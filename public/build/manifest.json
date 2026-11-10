@@ -9,7 +9,7 @@
     "isEntry": true
   },
   "resources/css/outgame.css": {
-    "file": "assets/outgame-Bd4b_3cr.css",
+    "file": "assets/outgame-Bdp0fYqR.css",
     "name": "outgame",
     "names": [
       "outgame.css"
@@ -18,12 +18,12 @@
     "isEntry": true
   },
   "resources/js/ingame.js": {
-    "file": "assets/ingame-d9e2d17e.js",
+    "file": "assets/ingame-afbb257d.js",
     "src": "resources/js/ingame.js",
     "isEntry": true
   },
   "resources/js/outgame.js": {
-    "file": "assets/outgame-1a0852d6.js",
+    "file": "assets/outgame-10de045b.js",
     "src": "resources/js/outgame.js",
     "isEntry": true
   }

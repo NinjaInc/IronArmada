@@ -17,7 +17,7 @@ return [
 
     // Login form (header)
     'login' => [
-        'page_title'        => 'OGame - Conquer the universe',
+        'page_title'        => 'Iron Armada - Conquer the universe',
         'btn'               => 'Login',
         'email_label'       => 'Email address:',
         'password_label'    => 'Password:',
@@ -50,10 +50,20 @@ return [
 
     // Home tab content
     'home' => [
-        'title'            => 'OGame - Conquer the universe',
-        'description_html' => '<em>OGame</em> is a strategy game set in space, with thousands of players from across the world competing at the same time. You only need a regular web browser to play.',
+        'title'            => 'Iron Armada - Conquer the universe',
+        'description_html' => '<em>Iron Armada</em> is a private space strategy game for a small crew of commanders. Build mines, research tech, raise a fleet and take the galaxy. Fast universe, no pay-to-win, no dark matter shop. You only need a web browser to play.',
         'board_btn'        => 'Board',
         'trailer_title'    => 'Trailer',
+    ],
+
+    // Archon Tech links (edit URLs here)
+    'links' => [
+        'archon_tech'        => 'Archon Tech',
+        'archon_tech_url'    => 'https://archontech.au',
+        'archon_hosting'     => 'Archon Hosting',
+        'archon_hosting_url' => 'https://archonhosting.au',
+        'support'            => 'Support',
+        'support_url'        => 'https://archontech.au',
     ],
 
     // Footer
@@ -63,7 +73,7 @@ return [
         'terms'          => 'T&Cs',
         'contact'        => 'Contact',
         'rules'          => 'Rules',
-        'copyright'      => '© OGameX. All rights reserved.',
+        'copyright'      => 'Iron Armada · An Archon Tech project. Private fan project, not affiliated with GameForge or OGame. Based on OGameX (MIT licence).',
     ],
 
     // Inline JS strings

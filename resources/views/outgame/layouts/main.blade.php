@@ -21,15 +21,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="language" content="{{ app()->getLocale() }}"/>
-    <meta name="author" content="OGameX"/>
-    <meta name="publisher" content="OGameX"/>
-    <meta name="copyright" content="OGameX"/>
+    <meta name="author" content="Archon Tech"/>
+    <meta name="publisher" content="Archon Tech"/>
+    <meta name="copyright" content="Archon Tech"/>
     <meta name="audience" content="all"/>
     <meta name="Expires" content="never"/>
     <meta name="Keywords"
-          content="Game, Browser, online, for free, legendary, MMOG, Science fiction, space, space ship"/>
+          content="Game, Browser, online, strategy, Science fiction, space, space ship, Iron Armada"/>
     <meta name="Description"
-          content="OGameX - The legendary game in the space! Discover the universe together with thousands of players."/>
+          content="Iron Armada - a private space strategy game by Archon Tech. Build, research, raise a fleet and conquer the universe."/>
     <meta name="robots" content="index,follow"/>
     <meta name="Revisit" content="After 14 days"/>
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -286,13 +286,6 @@
                     <div>
                         <input type="submit" id="regSubmit" value="{{ __('t_external.register.submit') }}"/>
                     </div>
-                    <div id="ipadapp">
-                        <a href="#"
-                        >
-                            <img src="/img/outgame/1817433e4a8d432a8d8ed25a4d6060.png" alt=""/>
-                            <img src="/img/outgame/c98a4685de676300b80da072ab6ad7.png" alt=""/>
-                        </a>
-                    </div>
                 </div>
             </form>
         </div>
@@ -319,13 +312,10 @@
                 <a href="{{ route('language.switch', ['lang' => 'fr']) }}" @if($outgameLocale === 'fr') style="font-weight:bold" @endif>FR</a> |
                 <a href="{{ route('language.switch', ['lang' => 'zh-TW']) }}" @if($outgameLocale === 'zh-TW') style="font-weight:bold" @endif>繁體中文</a>
                 <br/>
-                <div class="align_center">
-                    <a href="#" target="_blank">
-                        <div class="socialMediaLogo gPlusLogo">Google+</div>
-                    </a>
-                    <a href="#" target="_blank">
-                        <div class="socialMediaLogo fbLogo">Facebook</div>
-                    </a>
+                <div class="align_center" id="archonLinks">
+                    <a href="{{ __('t_external.links.archon_tech_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_tech') }}</a> |
+                    <a href="{{ __('t_external.links.archon_hosting_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_hosting') }}</a> |
+                    <a href="{{ __('t_external.links.support_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.support') }}</a>
                 </div>
                 <p id="copyright">{{ __('t_external.footer.copyright') }} {{ \OGame\Facades\GitInfoUtil::getAppVersion() }} </p>
             </div>
