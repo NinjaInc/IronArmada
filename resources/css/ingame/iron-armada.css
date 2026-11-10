@@ -250,6 +250,43 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     #chatBar { max-width: 100%; }
 }
 
+/* ---- All other pages: fluid content (fixed-width legacy containers) ---- */
+@media (max-width: 900px) {
+    #inhalt, #inhalt * { max-width: 100%; }
+    #inhalt, #inhalt .content, #inhalt .contentz, #inhalt .contentzs, #inhalt .section, #inhalt .boxWrapper,
+    #inhalt #technologies, #inhalt header, #inhalt .detail_screen, #inhalt div.detail_screen,
+    #technologydetails_content, #technologydetails, #detailWrapper, #buttonz, #buttonz ul, #buttonz ul#building,
+    #inhalt #warning, #inhalt h3, #inhalt .alliancetexts, #inhalt .tabsbelow, #inhalt .subtabs,
+    #alliance #ranks, #fleet2 #mission, #fleet2 #buttonz ul#missions, #fleet1 #sftcontainer,
+    #info #message-wrapper table, #info #messages_collapsed table, #combatSimRoundsContainer,
+    #div_traderResources .hints, #div_traderResources .fillup.allLocalResources, .mailcontainer,
+    #shop #itemBox, #lfsettingscomponent #technologies, #lfsettingscomponent .lfsettingsContent,
+    #lfsettingscomponent .lfsettingsContentWrapper .lfsettingsContent, #rewardscomponent .rewardlist-item-bottom,
+    .ship_selection_table, .detail_msg .msg_title, .ignorelist, .group, .new_rank, .ally_apply_desc_div {
+        width: 100% !important; min-width: 0 !important; box-sizing: border-box; margin-left: 0 !important; margin-right: 0 !important; }
+    #inhalt header { height: auto !important; min-height: 60px; background-size: cover !important; background-position: center !important; }
+    #inhalt textarea, #inhalt input[type=text], #inhalt input[type=password], #inhalt select { max-width: 100%; box-sizing: border-box; font-size: 16px; }
+
+    /* wide data tables scroll instead of breaking the page */
+    #galaxytable, #galaxyContent, #highscoreContent, #phalanx, #messages, #inhalt table.prefstable, #inhalt .ship_selection_table,
+    #fleet1, #fleet2, #fleet3, #movement, #inhalt table.members, #inhalt table.list, #merchant, #empire, #inhalt .tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    #inhalt table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    #galaxytable { display: block; min-width: 0; }
+    #galaxytable tbody { display: table; min-width: 640px; width: auto !important; }
+
+    /* technology tiles: let them wrap (4-5 across on a phone) */
+    #inhalt #technologies ul, #inhalt #technologies .list { width: 100% !important; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; }
+    #inhalt #technologies li { float: none !important; margin: 0 !important; }
+    #technologydetails { position: relative !important; left: auto !important; top: auto !important; height: auto !important; }
+    #technologydetails_content { height: auto !important; }
+    #technologydetails_content .information, #technologydetails_content .build_duration { max-width: 100%; }
+
+    /* bigger tap targets */
+    #inhalt a.build-it, #inhalt .build-it, #inhalt input.btn_blue, #inhalt button, #inhalt a.btn_blue, #inhalt input[type=submit] { min-height: 38px; }
+    .ui-dialog, .overlayDiv, #overlayDiv { max-width: 96vw !important; left: 2vw !important; width: 96vw !important; }
+    .ui-dialog .ui-dialog-content { width: auto !important; max-width: 100%; overflow-x: auto; }
+}
+
 @media (max-width: 480px) {
     #links #menuTable { grid-template-columns: repeat(2, 1fr); }
     #resourcesbarcomponent #resources { grid-template-columns: repeat(3, 1fr); }
