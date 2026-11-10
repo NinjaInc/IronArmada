@@ -20,6 +20,7 @@
     This application is released under the MIT License. For more details, visit the GitHub repository.
     -->
     <!-- CSRF Token -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" sizes="32x32" href="/img/iron-armada/favicon-32.png"/>
     <link rel="icon" href="/favicon.ico" sizes="any"/>

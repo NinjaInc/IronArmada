@@ -150,3 +150,107 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     background: url("/img/iron-armada/logo-iron-armada.png") no-repeat left center;
     background-size: contain;
 }
+
+/* ==========================================================================
+   Mobile / narrow screens. The legacy shell is a fixed ~990px frame with absolutely
+   positioned bars. Below 900px we drop the absolute geometry and stack it:
+   header -> resources -> notifications -> menu strip -> content -> planets -> footer.
+   ========================================================================== */
+@media (max-width: 900px) {
+    html, body#ingamepage { min-width: 0 !important; width: 100% !important; overflow-x: hidden; }
+    body#ingamepage { -webkit-text-size-adjust: 100%; }
+
+    #siteHeader { height: auto; min-height: 22px; }
+    #pageContent { width: 100% !important; min-width: 0 !important; max-width: 100%; box-sizing: border-box; padding: 0 6px; }
+
+    /* header block */
+    #top { height: auto !important; min-height: 0; display: block; position: relative; padding: 8px 8px 10px; box-sizing: border-box; width: 100% !important; }
+    #headerbarcomponent, #headerbarcomponent #bar { position: static !important; width: 100% !important; height: auto !important; margin: 0 !important; }
+    #headerbarcomponent #bar ul { display: flex; flex-wrap: wrap; gap: 2px 14px; justify-content: space-between; margin: 0; padding: 0; }
+    #headerbarcomponent #bar li { float: none !important; position: static !important; width: auto !important; margin: 0 !important; }
+    #pageReloader { position: relative !important; top: auto !important; left: auto !important; display: block; width: 190px; height: 48px; margin: 6px 0 8px; }
+
+    #resourcesbarcomponent { position: static !important; width: 100% !important; height: auto !important; float: none !important; left: auto; top: auto; }
+    #resourcesbarcomponent #resources { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; width: 100% !important; height: auto !important; margin: 0; padding: 0; }
+    #resourcesbarcomponent .resource_tile { position: relative; float: none !important; width: auto !important; height: auto !important; margin: 0 !important; padding: 0 !important; background: none !important; min-width: 0; }
+    #resourcesbarcomponent .resource_tile .resource { position: static !important; float: none !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 4px 2px 5px !important; box-sizing: border-box; text-align: center; }
+    #resourcesbarcomponent .resourceIcon { position: static !important; display: block; margin: 0 auto 2px !important; transform: scale(.7); transform-origin: center; height: 34px !important; }
+    #resourcesbarcomponent .resource .value { position: static !important; display: block; width: 100% !important; margin: 0 !important; padding: 0 !important; font-size: 12px !important; line-height: 14px; text-align: center; overflow: hidden; text-overflow: ellipsis; }
+    #resourcesbarcomponent .resource_tile::after { left: 2px; right: 2px; }
+
+    #notificationbarcomponent { position: relative !important; overflow: hidden; width: auto !important; height: auto !important; min-height: 40px; margin: 8px 0 0 !important; left: auto; right: auto; top: auto; box-sizing: border-box; }
+
+    /* menu becomes a wrapped strip of buttons */
+    #left { float: none !important; position: static !important; top: auto !important; width: 100% !important; margin: 8px 0 0; }
+    #links, #rechts { float: none !important; width: 100% !important; max-width: 100% !important; }
+    #links #menuTable { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+    #links .leftmenu li { margin: 0 !important; float: none !important; width: auto !important; }
+    #links .leftmenu a.menubutton { display: flex !important; align-items: center; width: 100% !important; height: 40px !important; line-height: 1.1 !important; padding: 0 8px !important; }
+    #links .leftmenu a.menubutton .menu_icon { display: none !important; }
+    #links .leftmenu a.menubutton .textlabel { display: block; width: 100%; font-size: 14px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #links .leftmenu .menu_icon { display: none !important; }
+
+    /* content */
+    #middle { float: none !important; width: 100% !important; margin: 8px 0 0 !important; }
+    #contentWrapper, #box #inhalt, #middle #inhalt, #inhalt { width: 100% !important; max-width: 100%; box-sizing: border-box; }
+    #contentWrapper { padding-bottom: 16px !important; overflow-x: auto; }
+    #inhalt img, #inhalt video { max-width: 100%; height: auto; }
+    #inhalt table { max-width: 100%; }
+    #inhalt .content-box-s, #inhalt .contentz, #inhalt .content, #inhalt .header, #inhalt .footer { max-width: 100%; box-sizing: border-box; }
+    #inhalt .contentz, #inhalt #planet, #inhalt #planetdata { width: 100% !important; }
+    #planet { height: auto !important; min-height: 0; display: flow-root; background-size: cover !important; padding-bottom: 6px; }
+    #planetdata { position: relative !important; top: auto !important; left: auto !important; bottom: auto !important; margin: 6px 0 0 !important; }
+    #planetdata .overlay, #planetOptions, #buffBar { position: relative !important; top: auto !important; bottom: auto !important; }
+
+    #left, #links, #links #menuTable { height: auto !important; min-height: 0; }
+    #links, #links #menuTable { width: 100% !important; box-sizing: border-box; }
+    #left { display: flow-root; }
+
+    #planet { width: 100% !important; box-sizing: border-box; }
+    #productionboxBottom { width: 100% !important; height: auto !important; float: none !important; display: flex !important; flex-direction: column !important; flex-wrap: nowrap !important; }
+    #productionboxBottom { margin-top: 10px !important; clear: both; }
+    #productionboxBottom > .boxColumn { flex: 0 0 auto !important; width: 100% !important; max-width: 100% !important; }
+    #productionboxBottom .injectedComponent, #productionboxBottom .content-box-s { float: none !important; width: auto !important; max-width: 100%; margin: 4px 0 !important; box-sizing: border-box; }
+    #productionboxBottom .content-box-s .content { height: auto !important; min-height: 0; }
+
+    /* wrappers that carried fixed widths */
+    #toolbarcomponent, #planetbarcomponent { width: 100% !important; float: none !important; }
+    #message-wrapper, #messages_collapsed, #eventboxLoading, #eventboxFilled, #eventboxBlank, #eventboxContent { position: relative !important; width: 100% !important; left: auto !important; top: auto !important; box-sizing: border-box; }
+    #attack_alert { display: none; }
+    #headerbarcomponent #bar, #headerbarcomponent #bar ul { height: auto !important; overflow: visible; }
+    #headerbarcomponent #bar ul { margin-bottom: 8px !important; }
+
+    #resourcesbarcomponent .resource_tile .resource { display: flex !important; flex-direction: column; align-items: center; }
+    #resourcesbarcomponent .resource .resourceIcon { order: 0; margin: 0 auto !important; top: auto !important; left: auto !important; }
+    #resourcesbarcomponent .resource .value { order: 1; top: auto !important; left: auto !important; bottom: auto !important; transform: none !important; height: auto !important; }
+    #resourcesbarcomponent .resource .value span { position: static !important; }
+
+    /* planet overview panel: fixed 650px children -> fluid */
+    #detailWrapper, #header_text, #planetdata, #planetdata .overlay, #planetDetails, #planetDetails table, #planetOptions, #buffBar { width: 100% !important; max-width: 100% !important; left: auto !important; box-sizing: border-box; }
+    #planetDetails table { position: static !important; }
+    #planetDetails td.data { width: auto !important; }
+    #planetDetails td.desc { width: 40% !important; }
+    #header_text h2 { width: auto !important; max-width: 100%; overflow-wrap: anywhere; font-size: 18px; }
+    #planetOptions a, #planetOptions span { white-space: normal; }
+    #planetdata { height: auto !important; }
+    #planetdata .overlay { position: relative !important; height: auto !important; }
+
+    #productionboxBottom div[class*="productionBox"], #productionboxBottom div[class*="productionbox"] { float: none !important; display: block !important; position: relative !important; left: auto !important; top: auto !important; width: 100% !important; margin-left: 0 !important; box-sizing: border-box; }
+
+    /* planets list */
+    #right { float: none !important; width: 100% !important; margin-top: 8px; }
+    #rechts { width: 100% !important; margin: 0 !important; }
+    #rechts #planetList { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+    #rechts .smallplanet { float: none !important; flex: 0 0 150px; margin: 0 !important; }
+
+    /* footer + chat */
+    #siteFooter { height: auto; line-height: 1.5; padding: 6px 0; }
+    #siteFooter .content { display: block; text-align: center; }
+    #siteFooter .fleft, #siteFooter .fright { float: none !important; display: block; width: auto !important; }
+    #chatBar { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+    #links #menuTable { grid-template-columns: repeat(2, 1fr); }
+    #resourcesbarcomponent #resources { grid-template-columns: repeat(3, 1fr); }
+}
