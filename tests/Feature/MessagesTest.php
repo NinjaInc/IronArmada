@@ -24,9 +24,9 @@ class MessagesTest extends MoonTestCase
     public function testRegistrationMessageReceived(): void
     {
         $this->assertMessageReceivedAndContains('universe', '', [
-            'Welcome to OGameX!',
+            'Welcome to Iron Armada!',
             'msg_new',
-            'Greetings Emperor ' . $this->currentUsername . '!',
+            'Commander ' . $this->currentUsername . ', your homeworld is yours.',
         ]);
     }
 

@@ -1890,14 +1890,12 @@ However, the Space Dock's engineers think that some of the remains can be salvag
             <a href="{{ route('serversettings.overlay') }}" class="overlay"
                data-overlay-title="{{ __('t_ingame.layout.server_settings') }}" data-overlay-class="serversettingsoverlay"
                data-overlay-popup-width="400" data-overlay-popup-height="510">{{ __('t_ingame.layout.server_settings') }}</a>|
-            <a href="http://wiki.ogame.org/" target="_blank">{{ __('t_ingame.layout.help') }}</a>|
             @php $localeActive = $locale ?? app()->getLocale(); @endphp
             <a href="{{ route('language.switch', ['lang' => 'en']) }}" @if($localeActive === 'en') class="bold" @endif>EN</a>|
             <a href="{{ route('language.switch', ['lang' => 'it']) }}" @if($localeActive === 'it') class="bold" @endif>IT</a>|
             <a href="{{ route('language.switch', ['lang' => 'nl']) }}" @if($localeActive === 'nl') class="bold" @endif>NL</a>|
             <a href="{{ route('language.switch', ['lang' => 'fr']) }}" @if($localeActive === 'fr') class="bold" @endif>FR</a>|
             <a href="{{ route('language.switch', ['lang' => 'zh-TW']) }}" @if($localeActive === 'zh-TW') class="bold" @endif>繁體中文</a>|
-            <a href="#">{{ __('t_ingame.layout.board') }}</a>|
             <a class="overlay" href="{{ route('rules.ajax') }}"
                data-overlay-title="{{ __('t_ingame.layout.rules') }}">{{ __('t_ingame.layout.rules') }}</a>|
             <a class="overlay" href="{{ route('legal.ajax') }}"

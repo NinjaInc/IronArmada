@@ -545,7 +545,7 @@ return [
         'tab_communication' => 'Communication',
         'tab_economy'       => 'Economy',
         'tab_universe'      => 'Universe',
-        'tab_system'        => 'OGame',
+        'tab_system'        => 'Iron Armada',
         'tab_favourites'    => 'Favourites',
 
         // Fleet subtabs
@@ -833,7 +833,7 @@ return [
         // Info popup
         'info_title'                    => 'Alliance Information',
         'apply_confirm'                 => 'Do you want to apply to this alliance?',
-        'redirect_confirm'              => 'By following this link, you will leave OGame. Do you wish to continue?',
+        'redirect_confirm'              => 'By following this link, you will leave Iron Armada. Do you wish to continue?',
 
         // Classes tab
         'class_selection_header'        => 'Class Selection',

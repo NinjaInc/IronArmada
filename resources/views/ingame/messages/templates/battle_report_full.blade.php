@@ -32,21 +32,6 @@
                             aria-expanded="false"><img src="/img/icons/basic/apikey.png"
                                                        style="width:20px;height:20px;"></button>
                 </gradient-button>
-                <gradient-button sq28="">
-                    <button class="custom_btn overlay tooltip msgShareBtn" data-message-id="8196210"
-                            data-overlay-title="{{ __('t_ingame.messages.battle_share') }}"
-                            data-target="https://s255-en.ogame.gameforge.com/game/index.php?page=componentOnly&amp;component=messagedetails&amp;action=loadShareReport&amp;ajax=1&amp;messageId=8196210"
-                            data-tooltip-title="{{ __('t_ingame.messages.battle_share') }}"><img src="/img/icons/basic/share.png"
-                                                                    style="width:20px;height:20px;"></button>
-                </gradient-button>
-                <gradient-button sq28="">
-                    <button class="custom_btn tooltip msgAttackBtn"
-                            onclick="window.location.href='https://s255-en.ogame.gameforge.com/game/index.php?page=ingame&amp;component=fleetdispatch&amp;galaxy=2&amp;system=488&amp;position=1&amp;type=3&amp;mission=1';"
-                            data-message-id="8196210" data-tooltip-title="{{ __('t_ingame.messages.battle_attack') }}">
-                        <div class="msgAttackIconContainer"><img src="/img/icons/basic/attack.png"
-                                                                 style="width:20px;height:20px;"></div>
-                    </button>
-                </gradient-button>
 
 
                 <gradient-button sq28="">

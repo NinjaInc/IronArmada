@@ -43,7 +43,7 @@ return [
     // Top navigation tabs
     'nav' => [
         'home'  => 'Home',
-        'about' => 'About OGame',
+        'about' => 'About Iron Armada',
         'media' => 'Media',
         'wiki'  => 'Wiki',
     ],
