@@ -208,9 +208,6 @@
                     </div>
                 </div>
                 <input type="submit" id="loginSubmit" value="{{ __('t_external.login.submit') }}"/>
-                <a href="#" id="pwLost" target="_blank" title="{{ __('t_external.login.forgot_password') }}">{{ __('t_external.login.forgot_password') }}</a>
-                <br/>
-                <a href="#" id="emailLost" target="_blank" title="{{ __('t_external.login.forgot_email') }}">{{ __('t_external.login.forgot_email') }}</a>
                 <p id="TermsAndConditionsAcceptWithLogin">
                     {!! __('t_external.login.terms_accept_html') !!}</p>
             </form>
@@ -268,7 +265,7 @@
 
                 </div>
                 <div class="input-wrap first">
-                    <label for="server">{{ __('t_external.register.universe_label') }} (<a class="overlay" data-type="ajax" href="/ajax/main/distinctions">{{ __('t_external.register.distinctions') }}</a>)</label>
+                    <label for="server">{{ __('t_external.register.universe_label') }}</label>
                 </div>
                 <div class="input-wrap expand">
                     <input type="hidden" id="agb" name="agb" value="on"/>

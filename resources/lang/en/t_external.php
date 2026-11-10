@@ -26,7 +26,7 @@ return [
         'submit'            => 'Log in',
         'forgot_password'   => 'Forgot your password?',
         'forgot_email'      => 'Forgot your email address?',
-        'terms_accept_html' => 'With the login I accept the <a class="" href="#" target="_blank" title="T&amp;Cs">T&amp;Cs</a>',
+        'terms_accept_html' => 'With the login I accept the <a class="overlay" data-type="ajax" href="/ajax/main/terms" title="T&amp;Cs">T&amp;Cs</a>',
     ],
 
     // Registration form (sidebar)
@@ -36,7 +36,7 @@ return [
         'password_label' => 'Password:',
         'universe_label' => 'Universe:',
         'distinctions' => 'Distinctions',
-        'terms_html'   => 'Our <a class="" target="_blank" href="#" title="T&amp;Cs"> T&amp;Cs </a> and <a class="" target="_blank" href="#" title="Privacy Policy"> Privacy Policy </a> apply in the game',
+        'terms_html'   => 'Our <a class="overlay" data-type="ajax" href="/ajax/main/terms" title="T&amp;Cs">T&amp;Cs</a> and <a class="overlay" data-type="ajax" href="/ajax/main/privacy-policy" title="Privacy Policy">Privacy Policy</a> apply in the game',
         'submit'       => 'Register',
     ],
 
