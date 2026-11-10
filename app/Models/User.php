@@ -46,6 +46,11 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $tactical_retreat_ratio
  * @property Carbon|null $dark_matter_last_regen
  * @property bool $vacation_mode
+ * @property bool $is_bot
+ * @property string|null $bot_personality
+ * @property int $bot_difficulty
+ * @property bool $bot_enabled
+ * @property int $bot_next_action_at
  * @property Carbon|null $vacation_mode_activated_at
  * @property Carbon|null $vacation_mode_until
  * @property int|null $character_class
@@ -319,6 +324,8 @@ class User extends Authenticatable
             'character_class_free_used' => 'boolean',
             'character_class_changed_at' => 'datetime',
             'alliance_left_at' => 'datetime',
+            'is_bot' => 'boolean',
+            'bot_enabled' => 'boolean',
         ];
     }
 }

@@ -8,6 +8,7 @@ use OGame\Console\Commands\Scheduler\GenerateAllianceHighscores;
 use OGame\Console\Commands\Scheduler\GenerateHighscoreRanks;
 use OGame\Console\Commands\Scheduler\GenerateHighscores;
 use OGame\Console\Commands\Scheduler\ResetDebrisFields;
+use OGame\Console\Commands\Scheduler\RunBots;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +41,6 @@ Schedule::command(CleanupDestroyedPlanets::class)->dailyAt('03:00')->withoutOver
 
 // Process Dark Matter regeneration every 5 minutes
 Schedule::command(DarkMatterRegenerateCommand::class)->everyFiveMinutes()->withoutOverlapping();
+
+// Computer controlled empires take their turn (each bot is only due every few minutes)
+Schedule::command(RunBots::class)->everyMinute()->withoutOverlapping();

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use OGame\Http\Controllers\Admin\BotsController;
 use OGame\Http\Controllers\Admin\DeveloperShortcutsController;
 use OGame\Http\Controllers\Admin\FleetTimingController;
 use OGame\Http\Controllers\Admin\RulesController as AdminRulesController;
@@ -272,6 +273,13 @@ Route::middleware(['auth', 'globalgame', 'locale', 'admin'])->group(function () 
     Route::post('/admin/fleet-timing/fast-forward', [FleetTimingController::class, 'fastForward'])->name('admin.fleettiming.fast-forward');
     Route::post('/admin/fleet-timing/fast-forward-all', [FleetTimingController::class, 'fastForwardAll'])->name('admin.fleettiming.fast-forward-all');
     Route::post('/admin/fleet-timing/reduce', [FleetTimingController::class, 'reduceTime'])->name('admin.fleettiming.reduce');
+
+    // Bots (computer controlled empires)
+    Route::get('/admin/bots', [BotsController::class, 'index'])->name('admin.bots.index');
+    Route::post('/admin/bots/global', [BotsController::class, 'saveGlobal'])->name('admin.bots.global');
+    Route::post('/admin/bots/create', [BotsController::class, 'create'])->name('admin.bots.create');
+    Route::post('/admin/bots/{id}', [BotsController::class, 'update'])->whereNumber('id')->name('admin.bots.update');
+    Route::post('/admin/bots/{id}/turn', [BotsController::class, 'turn'])->whereNumber('id')->name('admin.bots.turn');
 
     // Server administration (multi-account detection, bans)
     Route::get('/admin/server-administration', [ServerAdministrationController::class, 'index'])->name('admin.server-administration.index');
