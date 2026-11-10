@@ -14,6 +14,7 @@ use OGame\Http\Controllers\ChangeNickController;
 use OGame\Http\Controllers\CharacterClassController;
 use OGame\Http\Controllers\ChatController;
 use OGame\Http\Controllers\DefenseController;
+use OGame\Http\Controllers\DirectivesController;
 use OGame\Http\Controllers\FacilitiesController;
 use OGame\Http\Controllers\FleetController;
 use OGame\Http\Controllers\FleetEventsController;
@@ -228,6 +229,8 @@ Route::middleware(['auth', 'banned', 'globalgame', 'locale', 'firstlogin'])->gro
     Route::get('/buddies/online', [BuddiesController::class, 'getOnlineBuddies'])->name('buddies.online');
 
     Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards.index');
+    Route::get('/directives', [DirectivesController::class, 'index'])->name('directives.index');
+    Route::post('/directives/claim', [DirectivesController::class, 'claim'])->name('directives.claim');
     Route::get('/planet-move', [PlanetMoveController::class, 'index'])->name('planetMove.index');
     Route::post('/ajax/planet-move', [PlanetMoveController::class, 'move'])->name('planetMove.move');
     Route::get('/ajax/planet-move/cancel', [PlanetMoveController::class, 'cancel'])->name('planetMove.cancel');

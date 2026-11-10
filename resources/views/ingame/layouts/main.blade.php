@@ -640,6 +640,19 @@
                         </a>
                     </li>
 
+                    <li>
+                        <span class="menu_icon">
+                            <div class="menuImage rewarding {{(Request::is('directives') ? 'highlighted' : '') }}"></div>
+                        </span>
+                        <a class="menubutton {{(Request::is('directives') ? 'selected' : '') }}"
+                           href="{{ route('directives.index') }}"
+                           accesskey=""
+                           target="_self"
+                        >
+                            <span class="textlabel">{{ __('t_ingame.layout.menu_directives') }}</span>
+                        </a>
+                    </li>
+
                 </ul>
 
                 @if ($attackBlockActive)
