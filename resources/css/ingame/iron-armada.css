@@ -1,3 +1,115 @@
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/barlow/barlow-condensed-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/barlow/barlow-condensed-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/barlow/barlow-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/barlow/barlow-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/barlow/barlow-latin-600-normal.woff2") format("woff2"); }
+
+/* ==========================================================================
+   Iron Armada in-game skin (restyle layer, same design language as the login page).
+   The legacy sprite geometry (990px frame, absolutely positioned bars) is kept because
+   the game JS depends on it; only the chrome is repainted.
+   Palette: hull #070a0e/#0c1218/#141d25, seam #243543, steel #3a7fb4/#8fb3d1,
+            amber #d18533/#e7b15a, ink #e8eff6/#b7c5d3/#8a9bab.
+   ========================================================================== */
+body#ingamepage, body#ingamepage * { --ia-hull0:#070a0e; --ia-hull1:#0c1218; --ia-hull2:#141d25; --ia-seam:#243543;
+    --ia-steel:#3a7fb4; --ia-steel-hi:#8fb3d1; --ia-amber:#d18533; --ia-amber-hi:#e7b15a;
+    --ia-ink:#e8eff6; --ia-ink2:#b7c5d3; --ia-ink3:#8a9bab; }
+
+body#ingamepage { font-family: "Barlow", system-ui, sans-serif; color: var(--ia-ink2); background-color: var(--ia-hull0); }
+body#ingamepage::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background: linear-gradient(180deg, rgba(7,10,14,.55) 0%, rgba(7,10,14,.2) 40%, rgba(7,10,14,.6) 100%); }
+body#ingamepage a { color: var(--ia-steel-hi); }
+body#ingamepage a:hover { color: var(--ia-amber-hi); }
+body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-offset: 2px; }
+
+/* --- top strip (player / links / clock) --- */
+#siteHeader { background: var(--ia-hull0) !important; border-bottom: 1px solid var(--ia-seam); box-shadow: 0 1px 0 rgba(209,133,51,.25); height: 22px; }
+#siteHeader, #siteHeader a, #siteHeader li { font-family: "Barlow", sans-serif; font-size: 12px; color: var(--ia-ink3); }
+#siteHeader a:hover { color: var(--ia-amber-hi); }
+#siteHeader #playerName .textBeefy, #siteHeader #playerName span { color: var(--ia-amber-hi); font-weight: 600; }
+
+/* --- main header plate (replaces the sprite frame art) --- */
+#top { background: linear-gradient(180deg, var(--ia-hull2), var(--ia-hull1) 70%) !important;
+    border: 1px solid var(--ia-seam); border-top: 2px solid var(--ia-amber); border-bottom-width: 2px; border-radius: 2px; }
+#pageReloader { top: 36px; left: 14px; }
+
+/* resource bar */
+#resourcesbarcomponent .resource, #resources .resource { background: rgba(7,10,14,.55); border: 1px solid var(--ia-seam); border-radius: 2px; }
+#resources li, #resources .resource { font-family: "Barlow Condensed", sans-serif; }
+#resources .resource .value, #resources .value { font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 15px; letter-spacing: .02em; color: var(--ia-ink) !important; }
+#resources .resource .value.overmark, #resources .overmark { color: #e0603f !important; }
+#resources .resource .value.undermark, #resources .undermark { color: var(--ia-amber-hi) !important; }
+
+#resourcesbarcomponent .resource_tile { background: none !important; }
+#resourcesbarcomponent .resource_tile::after { content:""; position:absolute; left:6px; right:6px; bottom:0; height:2px; background: var(--ia-steel); opacity:.7; }
+#resourcesbarcomponent .resource_tile.metal::after { background:#8fb3d1; } #resourcesbarcomponent .resource_tile.crystal::after { background:#5fc3d0; }
+#resourcesbarcomponent .resource_tile.deuterium::after { background:#4f9e8f; } #resourcesbarcomponent .resource_tile.energy::after { background: var(--ia-amber); }
+#resourcesbarcomponent .resource_tile.darkmatter::after { background:#8a6fb8; }
+
+/* commander / officers: dim until active */
+#officers a { border-radius: 2px; filter: saturate(.75) brightness(.9); }
+#officers a.on, #officers a:hover { filter: none; }
+
+/* notification bar */
+#notificationbarcomponent { font-family: "Barlow", sans-serif; }
+#message-wrapper, #eventboxContent, #eventboxLoading, #eventboxFilled, #eventboxBlank { color: var(--ia-ink2); }
+#eventboxContent, #eventboxFilled, #eventboxLoading, #eventboxBlank { font-size: 13px; }
+
+/* --- left menu: flat armour plates --- */
+#links { width: 173px; }
+#links .leftmenu li { margin: 0 0 4px; }
+#links .leftmenu a.menubutton { background: linear-gradient(180deg, var(--ia-hull2), var(--ia-hull1)) !important;
+    border: 1px solid var(--ia-seam); border-left: 3px solid var(--ia-steel); border-radius: 2px;
+    height: 25px; line-height: 23px; box-sizing: border-box; width: 132px; text-align: left; padding: 0 10px; box-shadow: none; text-shadow: none; }
+#links .leftmenu a.menubutton .textlabel { font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--ia-ink2) !important; text-shadow: none; }
+#links .leftmenu a.menubutton:hover { background: var(--ia-hull2) !important; border-left-color: var(--ia-amber); }
+#links .leftmenu a.menubutton:hover .textlabel { color: var(--ia-ink) !important; }
+#links .leftmenu a.menubutton.selected { background: linear-gradient(180deg, #1c2a36, var(--ia-hull2)) !important; border-left-color: var(--ia-amber-hi); }
+#links .leftmenu a.menubutton.selected .textlabel { color: var(--ia-amber-hi) !important; }
+#links .leftmenu a.menubutton.premiumHighligt .textlabel { color: var(--ia-amber) !important; }
+#links .leftmenu a.menubutton.premiumHighligt:hover .textlabel { color: var(--ia-amber-hi) !important; }
+.menu_icon .menuImage { filter: grayscale(.55) brightness(.9); transition: filter .15s; }
+.menu_icon .menuImage.highlighted, .menu_icon:hover .menuImage { filter: none; }
+
+/* --- planet list (right column) --- */
+#rechts #countColonies { background: var(--ia-hull1) !important; border: 1px solid var(--ia-seam); border-radius: 2px; }
+#rechts #countColonies p, #rechts #countColonies span { font-family: "Barlow Condensed", sans-serif; font-weight: 600; letter-spacing: .04em; color: var(--ia-ink2); }
+#rechts .smallplanet { margin: 0 0 6px; }
+#rechts .smallplanet a.planetlink { border: 1px solid var(--ia-seam); border-radius: 2px; background-color: var(--ia-hull1); }
+#rechts .smallplanet a.planetlink:hover { border-color: var(--ia-amber); background-color: var(--ia-hull2); }
+#rechts .smallplanet a.planetlink.active { border-color: var(--ia-amber-hi); box-shadow: inset 3px 0 0 var(--ia-amber); }
+#rechts .planet-name { font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 14px; letter-spacing: .03em; color: var(--ia-ink) !important; }
+#rechts .planet-koords { font-family: "Barlow", sans-serif; color: var(--ia-ink3) !important; }
+
+/* --- content area --- */
+#inhalt { font-family: "Barlow", sans-serif; }
+#inhalt h2, #inhalt .header h2, #header_text h2, #planetNameHeader { font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ia-ink) !important; text-shadow: 0 1px 0 rgba(0,0,0,.6); }
+#planet { border: 1px solid var(--ia-seam); border-top: 2px solid var(--ia-amber); border-radius: 2px; }
+#planetdata { background: rgba(7,10,14,.72) !important; border: 1px solid var(--ia-seam); border-radius: 2px; color: var(--ia-ink2); }
+#planetdata td, #planetdata .desc { color: var(--ia-ink2); }
+#planetOptions a, #planetOptions .planetMoveIcons { color: var(--ia-steel-hi); font-family: "Barlow", sans-serif; }
+#planetOptions a:hover { color: var(--ia-amber-hi); }
+
+/* production boxes (Buildings / Research / Shipyard) */
+#productionboxBottom .content-box-s { background: linear-gradient(180deg, var(--ia-hull2), var(--ia-hull1)) !important; border: 1px solid var(--ia-seam); border-top: 2px solid var(--ia-steel); border-radius: 2px; margin: 4px 3px; }
+#productionboxBottom .content-box-s .header, #productionboxBottom .content-box-s .header h3 { background: none !important; font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ia-steel-hi) !important; }
+#productionboxBottom .content-box-s .content, #productionboxBottom .content-box-s .footer { background: none !important; color: var(--ia-ink2); }
+#productionboxBottom .content-box-s .footer { display: none; }
+
+/* generic legacy boxes/tabs used on other pages */
+.content-box-s .header h3, .contentz .header h2 { font-family: "Barlow Condensed", sans-serif; letter-spacing: .06em; }
+
+/* --- footer --- */
+#siteFooter { background: var(--ia-hull0) !important; border-top: 1px solid var(--ia-seam); box-shadow: 0 -1px 0 rgba(209,133,51,.25); font-family: "Barlow", sans-serif; font-size: 12px; color: var(--ia-ink3); }
+#siteFooter a { color: var(--ia-ink3); }
+#siteFooter a:hover, #siteFooter a.active { color: var(--ia-amber-hi); }
+
+/* chat bar */
+#chatBar { font-family: "Barlow", sans-serif; }
+
+@media (prefers-reduced-motion: reduce) { .menu_icon .menuImage { transition: none; } }
+
+
 /* Iron Armada branding overrides for the in-game pages.
    Loaded last from resources/css/ingame.css; the original OGame stylesheets stay untouched. */
 

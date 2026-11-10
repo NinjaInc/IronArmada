@@ -496,21 +496,6 @@
 
 
     <div id="left">
-        <div id="ipimenucomponent" class="">
-            <div id="ipiMenuWrapper" class="ipiMenuTrackedAction ipiHintable " title="" data-ipi-hint="ipiMenu">
-                <div id="ipimenucontent"><a
-                            href="#TODO_page=ajax&amp;component=ipioverview&amp;action=overviewLayer&amp;ajax=1"
-                            class="overlay textBeefy" data-overlay-title="" id="ipiInnerMenuContentHolder">
-                        <div class="ipiMenuHead">
-                            {{ __('t_ingame.layout.menu_directives') }}
-                        </div>
-
-                        <div class="ipiMenuBody hidden"></div>
-                        <div class="ipiMenuFooter hidden"></div>
-                    </a>
-                </div>
-            </div>
-        </div>
         <div id="toolbarcomponent" class="">
             <div id="links">
                 <ul id="menuTable" class="leftmenu">
