@@ -37,6 +37,23 @@
                         </div>
                     </form>
 
+                    <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.bots.pirates_title') }}</p>
+                    <p class="textCenter">{{ __('t_ingame.bots.pirates_hint') }}</p>
+                    <form action="{{ route('admin.bots.pirates') }}" method="post" class="group bborder" style="display:block;">
+                        {{ csrf_field() }}
+                        <div class="fieldwrapper">
+                            <label class="styled textBeefy">{{ __('t_ingame.bots.pirates_enabled') }}</label>
+                            <div class="thefield"><input type="checkbox" name="pirates_enabled" value="1" {{ $pirate_settings['pirates_enabled'] ? 'checked' : '' }}></div>
+                        </div>
+                        @foreach (['pirates_min_points', 'pirates_min_account_age_days', 'pirates_strength_percent', 'pirates_target_cooldown_hours', 'pirates_max_raids_per_day', 'pirates_min_fleet_value', 'pirates_max_fleet_value'] as $key)
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.bots.' . $key) }}</label>
+                                <div class="thefield"><input class="textInput w100" type="number" min="0" name="{{ $key }}" value="{{ $pirate_settings[$key] }}"></div>
+                            </div>
+                        @endforeach
+                        <div class="fieldwrapper"><div class="thefield"><input type="submit" class="btn_blue" value="{{ __('t_ingame.bots.save') }}"></div></div>
+                    </form>
+
                     <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.bots.create_title') }}</p>
                     <form action="{{ route('admin.bots.create') }}" method="post" class="group bborder" style="display:block;">
                         {{ csrf_field() }}

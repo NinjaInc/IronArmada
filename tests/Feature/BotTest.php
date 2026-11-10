@@ -25,7 +25,7 @@ class BotTest extends IsolatedAccountTestCase
         $this->assertTrue($bot->is_bot);
         $this->assertSame('miner', $bot->bot_personality);
         $this->assertSame(3, $bot->bot_difficulty);
-        $this->assertSame('Test Bot Alpha', $bot->username);
+        $this->assertSame('Test Bot Alpha (NPC)', $bot->username);
         $this->assertStringEndsWith('@bots.invalid', $bot->email);
         $this->assertTrue(Planet::where('user_id', $bot->id)->exists());
     }

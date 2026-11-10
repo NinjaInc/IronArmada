@@ -277,6 +277,7 @@ Route::middleware(['auth', 'globalgame', 'locale', 'admin'])->group(function () 
     // Bots (computer controlled empires)
     Route::get('/admin/bots', [BotsController::class, 'index'])->name('admin.bots.index');
     Route::post('/admin/bots/global', [BotsController::class, 'saveGlobal'])->name('admin.bots.global');
+    Route::post('/admin/bots/pirates', [BotsController::class, 'savePirates'])->name('admin.bots.pirates');
     Route::post('/admin/bots/create', [BotsController::class, 'create'])->name('admin.bots.create');
     Route::post('/admin/bots/{id}', [BotsController::class, 'update'])->whereNumber('id')->name('admin.bots.update');
     Route::post('/admin/bots/{id}/turn', [BotsController::class, 'turn'])->whereNumber('id')->name('admin.bots.turn');

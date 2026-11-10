@@ -25,7 +25,10 @@ use Throwable;
  */
 class BotService
 {
-    public const PERSONALITIES = ['balanced', 'miner', 'turtle', 'raider'];
+    /** Appended to every bot username. */
+    public const NPC_SUFFIX = ' (NPC)';
+
+    public const PERSONALITIES = ['balanced', 'miner', 'turtle', 'raider', 'pirate'];
 
     /** Difficulty => [label, minutes between turns, share of spare resources spent on units]. */
     public const DIFFICULTIES = [
@@ -139,7 +142,12 @@ class BotService
 
         $username = $name !== null && trim($name) !== ''
             ? trim($name)
-            : app(CreateNewUser::class)->generateUniqueName();
+            : ($personality === 'pirate' ? 'Pirate ' : '') . app(CreateNewUser::class)->generateUniqueName();
+
+        // Bots are always marked so players can tell them apart from real people.
+        if (!str_ends_with($username, self::NPC_SUFFIX)) {
+            $username .= self::NPC_SUFFIX;
+        }
 
         if (User::where('username', $username)->exists()) {
             throw new InvalidArgumentException('That username is already taken.');
@@ -213,6 +221,13 @@ class BotService
         $difficulty = self::DIFFICULTIES[$bot->bot_difficulty] ?? self::DIFFICULTIES[2];
 
         $player = $this->playerServiceFactory->make($bot->id);
+
+        // Pirates do not build an economy, they only raid (with strict protection rules for players).
+        if ($personality === 'pirate') {
+            app(PirateService::class)->takeTurn($bot, $player);
+            return;
+        }
+
         $isFirstPlanet = true;
 
         foreach ($player->planets->allPlanets() as $planet) {

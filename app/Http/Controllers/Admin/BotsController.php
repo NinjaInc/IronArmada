@@ -9,6 +9,8 @@ use InvalidArgumentException;
 use OGame\Http\Controllers\OGameController;
 use OGame\Models\User;
 use OGame\Services\BotService;
+use OGame\Services\PirateService;
+use OGame\Services\SettingsService;
 use Throwable;
 
 class BotsController extends OGameController
@@ -16,7 +18,7 @@ class BotsController extends OGameController
     /**
      * Shows the bot administration page.
      */
-    public function index(BotService $botService): View
+    public function index(BotService $botService, PirateService $pirateService): View
     {
         $bots = User::with('highscore')
             ->where('is_bot', true)
@@ -28,6 +30,10 @@ class BotsController extends OGameController
             'bots_enabled' => $botService->isEnabled(),
             'personalities' => BotService::PERSONALITIES,
             'difficulties' => array_keys(BotService::DIFFICULTIES),
+            'pirate_settings' => array_combine(
+                array_keys(PirateService::SETTING_DEFAULTS),
+                array_map(fn (string $key) => $pirateService->getSetting($key), array_keys(PirateService::SETTING_DEFAULTS))
+            ),
         ]);
     }
 
@@ -39,6 +45,29 @@ class BotsController extends OGameController
         $botService->setEnabled($request->boolean('bots_enabled'));
 
         return redirect()->route('admin.bots.index')->with('status', __('t_ingame.bots.global_saved'));
+    }
+
+    /**
+     * Save the pirate raid rules.
+     */
+    public function savePirates(Request $request, SettingsService $settings): RedirectResponse
+    {
+        $validated = $request->validate([
+            'pirates_min_points' => ['required', 'integer', 'min:0'],
+            'pirates_min_account_age_days' => ['required', 'integer', 'min:0', 'max:365'],
+            'pirates_strength_percent' => ['required', 'integer', 'min:1', 'max:200'],
+            'pirates_target_cooldown_hours' => ['required', 'integer', 'min:1', 'max:720'],
+            'pirates_max_raids_per_day' => ['required', 'integer', 'min:0', 'max:1000'],
+            'pirates_min_fleet_value' => ['required', 'integer', 'min:0'],
+            'pirates_max_fleet_value' => ['required', 'integer', 'min:0'],
+        ]);
+
+        foreach ($validated as $key => $value) {
+            $settings->set($key, (int)$value);
+        }
+        $settings->set('pirates_enabled', $request->boolean('pirates_enabled') ? 1 : 0);
+
+        return redirect()->route('admin.bots.index')->with('status', __('t_ingame.bots.pirates_saved'));
     }
 
     /**
