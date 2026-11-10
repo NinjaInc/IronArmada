@@ -265,12 +265,10 @@
                 </div> -->
                 <div class="resource_tile darkmatter">
                     <div id="darkmatter_box" class="darkmatter tooltipHTML resource ipiHintable tpd-hideOnClickOutside"
-                         title="{{ __('t_ingame.layout.res_dark_matter') }}|<table class=&quot;resourceTooltip&quot;><tr><th>{{ __('t_ingame.layout.res_available') }}:</th><td><span class=&quot;&quot;>{!! $resources['darkmatter']['amount_formatted'] !!}</span></td></tr></table>"
-                         data-tooltip-button="{{ __('t_ingame.layout.res_purchase_dm') }}" data-ipi-hint="ipiResourcedarkmatter">
-                        <a href="#TODO_page=payment" class="overlay">
-                            <img src="/img/icons/401d1a91ff40dc7c8acfa4377d3d65.gif">
+                         title="{{ __('t_ingame.layout.res_dark_matter') }}|<table class=&quot;resourceTooltip&quot;><tr><th>{{ __('t_ingame.layout.res_available') }}:</th><td><span class=&quot;&quot;>{!! $resources['darkmatter']['amount_formatted'] !!}</span></td></tr></table>" data-ipi-hint="ipiResourcedarkmatter">
+                                                    <img src="/img/icons/401d1a91ff40dc7c8acfa4377d3d65.gif">
                             <div class="resourceIcon darkmatter"></div>
-                        </a>
+                        
                         <span class="value">
                         <span id="resources_darkmatter" data-raw="{!! $resources['darkmatter']['amount'] !!}" class="overlay">{!! $resources['darkmatter']['amount_formatted'] !!}</span>
                     </span>
@@ -304,28 +302,6 @@
                    title="{{ $classTitle }}|@if($classBonuses){{ implode('<br>', $classBonuses) }}@else {{ __('t_ingame.layout.class_click_select') }}@endif"
                    data-ipi-hint="ipiCharacterclassSettings">
                     <div class="sprite characterclass medium {{ $classIcon }}"></div>
-                </a>
-            </div>
-            <div id="officers" class="  fright">
-                <a href="#TODO_=premium&amp;openDetail=2" class="tooltipHTML   commander js_hideTipOnMobile "
-                   title="{!! __('t_ingame.premium.hire_commander_tooltip') !!}">
-                    <img src="/img/layout/pixel.gif" width="30" height="30">
-                </a>
-                <a href="#TODO_page=premium&amp;openDetail=3" class="tooltipHTML    admiral js_hideTipOnMobile "
-                   title="{!! __('t_ingame.premium.hire_admiral_tooltip') !!}">
-                    <img src="/img/layout/pixel.gif" width="30" height="30">
-                </a>
-                <a href="#TODO_page=premium&amp;openDetail=4" class="tooltipHTML    engineer js_hideTipOnMobile "
-                   title="{!! __('t_ingame.premium.hire_engineer_tooltip') !!}">
-                    <img src="/img/layout/pixel.gif" width="30" height="30">
-                </a>
-                <a href="#TODO_page=premium&amp;openDetail=5" class="tooltipHTML    geologist js_hideTipOnMobile "
-                   title="{!! __('t_ingame.premium.hire_geologist_tooltip') !!}">
-                    <img src="/img/layout/pixel.gif" width="30" height="30">
-                </a>
-                <a href="#TODO_page=premium&amp;openDetail=6" class="tooltipHTML    technocrat js_hideTipOnMobile "
-                   title="{!! __('t_ingame.premium.hire_technocrat_tooltip') !!}">
-                    <img src="/img/layout/pixel.gif" width="30" height="30">
                 </a>
             </div>
         </div>
@@ -396,7 +372,6 @@
                 <div id="attack_alert" class="@if ($underAttack) soon @elseif (!empty($playerWreckFields) && !$underAttack) wreckField @else noAttack @endif"
                      @if ($underAttack) title="{{ __('t_ingame.layout.under_attack') }}" @endif>
                     @if ($underAttack)
-                        <a href="#TODO_componentOnly&amp;component=eventList" class=" tooltipHTML js_hideTipOnMobile"></a>
                     @elseif (!empty($playerWreckFields))
                         @php
                             // Fix time calculation - use proper timezone
@@ -664,36 +639,6 @@
                         </a>
                     </li>
 
-                    <li>
-                        <span class="menu_icon">
-                            <div class="menuImage premium {{(Request::is('premium') ? 'highlighted' : '') }}"></div>
-                        </span>
-                        <a class="menubutton premiumHighligt officers {{(Request::is('premium') ? 'selected' : '') }}"
-                           href="{{ route('premium.index') }}"
-                           accesskey=""
-                           target="_self"
-                        >
-                            <span class="textlabel">{{ __('t_ingame.layout.menu_officers') }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <span class="menu_icon">
-                            <a href="{{ route('shop.index') }}#page=inventory"
-                               class="tooltipRight js_hideTipOnMobile "
-                               target="_self"
-                               title="{{ __('t_ingame.layout.menu_inventory_title') }}">
-                                <div class="menuImage shop {{(Request::is('shop') ? 'highlighted' : '') }}">
-                                </div>
-                            </a>
-                        </span>
-                        <a class="menubutton premiumHighligt {{(Request::is('shop') ? 'selected' : '') }}"
-                           href="{{ route('shop.index') }}"
-                           accesskey=""
-                           target="_self"
-                        >
-                            <span class="textlabel">{{ __('t_ingame.layout.menu_shop') }}</span>
-                        </a>
-                    </li>
                 </ul>
 
                 @if ($attackBlockActive)
@@ -1866,9 +1811,7 @@ However, the Space Dock's engineers think that some of the remains can be salvag
 <div id="siteFooter">
     <div class="content" style="font-size:10px">
         <div class="fleft textLeft">
-            <a href="#TODO_changelog&ajax=1" class="tooltip js_hideTipOnMobile overlay" data-class="noXScrollbar"
-               data-overlay-iframe="true" data-iframe-width="680" data-overlay-title="{{ __('t_ingame.layout.patch_notes') }}">
-                {{ \OGame\Facades\GitInfoUtil::getAppVersion() }}</a>
+            <span>{{ \OGame\Facades\GitInfoUtil::getAppVersion() }}</span>
             <a class="homeLink" href="https://github.com/lanedirt/ogamex" target="_blank">{{ __('t_ingame.layout.footer_notice') }}</a>
         </div>
         <div class="fright textRight">
