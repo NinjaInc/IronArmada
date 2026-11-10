@@ -11,7 +11,7 @@
    Palette: hull #070a0e/#0c1218/#141d25, seam #243543, steel #3a7fb4/#8fb3d1,
             amber #d18533/#e7b15a, ink #e8eff6/#b7c5d3/#8a9bab.
    ========================================================================== */
-body#ingamepage, body#ingamepage * { --ia-hull0:#070a0e; --ia-hull1:#0c1218; --ia-hull2:#141d25; --ia-seam:#243543;
+body#ingamepage, body#ingamepage * { --ia-hull0:#070a0e; --ia-hull1:#0c1218; --ia-hull2:#141d25; --ia-seam:#3b6385; --ia-seam-dim:#243543;
     --ia-steel:#3a7fb4; --ia-steel-hi:#8fb3d1; --ia-amber:#d18533; --ia-amber-hi:#e7b15a;
     --ia-ink:#e8eff6; --ia-ink2:#b7c5d3; --ia-ink3:#8a9bab; }
 
@@ -32,6 +32,15 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 #top { background: linear-gradient(180deg, var(--ia-hull2), var(--ia-hull1) 70%) !important;
     border: 1px solid var(--ia-seam); border-top: 2px solid var(--ia-amber); border-bottom-width: 2px; border-radius: 2px; }
 #pageReloader { top: 36px; left: 14px; }
+
+#top { background: linear-gradient(180deg, rgba(23,34,45,.96), rgba(10,16,22,.96) 75%) !important; box-shadow: 0 0 0 1px rgba(143,179,209,.10), 0 10px 28px rgba(0,0,0,.55), inset 0 0 40px rgba(58,127,180,.07); }
+
+/* notification bar (mail / chat / missions) gets its own plate, the old sprite frame is gone */
+#notificationbarcomponent { background: linear-gradient(180deg, rgba(20,29,37,.92), rgba(7,10,14,.92)) !important; border: 1px solid var(--ia-seam); border-left: 3px solid var(--ia-steel); border-radius: 2px; box-shadow: inset 0 0 18px rgba(58,127,180,.08); }
+
+/* panel behind the page content so the middle never looks bare */
+#middle #inhalt, #inhalt { background: transparent; }
+#contentWrapper { background: rgba(7,10,14,.45); border: 1px solid var(--ia-seam-dim); border-radius: 2px; }
 
 /* resource bar */
 #resourcesbarcomponent .resource, #resources .resource { background: rgba(7,10,14,.55); border: 1px solid var(--ia-seam); border-radius: 2px; }
