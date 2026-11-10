@@ -287,6 +287,38 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     .ui-dialog .ui-dialog-content { width: auto !important; max-width: 100%; overflow-x: auto; }
 }
 
+/* ---- Galaxy view: card-style rows instead of a 654px grid ---- */
+@media (max-width: 900px) {
+    #galaxyHeader { height: auto !important; margin: 0 !important; padding: 6px !important; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; box-sizing: border-box; width: 100% !important; }
+    #galaxyHeader form, #galaxyHeader > div { float: none !important; }
+    #galaxyHeader .btn_blue { float: none !important; height: auto !important; min-height: 32px; line-height: 32px !important; padding: 0 10px !important; display: inline-block; }
+    #galaxyHeader .systembuttons { float: none !important; display: flex; flex-wrap: wrap; gap: 4px; width: 100%; }
+    #galaxyHeader .btn_system_action { flex: 1 1 45%; min-width: 0; text-align: center; }
+    #galaxyHeader input#galaxy_input, #galaxyHeader input#system_input { width: 56px !important; height: 32px; font-size: 16px; text-align: center; }
+    #galaxyHeader .galaxy_icons { transform: scale(1.25); margin: 0 6px; }
+
+    #galaxyContent, #galaxyContent .galaxyTable { width: 100% !important; max-width: 100%; overflow-x: visible; box-sizing: border-box; }
+    #galaxyContent .ctGalaxyHead, #galaxyContent .ctGalaxyFleetInfo, #galaxyContent .ctGalaxyFooter { height: auto !important; min-height: 24px !important; flex-wrap: wrap; padding: 3px 4px; }
+    #galaxyContent .ctGalaxyHead.headBold { display: none; }
+    #galaxyContent .span11 { flex: 1 1 100%; flex-wrap: wrap; gap: 4px 12px; justify-content: flex-start; }
+    #galaxyContent .filterCell { display: flex; gap: 4px; }
+    #galaxyContent .filter { min-width: 28px; min-height: 28px; display: flex; align-items: center; justify-content: center; }
+
+    #galaxyContent .galaxyRow.ctContentRow { flex-wrap: wrap; min-height: 0; gap: 3px 4px; padding: 4px; background: rgba(7,10,14,.55); border: 1px solid var(--ia-seam-dim); border-radius: 2px; }
+    #galaxyContent .ctContentRow .cellPosition { flex: 0 0 24px; width: 24px; }
+    #galaxyContent .ctContentRow .cellPlanet { flex: 0 0 44px; width: 44px; }
+    #galaxyContent .ctContentRow .cellPlanetName { flex: 1 1 90px; min-width: 0; justify-content: flex-start; }
+    #galaxyContent .ctContentRow .cellMoon, #galaxyContent .ctContentRow .cellDebris { flex: 0 0 34px; width: 34px; }
+    #galaxyContent .ctContentRow .cellPlayerName { flex: 1 1 40%; min-width: 0; justify-content: flex-start; padding: 0 6px; min-height: 30px; }
+    #galaxyContent .ctContentRow .cellAlliance { flex: 1 1 18%; width: auto; min-width: 48px; min-height: 30px; }
+    #galaxyContent .ctContentRow .cellAction { flex: 1 1 100%; width: 100%; justify-content: space-around; flex-wrap: wrap; gap: 6px; min-height: 34px; }
+    #galaxyContent .ctContentRow .cellAction .emptyAction, #galaxyContent .ctContentRow .cellAction > span { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
+    #galaxyContent .ctContentRow .cellAction a { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
+    #galaxyContent .ctContentRow .cellAction img { width: 22px; height: 22px; }
+    #galaxyContent .ctContentRow .galaxyCell:empty { display: none; }
+    #galaxyContent .expeditionDebrisSlotBox { width: 100% !important; box-sizing: border-box; }
+}
+
 @media (max-width: 480px) {
     #links #menuTable { grid-template-columns: repeat(2, 1fr); }
     #resourcesbarcomponent #resources { grid-template-columns: repeat(3, 1fr); }
