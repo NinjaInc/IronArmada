@@ -137,189 +137,49 @@
         var emailOnlyLogin = 1;
     </script>
 </head>
-<body class='{{ app()->getLocale() }}'>
-<div id="dieIE6">
-    <div class="logo_gf"></div>
-    <div class="logo_ogame"></div>
-    <h1 class="ie6_header">{{ __('t_external.browser_warning.title') }}</h1>
+<body class='{{ app()->getLocale() }} ia'>
+<a class="ia-skip" href="#ia-main">{{ __('t_external.home.skip_link') }}</a>
+<div class="ia-page">
+    <header class="ia-header">
+        <a class="ia-brand" href="{{ route('login') }}" title="{{ __('t_external.login.page_title') }}">
+            <img src="/img/iron-armada/logo-iron-armada.png" alt="Iron Armada" width="260" height="80"/>
+        </a>
+    </header>
 
-    <p class="ie6_desc">{{ __('t_external.browser_warning.desc1') }}</p>
-    <p class="ie6_desc_box">{{ __('t_external.browser_warning.desc2') }}</p>
-    <p class="ie6_desc">{{ __('t_external.browser_warning.desc3') }}</p>
+    <main id="ia-main" class="ia-main">
+        @yield('content')
+    </main>
 
-    <div class="browser_downloads">
-        <a href="http://windows.microsoft.com/en-GB/internet-explorer/download-ie" target="_blank"
-           class="browserimg ie">IE 8+</a>
-        <a href="http://www.mozilla.org/de/firefox/" target="_blank" class="browserimg firefox">Firefox 16+</a>
-        <a href="http://www.google.com/chrome" target="_blank" class="browserimg chrome">Chrome 23+</a>
-        <a href="http://www.apple.com/de/safari/" target="_blank" class="browserimg safari">Safari 5+</a>
-    </div>
-</div>
-<div class="products">
-
-    <!-- #MMO:NETBAR# -->
-    <div id="pagefoldtarget"></div>
-</div>
-<div id="start">
-    <div id="header">
-        <h1>
-            <a href="{{ route('login') }}" title="{{ __('t_external.login.page_title') }}">
-                {{ __('t_external.login.page_title') }} </a>
-        </h1>
-        <a id="loginBtn" href="javascript:void(0)" title="{{ __('t_external.login.btn') }}">
-            {{ __('t_external.login.btn') }} </a>
-        <div id="login">
-            <form id="loginForm" name="loginForm" method="post" action="{{ route('login') }}">
-                {{ csrf_field() }}
-                <div class="input-wrap">
-                    <label for="usernameLogin">{{ __('t_external.login.email_label') }}</label>
-                    <div class="black-border">
-                        <input class="js_userName"
-                               type="text"
-                               onKeyDown="hideLoginErrorBox();"
-                               id="usernameLogin"
-                               name="email"
-                               value="{{ old('email') }}"
-                        />
-                    </div>
-                    <div id="usernameLogin_dialog" class="right">
-                    </div>
-                </div>
-                <div class="input-wrap">
-                    <label for="passwordLogin">{{ __('t_external.login.password_label') }}</label>
-                    <div class="black-border">
-                        <input type="password"
-                               onKeyDown="hideLoginErrorBox();"
-                               id="passwordLogin"
-                               name="password"
-                               maxlength="128"
-                        />
-                    </div>
-                </div>
-                <div class="input-wrap">
-                    <label for="serverLogin">
-                        {{ __('t_external.login.universe_label') }} </label>
-                    <div class="black-border">
-                        <select class="js_uniUrl" id="serverLogin" name="uni">
-                            <option value="s1">
-                                {{ __('t_external.login.universe_option_1') }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <input type="submit" id="loginSubmit" value="{{ __('t_external.login.submit') }}"/>
-                <p id="TermsAndConditionsAcceptWithLogin">
-                    {!! __('t_external.login.terms_accept_html') !!}</p>
-            </form>
-        </div>
-    </div>
-    <div id="content" class="clearfix">
-        <div id="subscribe">
-            <form id="subscribeForm"
-                  class=""
-                  name="subscribeForm"
-                  method="POST"
-                  onsubmit="changeAction('register','subscribeForm');"
-                  action="{{ route('register') }}"
-                  autocomplete="off"
-            >
-                {{ csrf_field() }}
-                <input style="display:none;" type="text" name="somefakename"/>
-                <input style="display:none;" type="password" name="anotherfakename"/>
-
-                <input type="hidden" name="v" value="3"/>
-                <input type="hidden" name="step" value="validate"/>
-                <input type="hidden" name="kid" value=""/>
-                <input type="hidden" name="errorCodeOn" value="1"/>
-                <input type="hidden" name="is_utf8" value="1"/>
-
-                <h2>{{ __('t_external.register.play_free') }}</h2>
-                <div class="input-wrap">
-                    <div class="input-wrap">
-                        <label for="email">{{ __('t_external.register.email_label') }}</label>
-                        <div class="black-border">
-                            <input class="validate[required,custom[email]]"
-                                   type="text"
-                                   id="email"
-                                   name="email"
-                                   value="{{ old('email') }}"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div class="input-wrap">
-                    <label for="password">{{ __('t_external.register.password_label') }}</label>
-                    <div class="black-border">
-                        <input class="validate[required,custom[pwLength]]"
-                               type="password"
-                               id="password"
-                               name="password"
-                               autocomplete="new-password"
-                               value="{{ old('password') }}"
-                               maxlength="128"
-                        />
-                    </div>
-
-                    <div id="password_dialog" class="left">
-                    </div>
-
-                </div>
-                <div class="input-wrap first">
-                    <label for="server">{{ __('t_external.register.universe_label') }}</label>
-                </div>
-                <div class="input-wrap expand">
-                    <input type="hidden" id="agb" name="agb" value="on"/>
-                    <label id="agbLabel">
-                        <span>{!! __('t_external.register.terms_html') !!}</span>
-                    </label>
-                    @if ($errors->register->has('email'))
-                        <span class="help-block" style="color: #e74c3c;">
-                                        <strong>{{ $errors->register->first('email') }}</strong>
-                                    </span>
-                    @endif
-                    @if ($errors->register->has('password'))
-                        <span class="help-block" style="color: #e74c3c;">
-                                        <strong>{{ $errors->register->first('password') }}</strong>
-                                    </span>
-                    @endif
-                    <div>
-                        <input type="submit" id="regSubmit" value="{{ __('t_external.register.submit') }}"/>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div id="contentWrap">
-            @yield('content')
-        </div>
-    </div>
-    <div id="push"></div>
-</div>
-<div id="footer">
-    <div id="footerContent">
-        <div class="linksAndCopyright">
-            <div id="footerLinks">
-                <a class="overlay" data-type="ajax" href="/ajax/main/legal">{{ __('t_external.footer.legal') }}</a> |
-                <a class="overlay" data-type="ajax" href="/ajax/main/privacy-policy">{{ __('t_external.footer.privacy_policy') }}</a> |
-                <a class="overlay" data-type="ajax" href="/ajax/main/terms">{{ __('t_external.footer.terms') }}</a> |
-                <a class="overlay" data-type="ajax" href="/ajax/main/contact">{{ __('t_external.footer.contact') }}</a> |
+    <footer class="ia-footer">
+        <div class="ia-footer-inner">
+            <nav class="ia-footer-links" aria-label="{{ __('t_external.home.footer_nav') }}">
+                <a class="overlay" data-type="ajax" href="/ajax/main/legal">{{ __('t_external.footer.legal') }}</a>
+                <a class="overlay" data-type="ajax" href="/ajax/main/privacy-policy">{{ __('t_external.footer.privacy_policy') }}</a>
+                <a class="overlay" data-type="ajax" href="/ajax/main/terms">{{ __('t_external.footer.terms') }}</a>
+                <a class="overlay" data-type="ajax" href="/ajax/main/contact">{{ __('t_external.footer.contact') }}</a>
                 <a class="overlay" data-type="ajax" href="/ajax/main/rules">{{ __('t_external.footer.rules') }}</a>
-                <br/>
-                @php $outgameLocale = app()->getLocale(); @endphp
-                <a href="{{ route('language.switch', ['lang' => 'en']) }}" @if($outgameLocale === 'en') style="font-weight:bold" @endif>EN</a> |
-                <a href="{{ route('language.switch', ['lang' => 'it']) }}" @if($outgameLocale === 'it') style="font-weight:bold" @endif>IT</a> |
-                <a href="{{ route('language.switch', ['lang' => 'nl']) }}" @if($outgameLocale === 'nl') style="font-weight:bold" @endif>NL</a> |
-                <a href="{{ route('language.switch', ['lang' => 'fr']) }}" @if($outgameLocale === 'fr') style="font-weight:bold" @endif>FR</a> |
-                <a href="{{ route('language.switch', ['lang' => 'zh-TW']) }}" @if($outgameLocale === 'zh-TW') style="font-weight:bold" @endif>繁體中文</a>
-                <br/>
-                <div class="align_center" id="archonLinks">
-                    <a href="{{ __('t_external.links.archon_tech_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_tech') }}</a> |
-                    <a href="{{ __('t_external.links.archon_hosting_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_hosting') }}</a> |
+            </nav>
+            @php $outgameLocale = app()->getLocale(); @endphp
+            <nav class="ia-footer-langs" aria-label="{{ __('t_external.home.language_nav') }}">
+                <a href="{{ route('language.switch', ['lang' => 'en']) }}" @if($outgameLocale === 'en') aria-current="true" @endif>EN</a>
+                <a href="{{ route('language.switch', ['lang' => 'it']) }}" @if($outgameLocale === 'it') aria-current="true" @endif>IT</a>
+                <a href="{{ route('language.switch', ['lang' => 'nl']) }}" @if($outgameLocale === 'nl') aria-current="true" @endif>NL</a>
+                <a href="{{ route('language.switch', ['lang' => 'fr']) }}" @if($outgameLocale === 'fr') aria-current="true" @endif>FR</a>
+                <a href="{{ route('language.switch', ['lang' => 'zh-TW']) }}" @if($outgameLocale === 'zh-TW') aria-current="true" @endif>繁體中文</a>
+            </nav>
+            <div class="ia-footer-brand">
+                <a class="ia-archon" href="{{ __('t_external.links.archon_tech_url') }}" target="_blank" rel="noopener">
+                    <img src="/img/iron-armada/logo-archon-tech.png" alt="{{ __('t_external.links.archon_tech') }}" height="44"/>
+                </a>
+                <nav class="ia-footer-links" aria-label="Archon Tech">
+                    <a href="{{ __('t_external.links.archon_tech_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_tech') }}</a>
+                    <a href="{{ __('t_external.links.archon_hosting_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_hosting') }}</a>
                     <a href="{{ __('t_external.links.support_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.support') }}</a>
-                </div>
-                <p id="copyright">{{ __('t_external.footer.copyright') }} {{ \OGame\Facades\GitInfoUtil::getAppVersion() }} </p>
+                </nav>
             </div>
+            <p class="ia-copyright">{{ __('t_external.footer.copyright') }} {{ \OGame\Facades\GitInfoUtil::getAppVersion() }}</p>
         </div>
-    </div>
+    </footer>
 </div>
 <!-- OVERLAY DIVISION -->
 <script type="text/javascript">

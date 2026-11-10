@@ -1,11 +1,457 @@
-/* Iron Armada branding overrides for the outgame (login/register) pages.
-   Loaded last from resources/css/outgame.css so the original hashed OGame
-   stylesheets stay untouched. The #start background (cover, 1x/2x) is set in
-   the base outgame stylesheet. */
+/* Iron Armada outgame (login / register) design.
+   Loaded last from resources/css/outgame.css. The legacy hashed OGame stylesheets
+   are still imported before this one because the overlay pages (legal, rules, ...)
+   and fancybox rely on them, so every rule here is scoped to .ia-page / body.ia and
+   written to win over the legacy element selectors (h1, h2, p, a:link, ...). */
 
-/* The original background had the game logo baked into it; the new one does not,
-   so the logo is drawn on the existing #header h1 link (260x80 slot). */
-#header h1 a {
-    background: url("/img/iron-armada/logo-iron-armada.png") no-repeat left center;
-    background-size: contain;
+@font-face {
+    font-family: "Barlow Condensed";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/barlow/barlow-condensed-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Barlow Condensed";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("/fonts/barlow/barlow-condensed-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Barlow";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/barlow/barlow-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Barlow";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("/fonts/barlow/barlow-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Barlow";
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url("/fonts/barlow/barlow-latin-600-normal.woff2") format("woff2");
+}
+
+body.ia {
+    --hull-950: #070a0e;
+    --hull-900: #0c1218;
+    --hull-800: #141d25;
+    --seam: #243543;
+    --steel-500: #3a7fb4;
+    --steel-300: #8fb3d1;
+    --amber-500: #d18533;
+    --amber-300: #e7b15a;
+    --ink: #e8eff6;
+    --ink-soft: #b7c5d3;
+    --ink-mute: #8a9bab;
+    --art-y: calc(12vh + 3vw);
+    --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+    --body: "Barlow", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+    height: auto;
+    min-height: 100%;
+    margin: 0;
+    color: var(--ink-soft);
+    font: 400 17px/1.5 var(--body);
+    background-color: var(--hull-950);
+    background-repeat: no-repeat;
+    background-position: center top, center var(--art-y);
+    background-size: 100% 100%, cover;
+    background-attachment: fixed;
+    background-image: linear-gradient(180deg, #070a0e 0, #070a0e var(--art-y), rgba(7, 10, 14, 0) calc(var(--art-y) + 170px)), url("/img/iron-armada/login-background.jpg");
+    background-image: linear-gradient(180deg, #070a0e 0, #070a0e var(--art-y), rgba(7, 10, 14, 0) calc(var(--art-y) + 170px)), -webkit-image-set(url("/img/iron-armada/login-background.jpg") 1x, url("/img/iron-armada/login-background@2x.jpg") 2x);
+    background-image: linear-gradient(180deg, #070a0e 0, #070a0e var(--art-y), rgba(7, 10, 14, 0) calc(var(--art-y) + 170px)), image-set(url("/img/iron-armada/login-background.jpg") 1x, url("/img/iron-armada/login-background@2x.jpg") 2x);
+}
+html:has(body.ia) {
+    background: #070a0e;
+}
+
+.ia-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+}
+.ia-page *,
+.ia-page *::before,
+.ia-page *::after {
+    box-sizing: border-box;
+}
+
+/* links: beat the legacy a:link / a:visited / a:hover rules */
+.ia-page a,
+.ia-page a:link,
+.ia-page a:visited {
+    color: var(--steel-300);
+    font-weight: 500;
+    text-decoration: none;
+}
+.ia-page a:hover,
+.ia-page a:active {
+    color: var(--amber-300);
+    text-decoration: underline;
+    top: 0;
+}
+.ia-page a:focus-visible,
+.ia-page button:focus-visible {
+    outline: 2px solid var(--amber-300);
+    outline-offset: 3px;
+}
+
+.ia-skip {
+    position: absolute;
+    left: 12px;
+    top: -60px;
+    z-index: 10;
+    padding: 10px 16px;
+    background: var(--amber-300);
+    color: #1a1006;
+    font: 600 16px var(--body);
+}
+.ia-skip:focus {
+    top: 12px;
+}
+
+/* header */
+.ia-header {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 20px clamp(20px, 4vw, 56px) 0;
+}
+.ia-brand {
+    display: inline-block;
+    line-height: 0;
+}
+.ia-brand img {
+    display: block;
+    width: auto;
+    height: 64px;
+}
+
+/* hero */
+.ia-main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+.ia-hero {
+    display: grid;
+    flex: 1;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 430px);
+    gap: clamp(24px, 6vw, 112px);
+    align-items: start;
+    min-height: calc(100vh - 110px);
+    min-height: calc(100svh - 110px);
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: clamp(24px, 5vh, 64px) clamp(20px, 4vw, 56px) clamp(48px, 9vh, 120px);
+}
+.ia-hero-copy {
+    position: relative;
+    isolation: isolate;
+}
+.ia-hero-copy::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -30px -80px -50px -140px;
+    background: radial-gradient(ellipse at 38% 50%, rgba(7, 10, 14, 0.78), rgba(7, 10, 14, 0) 72%);
+    pointer-events: none;
+}
+.ia-hero-copy h1 {
+    float: none;
+    width: auto;
+    height: auto;
+    max-width: 9em;
+    margin: 0;
+    color: #f2f6fa;
+    font: 700 clamp(52px, 7.2vw, 108px)/0.92 var(--display);
+    letter-spacing: -0.005em;
+    text-shadow: 0 2px 28px rgba(0, 0, 0, 0.7);
+    text-wrap: balance;
+}
+.ia-hero-copy p {
+    max-width: 28em;
+    margin: 22px 0 0;
+    text-wrap: pretty;
+    color: var(--ink-soft);
+    font: 500 clamp(17px, 1.4vw, 20px)/1.5 var(--body);
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.8);
+}
+
+/* the armour plate (sign in / create account) */
+.ia-plate {
+    align-self: center;
+    padding: 1px;
+    background: linear-gradient(160deg, #3d5a73, #1f2f3d 55%, #2c4357);
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.55));
+}
+.ia-plate-inner {
+    position: relative;
+    background: linear-gradient(180deg, rgba(20, 29, 37, 0.96), rgba(10, 16, 22, 0.97));
+    clip-path: polygon(0 0, calc(100% - 29px) 0, 100% 29px, 100% 100%, 29px 100%, 0 calc(100% - 29px));
+}
+.ia-plate-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--amber-500), var(--amber-300) 60%, var(--amber-500));
+    transform-origin: left center;
+    animation: ia-seam 1.1s 0.25s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes ia-seam {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.ia-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 3px;
+    border-bottom: 1px solid var(--seam);
+}
+.ia-tabs button {
+    margin: 0;
+    padding: 18px 12px 15px;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--ink-mute);
+    font: 600 23px/1 var(--display);
+    letter-spacing: 0.01em;
+    cursor: pointer;
+}
+.ia-tabs button:hover {
+    color: var(--ink);
+}
+.ia-tabs button[aria-selected="true"] {
+    color: #f2f6fa;
+    box-shadow: inset 0 -3px 0 var(--amber-500);
+}
+.ia-tabs button:focus-visible {
+    outline-offset: -4px;
+}
+
+.ia-panel {
+    padding: 26px 30px 34px;
+}
+.ia-panel[hidden] {
+    display: none;
+}
+
+.ia-field {
+    margin: 0 0 18px;
+}
+.ia-field label {
+    display: block;
+    width: auto;
+    margin: 0 0 6px;
+    padding: 0;
+    background: none;
+    color: var(--ink-soft);
+    font: 600 15px/1.2 var(--body);
+}
+.ia-field input,
+.ia-field select {
+    display: block;
+    width: 100%;
+    height: 48px;
+    margin: 0;
+    padding: 0 14px;
+    border: 1px solid #2b3d4d;
+    border-radius: 2px;
+    background: #091017;
+    color: var(--ink);
+    font: 500 17px/1 var(--body);
+    color-scheme: dark;
+}
+.ia-field input:hover,
+.ia-field select:hover {
+    border-color: #3f5a72;
+}
+.ia-field input:focus,
+.ia-field select:focus {
+    border-color: var(--amber-300);
+    outline: 2px solid var(--amber-300);
+    outline-offset: 1px;
+}
+.ia-hint {
+    display: block;
+    margin-top: 6px;
+    color: var(--ink-mute);
+    font-size: 14px;
+}
+
+.ia-submit {
+    display: block;
+    width: 100%;
+    height: 52px;
+    margin: 26px 0 0;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--amber-300), var(--amber-500));
+    color: #1a1006;
+    font: 700 24px/1 var(--display);
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+.ia-submit:hover {
+    filter: brightness(1.08);
+}
+.ia-submit:active {
+    transform: translateY(1px);
+}
+
+.ia-terms {
+    margin: 16px 0 0;
+    color: var(--ink-mute);
+    font-size: 14px;
+    line-height: 1.45;
+}
+.ia-alert {
+    margin: 0 0 18px;
+    padding: 10px 14px;
+    border-left: 3px solid #e0594d;
+    background: rgba(224, 89, 77, 0.14);
+    color: #ffd9d4;
+    font: 500 15px/1.4 var(--body);
+}
+
+/* how the game works: three plain statements, not cards */
+.ia-loop {
+    border-top: 1px solid var(--seam);
+    background: var(--hull-900);
+}
+.ia-loop-inner {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(24px, 4vw, 64px);
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: clamp(36px, 6vw, 72px) clamp(20px, 4vw, 56px);
+}
+.ia-loop-item {
+    padding-left: 20px;
+    border-left: 2px solid var(--steel-500);
+}
+.ia-loop-item h2 {
+    height: auto;
+    margin: 0 0 8px;
+    color: #f2f6fa;
+    font: 600 32px/1.1 var(--display);
+    text-shadow: none;
+}
+.ia-loop-item p {
+    max-width: 36ch;
+    margin: 0;
+    color: #a9b9c8;
+    font-size: 17px;
+    line-height: 1.55;
+}
+
+/* footer */
+.ia-footer {
+    border-top: 1px solid var(--seam);
+    background: var(--hull-950);
+}
+.ia-footer-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 14px 40px;
+    align-items: center;
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 28px clamp(20px, 4vw, 56px) 32px;
+    font-size: 15px;
+}
+.ia-footer-links,
+.ia-footer-langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+}
+.ia-footer-langs {
+    justify-content: flex-end;
+}
+.ia-footer-langs a[aria-current="true"] {
+    color: #f2f6fa;
+    font-weight: 600;
+}
+.ia-footer-brand {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    align-items: center;
+}
+.ia-archon {
+    line-height: 0;
+}
+.ia-archon img {
+    display: block;
+    width: auto;
+    height: 44px;
+}
+.ia-copyright {
+    grid-column: 1 / -1;
+    margin: 6px 0 0;
+    color: #7a8c9d;
+    font-size: 13.5px;
+    line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+    body.ia {
+        background-attachment: scroll;
+        --art-y: 20vh;
+        background-position: center top, 22% 22vh;
+        background-size: 100% 100%, auto 62vh;
+    }
+    .ia-brand img {
+        height: 52px;
+    }
+    .ia-hero {
+        grid-template-columns: minmax(0, 1fr);
+        min-height: 0;
+        padding-top: 20px;
+    }
+    .ia-plate {
+        align-self: stretch;
+    }
+    .ia-loop-inner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .ia-footer-inner {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .ia-footer-langs {
+        justify-content: flex-start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ia-plate-inner::before {
+        animation: none;
+    }
+    .ia-submit:active {
+        transform: none;
+    }
 }

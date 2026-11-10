@@ -54,6 +54,36 @@ return [
         'description_html' => '<em>Iron Armada</em> is a private space strategy game for a small crew of commanders. Build mines, research tech, raise a fleet and take the galaxy. Fast universe, no pay-to-win, no dark matter shop. You only need a web browser to play.',
         'board_btn'        => 'Board',
         'trailer_title'    => 'Trailer',
+        'skip_link'        => 'Skip to log in',
+        'footer_nav'       => 'Legal',
+        'language_nav'     => 'Language',
+        'hero_title'       => 'Build the yard. Launch the fleet.',
+        'hero_text'        => 'Iron Armada is a private space strategy game for a small crew. Mine resources, research better hulls and take the galaxy one system at a time.',
+        'tabs_label'       => 'Account',
+        'tab_login'        => 'Log in',
+        'tab_register'     => 'Create account',
+        'field_email'      => 'Email',
+        'field_password'   => 'Password',
+        'field_universe'   => 'Universe',
+        'password_hint'    => 'At least 8 characters.',
+        'login_submit'     => 'Log in',
+        'register_submit'  => 'Create account',
+        'register_terms_html' => 'By creating an account you accept the <a class="overlay" data-type="ajax" href="/ajax/main/terms">T&amp;Cs</a> and <a class="overlay" data-type="ajax" href="/ajax/main/privacy-policy">Privacy Policy</a>.',
+        'loop_label'       => 'How the game works',
+        'loop' => [
+            'mine' => [
+                'title' => 'Mine',
+                'text'  => 'Metal, crystal and deuterium pay for everything. Build your mines first and keep the power on.',
+            ],
+            'research' => [
+                'title' => 'Research',
+                'text'  => 'Sharper weapons, thicker armour and faster drives. Every upgrade changes what your fleet can do.',
+            ],
+            'fight' => [
+                'title' => 'Fight',
+                'text'  => 'Raid your neighbours, defend your colonies and recycle the debris. Fleets fly in real time.',
+            ],
+        ],
     ],
 
     // Archon Tech links (edit URLs here)
