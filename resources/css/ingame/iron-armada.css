@@ -14,3 +14,18 @@
 #siteFooter .fleft {
     max-width: none;
 }
+
+/* Header: the original header image has the game logo baked in. Use a copy with that
+   area cleared (public/img/iron-armada/header-top.png) and draw our logo on the
+   existing #pageReloader hotspot instead. */
+#top {
+    background-image: url("/img/iron-armada/header-top.png");
+}
+
+#pageReloader {
+    width: 205px;
+    height: 60px;
+    top: 33px;
+    background: url("/img/iron-armada/logo-iron-armada.png") no-repeat left center;
+    background-size: contain;
+}
