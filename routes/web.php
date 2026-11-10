@@ -26,11 +26,9 @@ use OGame\Http\Controllers\MessagesController;
 use OGame\Http\Controllers\NotesController;
 use OGame\Http\Controllers\OptionsController;
 use OGame\Http\Controllers\OverviewController;
-use OGame\Http\Controllers\PaymentController;
 use OGame\Http\Controllers\PhalanxController;
 use OGame\Http\Controllers\PlanetAbandonController;
 use OGame\Http\Controllers\PlanetMoveController;
-use OGame\Http\Controllers\PremiumController;
 use OGame\Http\Controllers\ResearchController;
 use OGame\Http\Controllers\ResourcesController;
 use OGame\Http\Controllers\RewardsController;
@@ -38,7 +36,6 @@ use OGame\Http\Controllers\RulesController;
 use OGame\Http\Controllers\SearchController;
 use OGame\Http\Controllers\ServerSettingsController;
 use OGame\Http\Controllers\ShipyardController;
-use OGame\Http\Controllers\ShopController;
 use OGame\Http\Controllers\TechtreeController;
 
 /*
@@ -200,8 +197,6 @@ Route::middleware(['auth', 'banned', 'globalgame', 'locale', 'firstlogin'])->gro
     Route::post('/alliance/members/assign-rank', [AllianceController::class, 'assignRankAction'])->name('alliance.members.assign-rank');
     Route::post('/alliance/text/update', [AllianceController::class, 'updateAllianceText'])->name('alliance.text.update');
 
-    Route::get('/premium', [PremiumController::class, 'index'])->name('premium.index');
-    Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 
     // Character Class
     Route::get('/characterclass', [CharacterClassController::class, 'index'])->name('characterclass.index');
@@ -252,8 +247,6 @@ Route::middleware(['auth', 'banned', 'globalgame', 'locale', 'firstlogin'])->gro
     Route::get('/overlay/changenick', [ChangeNickController::class, 'overlay'])->name('changenick.overlay');
     Route::post('ajax/changenick/rename', [ChangeNickController::class, 'rename'])->name('changenick.rename');
 
-    Route::get('/overlay/payment', [PaymentController::class, 'overlay'])->name('payment.overlay');
-    Route::get('/overlay/payment/iframe', [PaymentController::class, 'iframe'])->name('payment.iframesrc');
 
     Route::get('/overlay/server-settings', [ServerSettingsController::class, 'overlay'])->name('serversettings.overlay');
 });

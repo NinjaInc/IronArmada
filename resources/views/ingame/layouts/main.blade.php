@@ -722,7 +722,7 @@
                 var timerHandler = new TimerHandler();
 
                 function redirectPremium() {
-                    location.href = "{{ route('premium.index', ['showDarkMatter' => 1]) }}#TODO_premium&showDarkMatter=1";
+                    // Premium / shop is not offered on this server.
                 }
 
                 var playerId = "{{ $currentPlayer->getId() }}";

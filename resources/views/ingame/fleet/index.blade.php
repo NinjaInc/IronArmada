@@ -838,7 +838,7 @@
                                        type="radio" name="tacticalRetreat" value="3" {{ ($tacticalRetreatRatio ?? 5) === 3 ? 'checked' : '' }}> 3:1
 @else
                                 <input type="radio" disabled="disabled" name="tacticalRetreat">
-                                <a href="{{ route('premium.index', ['openDetail' => '3']) }}"
+                                <a href="#"
                                    class="disabled tooltipHTML"
                                    title="{{ __('t_ingame.fleet.tactical_retreat_admiral_tooltip') }}">
                                     3:1

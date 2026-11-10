@@ -18,6 +18,9 @@ body#ingamepage, body#ingamepage * { --ia-hull0:#070a0e; --ia-hull1:#0c1218; --i
 body#ingamepage { font-family: "Barlow", system-ui, sans-serif; color: var(--ia-ink2); background-color: var(--ia-hull0); }
 body#ingamepage::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
     background: linear-gradient(180deg, rgba(7,10,14,.55) 0%, rgba(7,10,14,.2) 40%, rgba(7,10,14,.6) 100%); }
+/* backdrop covers any viewport (ultrawide included) instead of sitting at its native size */
+html { background: #000; }
+body#ingamepage { background-size: cover !important; background-attachment: fixed !important; background-position: 50% 0 !important; background-repeat: no-repeat !important; }
 body#ingamepage a { color: var(--ia-steel-hi); }
 body#ingamepage a:hover { color: var(--ia-amber-hi); }
 body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-offset: 2px; }

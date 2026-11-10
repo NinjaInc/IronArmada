@@ -372,7 +372,7 @@
     $(".build-it_disabled:not(.isWorking)")
         .click(function () {
             errorBoxDecision(@json(__('t_ingame.ajax_object.error')), @json(__('t_ingame.ajax_object.commander_queue_info')), @json(__('t_ingame.shared.yes')), @json(__('t_ingame.shared.no')), function () {
-                window.location.href = '{{ route('premium.index', ['openDetail' => 2]) }}'
+                // Commander / premium is not offered on this server.
             });
         });
 

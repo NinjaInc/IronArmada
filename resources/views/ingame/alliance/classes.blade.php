@@ -8,7 +8,7 @@
             {{-- Warriors Class --}}
             <div class="allianceclass box" data-alliance-class-id="1" data-alliance-class-name="{{ __('t_ingame.alliance.class_warriors') }}" data-alliance-class-price="400000">
                 <div class="buttons">
-                    <a class="build-it_disabled tooltip js_hideTipOnMobile nodarkmatter" rel="{{ route('premium.index') }}" data-tooltip-title="{{ __('t_ingame.alliance.no_dark_matter') }}">
+                    <a class="build-it_disabled tooltip js_hideTipOnMobile nodarkmatter" rel="#" data-tooltip-title="{{ __('t_ingame.alliance.no_dark_matter') }}">
                         <span>{{ __('t_ingame.alliance.buy_for') }}<br>400,000 DM</span>
                     </a>
                 </div>
@@ -27,7 +27,7 @@
             {{-- Traders Class --}}
             <div class="allianceclass box" data-alliance-class-id="2" data-alliance-class-name="{{ __('t_ingame.alliance.class_traders') }}" data-alliance-class-price="400000">
                 <div class="buttons">
-                    <a class="build-it_disabled tooltip js_hideTipOnMobile nodarkmatter" rel="{{ route('premium.index') }}" data-tooltip-title="{{ __('t_ingame.alliance.no_dark_matter') }}">
+                    <a class="build-it_disabled tooltip js_hideTipOnMobile nodarkmatter" rel="#" data-tooltip-title="{{ __('t_ingame.alliance.no_dark_matter') }}">
                         <span>{{ __('t_ingame.alliance.buy_for') }}<br>400,000 DM</span>
                     </a>
                 </div>
@@ -47,7 +47,7 @@
             {{-- Researchers Class --}}
             <div class="allianceclass box" data-alliance-class-id="3" data-alliance-class-name="{{ __('t_ingame.alliance.class_researchers') }}" data-alliance-class-price="400000">
                 <div class="buttons">
-                    <a class="build-it_disabled tooltip js_hideTipOnMobile nodarkmatter" rel="{{ route('premium.index') }}" data-tooltip-title="{{ __('t_ingame.alliance.no_dark_matter') }}">
+                    <a class="build-it_disabled tooltip js_hideTipOnMobile nodarkmatter" rel="#" data-tooltip-title="{{ __('t_ingame.alliance.no_dark_matter') }}">
                         <span>{{ __('t_ingame.alliance.buy_for') }}<br>400,000 DM</span>
                     </a>
                 </div>
