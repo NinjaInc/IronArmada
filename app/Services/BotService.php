@@ -20,8 +20,7 @@ use Throwable;
  * (random password, placeholder email). Every few minutes the scheduler calls runDueBots(),
  * which makes each due bot play one "turn" through the same queue services human players use.
  *
- * Phase 1 (this file): economy, research, ship and defense building.
- * Phase 2 (later): fleet missions (raiding, expeditions, colonising).
+ * Economy, research, ship and defense building live here; colonising and raiding live in BotFleetService.
  */
 class BotService
 {
@@ -248,6 +247,9 @@ class BotService
 
             $this->manageUnits($planet, $personality, (float)$difficulty['unit_spend']);
         }
+
+        // Fleet actions (colonising, raiding) once the economy has been looked after.
+        app(BotFleetService::class)->takeTurn($bot, $player, $personality);
     }
 
     /**

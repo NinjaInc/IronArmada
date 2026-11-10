@@ -32,10 +32,59 @@
                             <label class="styled textBeefy">{{ __('t_ingame.bots.global_enabled') }}</label>
                             <div class="thefield">
                                 <input type="checkbox" name="bots_enabled" value="1" {{ $bots_enabled ? 'checked' : '' }}>
-                                <input type="submit" class="btn_blue" value="{{ __('t_ingame.bots.save_global') }}">
                             </div>
                         </div>
+                        <div class="fieldwrapper">
+                            <label class="styled textBeefy">{{ __('t_ingame.bots.colonise_enabled') }}</label>
+                            <div class="thefield"><input type="checkbox" name="bots_colonise_enabled" value="1" {{ $bots_colonise_enabled ? 'checked' : '' }}></div>
+                        </div>
+                        <div class="fieldwrapper">
+                            <label class="styled textBeefy">{{ __('t_ingame.bots.raid_enabled') }}</label>
+                            <div class="thefield"><input type="checkbox" name="bots_raid_enabled" value="1" {{ $bots_raid_enabled ? 'checked' : '' }}></div>
+                        </div>
+                        <div class="fieldwrapper">
+                            <label class="styled textBeefy">{{ __('t_ingame.bots.raid_players') }}</label>
+                            <div class="thefield"><input type="checkbox" name="bots_raid_players" value="1" {{ $bots_raid_players ? 'checked' : '' }}></div>
+                        </div>
+                        <div class="fieldwrapper"><div class="thefield"><input type="submit" class="btn_blue" value="{{ __('t_ingame.bots.save_global') }}"></div></div>
                     </form>
+
+                    <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.bots.report_title') }}</p>
+                    <p class="textCenter">
+                        {{ __('t_ingame.bots.stat_bots') }}: {{ $stats['bots'] }} |
+                        {{ __('t_ingame.bots.stat_colonies') }}: {{ $stats['colonies'] }} |
+                        {{ __('t_ingame.bots.stat_raids') }}: {{ $stats['raids_24h'] }} ({{ __('t_ingame.bots.stat_raids_players') }}: {{ $stats['raids_players_24h'] }}) |
+                        {{ __('t_ingame.bots.stat_colonisations') }}: {{ $stats['colonisations_24h'] }}
+                    </p>
+                    <p class="textCenter">
+                        @foreach ($stats['by_personality'] as $name => $count)
+                            {{ __('t_ingame.bots.personality_' . $name) }}: {{ $count }}@if (!$loop->last) | @endif
+                        @endforeach
+                    </p>
+                    @if (count($raid_log) === 0)
+                        <p class="textCenter">{{ __('t_ingame.bots.raid_log_none') }}</p>
+                    @else
+                        <table class="members bborder" style="width:100%;">
+                            <thead><tr>
+                                <th>{{ __('t_ingame.bots.raid_time') }}</th><th>{{ __('t_ingame.bots.raid_attacker') }}</th>
+                                <th>{{ __('t_ingame.bots.raid_target') }}</th><th>{{ __('t_ingame.bots.raid_owner') }}</th>
+                                <th>{{ __('t_ingame.bots.raid_ships') }}</th><th>{{ __('t_ingame.bots.raid_state') }}</th>
+                            </tr></thead>
+                            <tbody>
+                            @foreach ($raid_log as $raid)
+                                <tr>
+                                    <td>{{ date('Y-m-d H:i', $raid['time']) }}</td>
+                                    <td>{{ $raid['attacker'] }}</td>
+                                    <td>{{ $raid['target'] }}</td>
+                                    <td>{{ $raid['owner'] }}@if (!$raid['target_is_bot']) <b>*</b>@endif</td>
+                                    <td>{{ number_format($raid['ships']) }}</td>
+                                    <td>{{ $raid['done'] ? __('t_ingame.bots.raid_done') : __('t_ingame.bots.raid_flying') }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                        <p class="textCenter">* {{ __('t_ingame.bots.raid_real_player') }}</p>
+                    @endif
 
                     <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.bots.pirates_title') }}</p>
                     <p class="textCenter">{{ __('t_ingame.bots.pirates_hint') }}</p>

@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use InvalidArgumentException;
 use OGame\Http\Controllers\OGameController;
+use OGame\Models\FleetMission;
+use OGame\Models\Planet;
 use OGame\Models\User;
+use OGame\Services\BotFleetService;
 use OGame\Services\BotService;
 use OGame\Services\PirateService;
 use OGame\Services\SettingsService;
@@ -18,14 +21,52 @@ class BotsController extends OGameController
     /**
      * Shows the bot administration page.
      */
-    public function index(BotService $botService, PirateService $pirateService): View
+    public function index(BotService $botService, PirateService $pirateService, BotFleetService $botFleetService): View
     {
         $bots = User::with('highscore')
             ->where('is_bot', true)
             ->orderBy('id')
             ->get();
 
+        $botIds = $bots->pluck('id')->all();
+        $now = time();
+
+        $raids = FleetMission::with(['planetFrom', 'planetTo'])
+            ->where('mission_type', 1)
+            ->whereIn('user_id', $botIds)
+            ->orderByDesc('time_departure')
+            ->limit(25)
+            ->get();
+        $targetOwners = User::whereIn('id', $raids->map(fn (FleetMission $m) => $m->planetTo?->user_id)->filter()->unique()->all())
+            ->pluck('username', 'id');
+        $attackers = $bots->pluck('username', 'id');
+
+        $raidLog = $raids->map(fn (FleetMission $m) => [
+            'time' => $m->time_departure,
+            'attacker' => $attackers[$m->user_id] ?? ('#' . $m->user_id),
+            'target' => ($m->planetTo?->name ?? '?') . ' [' . $m->galaxy_to . ':' . $m->system_to . ':' . $m->position_to . ']',
+            'owner' => $targetOwners[$m->planetTo?->user_id] ?? '?',
+            'target_is_bot' => in_array($m->planetTo?->user_id, $botIds, true),
+            'ships' => (int)($m->light_fighter + $m->heavy_fighter + $m->cruiser + $m->battle_ship + $m->battlecruiser + $m->bomber + $m->destroyer + $m->deathstar),
+            'done' => (bool)$m->processed,
+        ])->all();
+
+        $stats = [
+            'bots' => $bots->count(),
+            'colonies' => Planet::whereIn('user_id', $botIds)->where('planet_type', 1)->count(),
+            'raids_24h' => FleetMission::where('mission_type', 1)->whereIn('user_id', $botIds)->where('time_departure', '>=', $now - 86400)->count(),
+            'raids_players_24h' => FleetMission::where('mission_type', 1)->whereIn('user_id', $botIds)->where('time_departure', '>=', $now - 86400)
+                ->whereHas('planetTo', fn ($q) => $q->whereNotIn('user_id', $botIds))->count(),
+            'colonisations_24h' => FleetMission::where('mission_type', 7)->whereIn('user_id', $botIds)->where('time_departure', '>=', $now - 86400)->count(),
+            'by_personality' => $bots->groupBy(fn (User $b) => $b->bot_personality ?? 'balanced')->map->count()->all(),
+        ];
+
         return view('ingame.admin.bots')->with([
+            'raid_log' => $raidLog,
+            'stats' => $stats,
+            'bots_colonise_enabled' => $botFleetService->coloniseEnabled(),
+            'bots_raid_enabled' => $botFleetService->raidEnabled(),
+            'bots_raid_players' => $botFleetService->raidPlayersEnabled(),
             'bots' => $bots,
             'bots_enabled' => $botService->isEnabled(),
             'personalities' => BotService::PERSONALITIES,
@@ -40,9 +81,12 @@ class BotsController extends OGameController
     /**
      * Global on/off switch.
      */
-    public function saveGlobal(Request $request, BotService $botService): RedirectResponse
+    public function saveGlobal(Request $request, BotService $botService, SettingsService $settings): RedirectResponse
     {
         $botService->setEnabled($request->boolean('bots_enabled'));
+        foreach (['bots_colonise_enabled', 'bots_raid_enabled', 'bots_raid_players'] as $key) {
+            $settings->set($key, $request->boolean($key) ? 1 : 0);
+        }
 
         return redirect()->route('admin.bots.index')->with('status', __('t_ingame.bots.global_saved'));
     }
