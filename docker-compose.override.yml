@@ -1,0 +1,36 @@
+# Iron Armada deployment overrides. docker-compose.prod.yml is intentionally left untouched.
+#
+# NOTE: `docker compose -f docker-compose.prod.yml ...` does NOT auto-load this file.
+# Either pass both files:  docker compose -f docker-compose.prod.yml -f docker-compose.override.yml ...
+# or rely on COMPOSE_FILE in .env (already set), then plain `docker compose ...` works.
+
+services:
+  ogamex-db:
+    # No host port is published for the DB in prod.yml; nothing to reset here.
+    # Root password comes from .env (DB_PASSWORD) instead of the hardcoded "toor".
+    # Only takes effect when the DB volume is first initialised.
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD must be set in .env}
+
+  ogamex-webserver:
+    ports: !reset []
+    networks:
+      - app-network
+      - cloudflared
+
+  ogamex-reverb:
+    ports: !reset []
+    networks:
+      - app-network
+      - cloudflared
+
+  # phpMyAdmin: no host port and NOT attached to the cloudflared network,
+  # so it is unreachable from the host LAN and from the tunnel.
+  # Use `docker compose exec ogamex-db mariadb ...` for DB access.
+  ogamex-phpmyadmin:
+    ports: !reset []
+
+networks:
+  cloudflared:
+    external: true
+    name: cloudflared_default
