@@ -1,4 +1,4 @@
-# Iron Armada deployment overrides. docker-compose.prod.yml is intentionally left untouched.
+# Iron Armada deployment overrides. Host ports: game 8280, websocket 8290 (DB and phpMyAdmin stay unpublished). docker-compose.prod.yml is intentionally left untouched.
 #
 # NOTE: `docker compose -f docker-compose.prod.yml ...` does NOT auto-load this file.
 # Either pass both files:  docker compose -f docker-compose.prod.yml -f docker-compose.override.yml ...
@@ -13,13 +13,17 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD must be set in .env}
 
   ogamex-webserver:
-    ports: !reset []
+    # Published on a free host port so the Cloudflare tunnel can target <host-ip>:8280.
+    # !override replaces prod.yml's 80/443 mappings instead of appending to them.
+    ports: !override
+      - "8280:80"
     networks:
       - app-network
       - cloudflared
 
   ogamex-reverb:
-    ports: !reset []
+    ports: !override
+      - "8290:8090"
     networks:
       - app-network
       - cloudflared
