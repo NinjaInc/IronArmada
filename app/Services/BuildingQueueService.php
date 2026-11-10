@@ -133,11 +133,23 @@ class BuildingQueueService
             }
         }
 
+        // Reserve the resources now, so anything that is affordable can be queued, not just what is
+        // affordable when its turn comes. Refunded again when the item is canceled.
+        $reserved_price = ObjectService::getObjectRawPrice($building->machine_name, $next_level);
+        try {
+            $planet->deductResources($reserved_price);
+        } catch (RuntimeException $e) {
+            throw new Exception('Not enough resources to queue this building.');
+        }
+
         $queue = new BuildingQueue();
         $queue->planet_id = $planet->getPlanetId();
         $queue->object_id = $building->id;
         $queue->object_level_target = $next_level;
         $queue->is_downgrade = false; // Explicitly set to false for upgrades
+        $queue->metal = $reserved_price->metal->get();
+        $queue->crystal = $reserved_price->crystal->get();
+        $queue->deuterium = $reserved_price->deuterium->get();
 
         // Save the new queue item
         $queue->save();
@@ -428,13 +440,16 @@ class BuildingQueueService
                 }
             }
 
-            // Deduct resources
-            try {
-                $planet->deductResources($price);
-            } catch (RuntimeException $e) {
-                // Insufficient resources so we cancel the build request.
-                $this->cancel($planet, $queue_item->id, $queue_item->object_id);
-                continue;
+            // Deduct resources, unless they were already reserved when the item was queued.
+            $already_reserved = ($queue_item->metal + $queue_item->crystal + $queue_item->deuterium) > 0;
+            if (!$already_reserved) {
+                try {
+                    $planet->deductResources($price);
+                } catch (RuntimeException $e) {
+                    // Insufficient resources so we cancel the build request.
+                    $this->cancel($planet, $queue_item->id, $queue_item->object_id);
+                    continue;
+                }
             }
 
             if (!$time_start) {
@@ -480,8 +495,8 @@ class BuildingQueueService
 
         // If object is found: add canceled flag.
         if ($queue_item) {
-            // Give back resources if the current entry was already building.
-            if ($queue_item->building === 1) {
+            // Give back resources if the current entry was already building or had its resources reserved.
+            if ($queue_item->building === 1 || ($queue_item->metal + $queue_item->crystal + $queue_item->deuterium) > 0) {
                 $planet->addResources(new Resources($queue_item->metal, $queue_item->crystal, $queue_item->deuterium, 0));
             }
 

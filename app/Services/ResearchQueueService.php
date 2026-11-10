@@ -141,10 +141,21 @@ class ResearchQueueService
             throw new Exception('Requirements not met to build this object.');
         }
 
+        // Reserve the resources now, so anything that is affordable can be queued. Refunded on cancel.
+        $reserved_price = ObjectService::getObjectRawPrice($object->machine_name, $next_level);
+        try {
+            $planet->deductResources($reserved_price);
+        } catch (RuntimeException $e) {
+            throw new Exception('Not enough resources to queue this research.');
+        }
+
         $queue = new $this->model();
         $queue->planet_id = $planet->getPlanetId();
         $queue->object_id = $research_object_id;
         $queue->object_level_target = $next_level;
+        $queue->metal = $reserved_price->metal->get();
+        $queue->crystal = $reserved_price->crystal->get();
+        $queue->deuterium = $reserved_price->deuterium->get();
 
         // Save the new queue item
         $queue->save();
@@ -360,13 +371,16 @@ class ResearchQueueService
                 continue;
             }
 
-            // Deduct resources
-            try {
-                $planet->deductResources($price);
-            } catch (RuntimeException $e) {
-                // Insufficient resources so we cancel the research request.
-                $this->cancel($player, $queue_item->id, $queue_item->object_id);
-                continue;
+            // Deduct resources, unless they were already reserved when the item was queued.
+            $already_reserved = ($queue_item->metal + $queue_item->crystal + $queue_item->deuterium) > 0;
+            if (!$already_reserved) {
+                try {
+                    $planet->deductResources($price);
+                } catch (RuntimeException $e) {
+                    // Insufficient resources so we cancel the research request.
+                    $this->cancel($player, $queue_item->id, $queue_item->object_id);
+                    continue;
+                }
             }
 
             if (!$time_start) {
@@ -427,8 +441,8 @@ class ResearchQueueService
             // if user cancels research order for Energy Technology which is requirement
             // for Impulse Drive then Impulse Drive will also be canceled.
 
-            // Give back resources if the current entry was already building.
-            if ($queue_item->building === 1) {
+            // Give back resources if the current entry was already researching or had its resources reserved.
+            if ($queue_item->building === 1 || ($queue_item->metal + $queue_item->crystal + $queue_item->deuterium) > 0) {
                 $planet->addResources(new Resources($queue_item->metal, $queue_item->crystal, $queue_item->deuterium, 0));
             }
 
