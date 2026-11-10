@@ -347,3 +347,26 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 .ia-directive-state { font-size: 12px; color: var(--ia-ink3); }
 .ia-directive-reward .btn_blue { min-height: 30px; padding: 0 12px; cursor: pointer; }
 @media (max-width: 900px) { .ia-directives-balance { float: none; display: block; } .ia-directive { flex-wrap: wrap; } .ia-directive-reward { width: 100%; display: flex; align-items: center; justify-content: space-between; } }
+
+/* ---- Battle / espionage reports (message details) ---- */
+#messagedetails { font-family: "Barlow", sans-serif; color: var(--ia-ink2); }
+#messagedetails .detail_msg_head { background: linear-gradient(180deg, var(--ia-hull2), var(--ia-hull1)); border: 1px solid var(--ia-seam); border-top: 2px solid var(--ia-amber); border-radius: 2px; padding: 8px 10px; }
+#messagedetails .msg_title, #messagedetails .msg_title .middlemark { font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ia-ink) !important; }
+#messagedetails .msg_date, #messagedetails .msg_sender_label, #messagedetails .msg_sender { color: var(--ia-ink3); }
+#messagedetails .section_title, #messagedetails .title_txt { font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ia-steel-hi) !important; background: none; border-bottom: 1px solid var(--ia-seam-dim); }
+#messagedetails .detail_list, #messagedetails .detail_list_el, #messagedetails .common_info, #messagedetails .fightdetails { background: rgba(7,10,14,.55); border: 1px solid var(--ia-seam-dim); border-radius: 2px; color: var(--ia-ink2); }
+#messagedetails .detail_list_el:nth-child(even), #messagedetails .odd { background: rgba(20,29,37,.6); }
+#messagedetails .detail_shipname { color: var(--ia-ink); }
+#messagedetails .detail_shipslost, #messagedetails .lost_ships, #messagedetails .overmark { color: #e0603f !important; }
+#messagedetails .detail_shipsleft, #messagedetails .undermark { color: #6fcf97 !important; }
+#messagedetails .middlemark { color: var(--ia-amber-hi); }
+#messagedetails a.txt_link, #messagedetails .txt_link { color: var(--ia-steel-hi); }
+#messagedetails a.txt_link:hover { color: var(--ia-amber-hi); }
+
+@media (max-width: 900px) {
+    #messagedetails, #messagedetails .detailReport, #messagedetails .detail_msg_head { width: 100% !important; max-width: 100%; box-sizing: border-box; }
+    #messagedetails .detail_list, #messagedetails .common_info, #messagedetails .fightdetails, #messagedetails .detail_list_el { width: 100% !important; float: none !important; box-sizing: border-box; }
+    #messagedetails .c-left, #messagedetails .c-right { float: none !important; width: 100% !important; }
+    #messagedetails .detail_list_txt { white-space: normal; }
+    #messagedetails .markItUp, #messagedetails textarea { max-width: 100%; }
+}
