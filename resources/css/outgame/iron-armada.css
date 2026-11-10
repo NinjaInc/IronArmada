@@ -1,0 +1,11 @@
+/* Iron Armada branding overrides for the outgame (login/register) pages.
+   Loaded last from resources/css/outgame.css so the original hashed OGame
+   stylesheets stay untouched. The #start background (cover, 1x/2x) is set in
+   the base outgame stylesheet. */
+
+/* The original background had the game logo baked into it; the new one does not,
+   so the logo is drawn on the existing #header h1 link (260x80 slot). */
+#header h1 a {
+    background: url("/img/iron-armada/logo-iron-armada.png") no-repeat left center;
+    background-size: contain;
+}

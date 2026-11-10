@@ -21,7 +21,9 @@
     -->
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="apple-touch-icon" href="/img/icons/20da7e6c416e6cd5f8544a73f588e5.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/iron-armada/favicon-32.png"/>
+    <link rel="icon" href="/favicon.ico" sizes="any"/>
+    <link rel="apple-touch-icon" href="/img/iron-armada/icon-180.png"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="Language" content="en"/>
     <meta name="ogame-session" content="3c442273a6de4c8f79549e78f4c3ca50e7ea7580"/>
@@ -1856,15 +1858,6 @@ However, the Space Dock's engineers think that some of the remains can be salvag
                 </div>
             </div>
         </div>
-        <div id="bannerSkyscrapercomponent" class="">
-            <div id="banner_skyscraper" class="desktop" name="banner_skyscraper">
-                <div style="position: relative;">
-                    <a class="tooltipLeft " title="" href="#TODO=shop">
-                        <img src="/img/banners/de0dadddb0285ba78b026ce18fc898.jpg" alt="">
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -1891,8 +1884,7 @@ However, the Space Dock's engineers think that some of the remains can be salvag
             <a href="#TODO_changelog&ajax=1" class="tooltip js_hideTipOnMobile overlay" data-class="noXScrollbar"
                data-overlay-iframe="true" data-iframe-width="680" data-overlay-title="{{ __('t_ingame.layout.patch_notes') }}">
                 {{ \OGame\Facades\GitInfoUtil::getAppVersion() }}</a>
-            <a class="homeLink" href="https://github.com/lanedirt/ogamex" target="_blank">©
-                OGameX. {{ __('t_ingame.layout.all_rights_reserved') }}</a>
+            <a class="homeLink" href="https://github.com/lanedirt/ogamex" target="_blank">{{ __('t_ingame.layout.footer_notice') }}</a>
         </div>
         <div class="fright textRight">
             <a href="{{ route('serversettings.overlay') }}" class="overlay"

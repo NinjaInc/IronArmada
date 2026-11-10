@@ -1227,6 +1227,7 @@ return [
 
         // Footer
         'all_rights_reserved'       => 'All rights reserved.',
+        'footer_notice'             => 'Iron Armada · An Archon Tech project. Private fan project, not affiliated with GameForge or OGame. Based on OGameX (MIT licence).',
         'patch_notes'               => 'Patch notes',
         'server_settings'           => 'Server Settings',
         'help'                      => 'Help',

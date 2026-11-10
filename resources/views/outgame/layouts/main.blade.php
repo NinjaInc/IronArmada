@@ -34,7 +34,9 @@
     <meta name="Revisit" content="After 14 days"/>
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <link rel="apple-touch-icon" href="/img/outgame/20da7e6c416e6cd5f8544a73f588e5.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/iron-armada/favicon-32.png"/>
+    <link rel="icon" href="/favicon.ico" sizes="any"/>
+    <link rel="apple-touch-icon" href="/img/iron-armada/icon-180.png"/>
     @vite(['resources/css/outgame.css', 'resources/js/outgame.js'])
 
     <script type="text/javascript">

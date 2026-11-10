@@ -1,0 +1,16 @@
+/* Iron Armada branding overrides for the in-game pages.
+   Loaded last from resources/css/ingame.css; the original OGame stylesheets stay untouched. */
+
+/* The footer notice is longer than the original "(c) OGameX" text and was cut off by the
+   fixed 850px content box and the 435px left column. */
+#siteFooter .content,
+#empire #siteFooter .content {
+    width: auto;
+    max-width: 1400px;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+
+#siteFooter .fleft {
+    max-width: none;
+}
