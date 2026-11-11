@@ -11,13 +11,13 @@
    Palette: hull #070a0e/#0c1218/#141d25, seam #243543, steel #3a7fb4/#8fb3d1,
             amber #d18533/#e7b15a, ink #e8eff6/#b7c5d3/#8a9bab.
    ========================================================================== */
-body#ingamepage, body#ingamepage * { --ia-hull0:#070a0e; --ia-hull1:#0c1218; --ia-hull2:#141d25; --ia-seam:#3b6385; --ia-seam-dim:#243543;
+body#ingamepage, body#ingamepage * { --ia-hull0:#070a0e; --ia-hull1:#101a24; --ia-hull2:#182532; --ia-seam:#3b6385; --ia-seam-dim:#243543;
     --ia-steel:#3a7fb4; --ia-steel-hi:#8fb3d1; --ia-amber:#d18533; --ia-amber-hi:#e7b15a;
     --ia-ink:#e8eff6; --ia-ink2:#b7c5d3; --ia-ink3:#8a9bab; }
 
 body#ingamepage { font-family: "Barlow", system-ui, sans-serif; color: var(--ia-ink2); background-color: var(--ia-hull0); }
 body#ingamepage::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
-    background: linear-gradient(180deg, rgba(7,10,14,.55) 0%, rgba(7,10,14,.2) 40%, rgba(7,10,14,.6) 100%); }
+    background: linear-gradient(180deg, rgba(7,10,14,.3) 0%, rgba(7,10,14,.05) 40%, rgba(7,10,14,.35) 100%); }
 /* backdrop covers any viewport (ultrawide included) instead of sitting at its native size */
 html { background: #000; }
 body#ingamepage { background-size: cover !important; background-attachment: fixed !important; background-position: 50% 0 !important; background-repeat: no-repeat !important; }
@@ -388,3 +388,34 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     #resources .resource .value .overmark { color: #e0594a !important; }
     #resources .resource .value .middlemark { color: var(--ia-amber-hi) !important; }
 }
+
+
+/* ===== UI tidy pass 2: lighter panels, resource bar fit, galaxy rows, calmer disabled tiles ===== */
+#contentWrapper { background: rgba(14,22,31,.55); }
+#planetdata { background: rgba(10,16,23,.6) !important; }
+
+/* resource bar: the stock rule forces 9px Verdana, so beat its specificity and give the number room */
+#resourcesbarcomponent div#resources div.resource { height: 52px; }
+#resourcesbarcomponent div#resources div.resource .value,
+#resourcesbarcomponent div#resources div.resource .value span { font: 700 13px/15px "Barlow Condensed", sans-serif !important; letter-spacing: .02em; color: var(--ia-ink) !important; font-variant-numeric: tabular-nums; }
+#resourcesbarcomponent div#resources div.resource .value span.overmark { color: #e0594a !important; }
+#resourcesbarcomponent div#resources div.resource .value span.middlemark { color: var(--ia-amber-hi) !important; }
+#resourcesbarcomponent .resource_tile::after { bottom: -3px; }
+
+/* menu buttons: make the chrome obvious again */
+#links .leftmenu li a.menubutton, #links .leftmenu li a.menubutton:link, #links .leftmenu li a.menubutton:visited {
+    background: linear-gradient(180deg, #1d2d3b, var(--ia-hull2)) !important; border: 1px solid #3b6385 !important; border-left: 3px solid var(--ia-steel) !important; }
+#links .leftmenu li a.menubutton.selected, #links .leftmenu li a.menubutton.selected:link, #links .leftmenu li a.menubutton.selected:visited {
+    background: linear-gradient(180deg, #2a3a47, #1b2834) !important; border-left-color: var(--ia-amber-hi) !important; }
+#links .leftmenu a.menubutton .textlabel { color: var(--ia-ink) !important; }
+#links .leftmenu a.menubutton.selected .textlabel { color: var(--ia-amber-hi) !important; }
+
+/* galaxy: no more black slabs */
+#galaxyContent .galaxyRow { min-height: 30px; }
+#galaxyContent .ctContentRow .galaxyCell { background-color: rgba(22,34,46,.85); border: 1px solid rgba(59,99,133,.35); border-radius: 2px; color: var(--ia-ink2); font-size: 12px; }
+#galaxyContent .ctContentRow .cellPlanet, #galaxyContent .ctContentRow .cellMoon, #galaxyContent .ctContentRow .cellDebris, #galaxyContent .ctContentRow .cellAction { border: none; background: none; }
+#galaxyContent .ctContentRow:hover .galaxyCell:not(.cellPlanet):not(.cellMoon):not(.cellDebris):not(.cellAction) { background-color: rgba(30,46,62,.92); }
+
+/* disabled / unavailable tiles: readable instead of a loud orange hatch */
+.technology[data-status="disabled"] .icon::after { background: repeating-linear-gradient(-45deg, rgba(255,150,0,.12), rgba(255,150,0,.12) 2px, transparent 3px, transparent 8px) !important; }
+.technology[data-status="off"] .icon::after { background: rgba(0,0,0,.38) !important; }
