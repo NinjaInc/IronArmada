@@ -1826,6 +1826,7 @@ However, the Space Dock's engineers think that some of the remains can be salvag
     <div class="content" style="font-size:10px">
         <div class="fleft textLeft">
             <span>{{ \OGame\Facades\GitInfoUtil::getAppVersion() }}</span>
+            <a class="homeLink" href="{{ config('app.discord_invite') }}" target="_blank" rel="noopener">Discord</a> |
             <a class="homeLink" href="https://github.com/lanedirt/ogamex" target="_blank">{{ __('t_ingame.layout.footer_notice') }}</a>
         </div>
         <div class="fright textRight">

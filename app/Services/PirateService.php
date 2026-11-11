@@ -270,6 +270,9 @@ class PirateService
             return false;
         }
 
+        $targetPlayer = $target->getPlayer();
+        app(DiscordNotifier::class)->send(':skull_crossbones: Pirates are raiding **' . ($targetPlayer?->getUsername(false) ?? 'a commander') . '** at [' . $coordinate->asString() . ']');
+
         return true;
     }
 }

@@ -129,4 +129,7 @@ return [
      */
     'version' => '0.15.0',
     'discord_alert_webhook' => env('DISCORD_ALERT_WEBHOOK', false),
+
+    // Public community invite shown in the footers. The webhook itself must only ever live in .env.
+    'discord_invite' => env('DISCORD_INVITE_URL', 'https://discord.gg/sAqbt5taT'),
 ];

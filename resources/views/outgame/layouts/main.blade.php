@@ -176,6 +176,7 @@
                     <a href="{{ __('t_external.links.archon_tech_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_tech') }}</a>
                     <a href="{{ __('t_external.links.archon_hosting_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_hosting') }}</a>
                     <a href="{{ __('t_external.links.support_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.support') }}</a>
+                    <a href="{{ config('app.discord_invite') }}" target="_blank" rel="noopener">Discord</a>
                 </nav>
             </div>
             <p class="ia-copyright">{{ __('t_external.footer.copyright') }} {{ \OGame\Facades\GitInfoUtil::getAppVersion() }}</p>

@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use OGame\Models\User;
+use OGame\Services\DiscordNotifier;
 use OGame\Services\InitialUserDataService;
 use RuntimeException;
 
@@ -165,6 +166,8 @@ class CreateNewUser implements CreatesNewUsers
                 }
 
                 $this->initialUserDataService->createFor($user);
+
+                app(DiscordNotifier::class)->send(':satellite: New commander joined Iron Armada: **' . $user->username . '**');
 
                 return $user;
             } catch (Exception $e) {
