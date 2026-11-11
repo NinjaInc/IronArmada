@@ -40,7 +40,7 @@ class PirateTest extends IsolatedAccountTestCase
      */
     private function makeCurrentUserEligible(): User
     {
-        $user = User::findOrFail($this->planetService->getPlayer()->getId());
+        $user = User::findOrFail($this->currentUserId);
         $user->created_at = now()->subDays(30);
         $user->save();
 
@@ -74,7 +74,7 @@ class PirateTest extends IsolatedAccountTestCase
     public function testLowPointsPlayerIsProtected(): void
     {
         $this->makeCurrentUserEligible();
-        Highscore::where('player_id', $this->planetService->getPlayer()->getId())->update(['general' => 10]);
+        Highscore::where('player_id', $this->currentUserId)->update(['general' => 10]);
 
         $this->assertCurrentPlanetNotTargeted();
     }
@@ -101,6 +101,11 @@ class PirateTest extends IsolatedAccountTestCase
      */
     public function testPirateRaidIsRecordedAndPlayerGetsCooldown(): void
     {
+        // IsolatedAccountTestCase freezes the clock at 2024-01-01, but the cooldown query in PirateService
+        // compares mission departure times against the real time(). Use the real clock for this test so
+        // the raid that was just dispatched falls inside the cooldown window, as it does in production.
+        $this->travelBack();
+
         $this->makeCurrentUserEligible();
         $pirate = app(BotService::class)->createBot('pirate', 2);
         $pirate->bot_next_action_at = time() - 10;

@@ -154,10 +154,14 @@ class PirateService
 
             $planet = $homePlanets[array_rand($homePlanets)];
 
-            // Per-target cooldown.
+            // Per-player cooldown: a raid on any of the player's planets or moons protects all of them.
+            $ownedPlanetIds = [];
+            foreach ($targetPlayer->planets->allPlanets() as $ownedPlanet) {
+                $ownedPlanetIds[] = $ownedPlanet->getPlanetId();
+            }
             $recentlyRaided = FleetMission::where('mission_type', 1)
                 ->whereIn('user_id', $pirateIds)
-                ->where('planet_id_to', $planet->getPlanetId())
+                ->whereIn('planet_id_to', $ownedPlanetIds)
                 ->where('time_departure', '>=', time() - $cooldownSeconds)
                 ->exists();
             if ($recentlyRaided) {

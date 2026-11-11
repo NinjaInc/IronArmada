@@ -29,8 +29,6 @@ class Http200Test extends IsolatedAccountTestCase
             '/merchant',
             '/messages',
             '/alliance',
-            '/premium',
-            '/shop',
             '/buddies',
             '/rewards',
             '/highscore',

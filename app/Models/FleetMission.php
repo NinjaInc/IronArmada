@@ -110,7 +110,7 @@ class FleetMission extends Model
      */
     public function planetFrom(): BelongsTo
     {
-        return $this->belongsTo(Planet::class);
+        return $this->belongsTo(Planet::class, 'planet_id_from');
     }
 
     /**
@@ -118,7 +118,7 @@ class FleetMission extends Model
      */
     public function planetTo(): BelongsTo
     {
-        return $this->belongsTo(Planet::class);
+        return $this->belongsTo(Planet::class, 'planet_id_to');
     }
 
     /**
