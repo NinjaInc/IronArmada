@@ -198,7 +198,6 @@ Route::middleware(['auth', 'banned', 'globalgame', 'locale', 'firstlogin'])->gro
     Route::post('/alliance/members/assign-rank', [AllianceController::class, 'assignRankAction'])->name('alliance.members.assign-rank');
     Route::post('/alliance/text/update', [AllianceController::class, 'updateAllianceText'])->name('alliance.text.update');
 
-
     // Character Class
     Route::get('/characterclass', [CharacterClassController::class, 'index'])->name('characterclass.index');
     Route::post('/characterclass/select', [CharacterClassController::class, 'selectClass'])->name('characterclass.select');
@@ -249,7 +248,6 @@ Route::middleware(['auth', 'banned', 'globalgame', 'locale', 'firstlogin'])->gro
 
     Route::get('/overlay/changenick', [ChangeNickController::class, 'overlay'])->name('changenick.overlay');
     Route::post('ajax/changenick/rename', [ChangeNickController::class, 'rename'])->name('changenick.rename');
-
 
     Route::get('/overlay/server-settings', [ServerSettingsController::class, 'overlay'])->name('serversettings.overlay');
 });

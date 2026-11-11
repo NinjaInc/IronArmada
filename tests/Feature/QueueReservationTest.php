@@ -30,7 +30,7 @@ class QueueReservationTest extends IsolatedAccountTestCase
     public function testResourcesAreReservedWhenQueuing(): void
     {
         $this->planetAddResources(new Resources(100000, 100000, 100000, 0));
-        $before = Planet::find($this->currentPlanetId);
+        $before = Planet::findOrFail($this->currentPlanetId);
         $metalBefore = $before->metal;
 
         $queue = resolve(BuildingQueueService::class);
@@ -39,7 +39,7 @@ class QueueReservationTest extends IsolatedAccountTestCase
         $queue->add($this->planetService, $metalMine->id);
 
         $expected = ObjectService::getObjectRawPrice('metal_mine', 1)->metal->get() + ObjectService::getObjectRawPrice('metal_mine', 2)->metal->get();
-        $after = Planet::find($this->currentPlanetId);
+        $after = Planet::findOrFail($this->currentPlanetId);
 
         // Production over a few seconds can add a little metal, never remove it.
         $this->assertGreaterThanOrEqual($metalBefore - $expected, $after->metal);

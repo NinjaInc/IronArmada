@@ -1206,7 +1206,6 @@ return [
         'menu_directives'           => 'Directives',
         'menu_officers'             => 'Recruit Officers',
         'menu_shop'                 => 'Shop',
-        'menu_directives'           => 'Directives',
 
         // Menu sidebar — icon tooltip titles
         'menu_rewards_title'        => 'Rewards',

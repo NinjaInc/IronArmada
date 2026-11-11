@@ -2,6 +2,8 @@
 
 namespace OGame\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,13 +17,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $baseline
  * @property bool $claimed
  */
+#[Fillable(['user_id', 'directive_key', 'period_key', 'period_start', 'baseline', 'claimed'])]
+#[Table(name: 'user_directives')]
 class UserDirective extends Model
 {
-    protected $table = 'user_directives';
-
-    protected $fillable = ['user_id', 'directive_key', 'period_key', 'period_start', 'baseline', 'claimed'];
-
-    protected $casts = [
-        'claimed' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'claimed' => 'boolean',
+        ];
+    }
 }

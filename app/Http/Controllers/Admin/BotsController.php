@@ -44,7 +44,7 @@ class BotsController extends OGameController
         $raidLog = $raids->map(fn (FleetMission $m) => [
             'time' => $m->time_departure,
             'attacker' => $attackers[$m->user_id] ?? ('#' . $m->user_id),
-            'target' => ($m->planetTo?->name ?? '?') . ' [' . $m->galaxy_to . ':' . $m->system_to . ':' . $m->position_to . ']',
+            'target' => ($m->planetTo->name ?? '?') . ' [' . $m->galaxy_to . ':' . $m->system_to . ':' . $m->position_to . ']',
             'owner' => $targetOwners[$m->planetTo?->user_id] ?? '?',
             'target_is_bot' => in_array($m->planetTo?->user_id, $botIds, true),
             'ships' => (int)($m->light_fighter + $m->heavy_fighter + $m->cruiser + $m->battle_ship + $m->battlecruiser + $m->bomber + $m->destroyer + $m->deathstar),

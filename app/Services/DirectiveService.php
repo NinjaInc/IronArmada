@@ -2,8 +2,8 @@
 
 namespace OGame\Services;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
 use OGame\Models\FleetMission;
 use OGame\Models\User;
 use OGame\Models\UserDirective;
@@ -52,12 +52,12 @@ class DirectiveService
         if ($period === self::PERIOD_WEEKLY) {
             $start = $now->copy()->startOfWeek();
 
-            return ['w:' . $start->format('o-\WW'), $start->timestamp, $start->copy()->addWeek()->timestamp];
+            return ['w:' . $start->format('o-\WW'), (int)$start->timestamp, (int)$start->copy()->addWeek()->timestamp];
         }
 
         $start = $now->copy()->startOfDay();
 
-        return ['d:' . $start->format('Y-m-d'), $start->timestamp, $start->copy()->addDay()->timestamp];
+        return ['d:' . $start->format('Y-m-d'), (int)$start->timestamp, (int)$start->copy()->addDay()->timestamp];
     }
 
     /**

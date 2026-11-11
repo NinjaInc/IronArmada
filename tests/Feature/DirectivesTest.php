@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use OGame\Models\User;
 use OGame\Factories\PlayerServiceFactory;
+use OGame\Models\User;
 use OGame\Services\DirectiveService;
 use Tests\IsolatedAccountTestCase;
 
@@ -46,11 +46,11 @@ class DirectivesTest extends IsolatedAccountTestCase
         $this->planetSetObjectLevel('metal_mine', $this->planetService->getObjectLevel('metal_mine') + 3);
 
         $player = resolve(PlayerServiceFactory::class)->make($this->currentUserId, true);
-        $before = (int)User::find($this->currentUserId)->dark_matter;
+        $before = (int)User::findOrFail($this->currentUserId)->dark_matter;
 
         $awarded = $directiveService->claim($player, 'daily_build');
         $this->assertSame(DirectiveService::DEFINITIONS['daily_build']['reward'], $awarded);
-        $this->assertSame($before + $awarded, (int)User::find($this->currentUserId)->dark_matter);
+        $this->assertSame($before + $awarded, (int)User::findOrFail($this->currentUserId)->dark_matter);
 
         $this->assertSame(0, $directiveService->claim($player, 'daily_build'), 'A directive pays once per period.');
     }
