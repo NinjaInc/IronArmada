@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use OGame\Enums\HighscoreTypeEnum;
 use OGame\Http\Controllers\OGameController;
+use OGame\Services\DiscordNotifier;
 use OGame\Services\PlayerService;
 use OGame\Services\SettingsService;
 
@@ -73,6 +74,7 @@ class ServerSettingsController extends OGameController
             'expedition_weight_items' => $settingsService->expeditionWeightItems(),
             'hamill_probability' => $settingsService->hamillManoeuvreChance(),
             'highscore_admin_visible' => $settingsService->highscoreAdminVisible(),
+            'discord_webhook_set' => trim($settingsService->get(DiscordNotifier::SETTING_KEY, '')) !== '',
         ]);
     }
 
@@ -143,6 +145,17 @@ class ServerSettingsController extends OGameController
         $settingsService->set('hamill_manoeuvre_chance', max(1, (int)request('hamill_probability', 1000)));
 
         $settingsService->set('highscore_admin_visible', request('highscore_admin_visible', 0));
+
+        // Discord webhook: blank keeps the stored value, the clear box removes it.
+        $webhook = trim((string)request('discord_webhook_url', ''));
+        if (request('discord_webhook_clear')) {
+            $settingsService->set(DiscordNotifier::SETTING_KEY, '');
+        } elseif ($webhook !== '') {
+            if (!DiscordNotifier::isValidWebhookUrl($webhook)) {
+                return redirect()->route('admin.serversettings.index')->with('error', __('t_ingame.admin.discord_webhook_invalid'));
+            }
+            $settingsService->set(DiscordNotifier::SETTING_KEY, $webhook);
+        }
 
         // Clear highscore cache when admin visibility setting changes
         $this->clearHighscoreCache();

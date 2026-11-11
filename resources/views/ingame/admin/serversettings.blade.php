@@ -8,6 +8,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div id="resourcesettingscomponent" class="maincontent">
         <div id="planet" class="shortHeader">
             <h2>{{ __('t_ingame.admin.title') }}</h2>
@@ -30,6 +36,24 @@
                                     <input class="textInput w200" type="text" maxlength="20" value="{{ $universe_name }}" size="30" name="universe_name">
                                 </div>
                             </div>
+                        </div>
+
+                        <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.admin.discord_section') }}</p>
+
+                        <div class="group bborder" style="display: block;">
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.discord_webhook') }}</label>
+                                <div class="thefield">
+                                    <input class="textInput w200" type="text" autocomplete="off" value="" size="30" name="discord_webhook_url"
+                                           placeholder="{{ $discord_webhook_set ? '••••••••  (' . __('t_ingame.admin.discord_webhook_saved') . ')' : 'https://discord.com/api/webhooks/…' }}">
+                                </div>
+                            </div>
+                            @if ($discord_webhook_set)
+                                <div class="fieldwrapper">
+                                    <label class="styled textBeefy">{{ __('t_ingame.admin.discord_webhook_clear') }}</label>
+                                    <div class="thefield"><input type="checkbox" name="discord_webhook_clear" value="1"></div>
+                                </div>
+                            @endif
                         </div>
 
                         <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.admin.section_changes_note') }}</p>

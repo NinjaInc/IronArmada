@@ -5,6 +5,7 @@ namespace OGame\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use OGame\Services\DiscordNotifier;
 use Spatie\DiscordAlerts\Facades\DiscordAlert;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -30,7 +31,10 @@ class Handler extends ExceptionHandler
      */
     protected function sendToDiscord(Throwable $e): void
     {
-        if (config('app.discord_alert_webhook') && $this->shouldReport($e)) {
+        $webhook = DiscordNotifier::webhookUrl();
+        if ($webhook !== '' && $this->shouldReport($e)) {
+            config(['discord-alerts.webhook_urls.default' => $webhook]);
+
             $stackTrace = explode("\n", $e->getTraceAsString());
 
             // Limit to the first two stack trace lines
@@ -49,7 +53,11 @@ class Handler extends ExceptionHandler
                 )
             );
 
-            DiscordAlert::message($message);
+            try {
+                DiscordAlert::message($message);
+            } catch (Throwable) {
+                // never let alerting break error rendering
+            }
         }
     }
 }
