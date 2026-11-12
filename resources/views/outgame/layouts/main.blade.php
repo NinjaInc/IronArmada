@@ -143,7 +143,7 @@
 <div class="ia-page">
     <header class="ia-header">
         <a class="ia-brand" href="{{ route('login') }}" title="{{ __('t_external.login.page_title') }}">
-            <img src="/img/iron-armada/logo-iron-armada.png" alt="Iron Armada" width="260" height="80"/>
+            <img src="/img/iron-armada/logo-iron-armada.webp" alt="Iron Armada" width="320" height="80" class="ia-logo"/>
         </a>
     </header>
 
@@ -170,7 +170,7 @@
             </nav>
             <div class="ia-footer-brand">
                 <a class="ia-archon" href="{{ __('t_external.links.archon_tech_url') }}" target="_blank" rel="noopener">
-                    <img src="/img/iron-armada/logo-archon-tech.png" alt="{{ __('t_external.links.archon_tech') }}" height="44"/>
+                    <img src="/img/iron-armada/logo-archon-tech.webp" alt="{{ __('t_external.links.archon_tech') }}" height="44" class="ia-logo"/>
                 </a>
                 <nav class="ia-footer-links" aria-label="Archon Tech">
                     <a href="{{ __('t_external.links.archon_tech_url') }}" target="_blank" rel="noopener">{{ __('t_external.links.archon_tech') }}</a>

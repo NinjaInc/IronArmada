@@ -11,7 +11,7 @@
     <div id="suppliescomponent" class="maincontent">
         <div id="supplies">
             <header data-anchor="technologyDetails" data-technologydetails-size="large"
-                    style="background-image:url({{ asset('img/headers/resources/' . $header_filename) }}.jpg);">
+                    style="background-image:url({{ asset('img/headers/resources/' . strtok($header_filename, '_')) }}.jpg);">
                 <h2>{{ __('t_ingame.resources_page.page_title') }} - {{ $planet_name }}</h2>
                 <div id="slot01" class="slot">
                     <a href="{{ route('resources.settings') }}">

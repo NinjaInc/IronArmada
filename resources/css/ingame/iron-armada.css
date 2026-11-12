@@ -419,3 +419,298 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 /* disabled / unavailable tiles: readable instead of a loud orange hatch */
 .technology[data-status="disabled"] .icon::after { background: repeating-linear-gradient(-45deg, rgba(255,150,0,.12), rgba(255,150,0,.12) 2px, transparent 3px, transparent 8px) !important; }
 .technology[data-status="off"] .icon::after { background: rgba(0,0,0,.38) !important; }
+
+/* ==========================================================================
+   Iron Armada art: object tiles, resource icons, mission buttons, page headers.
+   Replaces the stock sprite sheet. One 200px webp per object, scaled to whatever
+   sprite size the markup asks for (tiny 28 / small 80 / medium 100 / big).
+   ========================================================================== */
+.sprite.metalMine,
+.sprite_before.metalMine::before,
+.sprite_after.metalMine::after,
+.sprite.crystalMine,
+.sprite_before.crystalMine::before,
+.sprite_after.crystalMine::after,
+.sprite.deuteriumSynthesizer,
+.sprite_before.deuteriumSynthesizer::before,
+.sprite_after.deuteriumSynthesizer::after,
+.sprite.solarPlant,
+.sprite_before.solarPlant::before,
+.sprite_after.solarPlant::after,
+.sprite.fusionPlant,
+.sprite_before.fusionPlant::before,
+.sprite_after.fusionPlant::after,
+.sprite.roboticsFactory,
+.sprite_before.roboticsFactory::before,
+.sprite_after.roboticsFactory::after,
+.sprite.shipyard,
+.sprite_before.shipyard::before,
+.sprite_after.shipyard::after,
+.sprite.researchLaboratory,
+.sprite_before.researchLaboratory::before,
+.sprite_after.researchLaboratory::after,
+.sprite.allianceDepot,
+.sprite_before.allianceDepot::before,
+.sprite_after.allianceDepot::after,
+.sprite.naniteFactory,
+.sprite_before.naniteFactory::before,
+.sprite_after.naniteFactory::after,
+.sprite.solarSatellite,
+.sprite_before.solarSatellite::before,
+.sprite_after.solarSatellite::after,
+.sprite.resbuggy,
+.sprite_before.resbuggy::before,
+.sprite_after.resbuggy::after,
+.sprite.transporterSmall,
+.sprite_before.transporterSmall::before,
+.sprite_after.transporterSmall::after,
+.sprite.transporterLarge,
+.sprite_before.transporterLarge::before,
+.sprite_after.transporterLarge::after,
+.sprite.fighterLight,
+.sprite_before.fighterLight::before,
+.sprite_after.fighterLight::after,
+.sprite.fighterHeavy,
+.sprite_before.fighterHeavy::before,
+.sprite_after.fighterHeavy::after,
+.sprite.cruiser,
+.sprite_before.cruiser::before,
+.sprite_after.cruiser::after,
+.sprite.battleship,
+.sprite_before.battleship::before,
+.sprite_after.battleship::after,
+.sprite.interceptor,
+.sprite_before.interceptor::before,
+.sprite_after.interceptor::after,
+.sprite.bomber,
+.sprite_before.bomber::before,
+.sprite_after.bomber::after,
+.sprite.destroyer,
+.sprite_before.destroyer::before,
+.sprite_after.destroyer::after,
+.sprite.deathstar,
+.sprite_before.deathstar::before,
+.sprite_after.deathstar::after,
+.sprite.reaper,
+.sprite_before.reaper::before,
+.sprite_after.reaper::after,
+.sprite.explorer,
+.sprite_before.explorer::before,
+.sprite_after.explorer::after,
+.sprite.recycler,
+.sprite_before.recycler::before,
+.sprite_after.recycler::after,
+.sprite.colonyShip,
+.sprite_before.colonyShip::before,
+.sprite_after.colonyShip::after,
+.sprite.espionageProbe,
+.sprite_before.espionageProbe::before,
+.sprite_after.espionageProbe::after,
+.sprite.rocketLauncher,
+.sprite_before.rocketLauncher::before,
+.sprite_after.rocketLauncher::after,
+.sprite.laserCannonLight,
+.sprite_before.laserCannonLight::before,
+.sprite_after.laserCannonLight::after,
+.sprite.laserCannonHeavy,
+.sprite_before.laserCannonHeavy::before,
+.sprite_after.laserCannonHeavy::after,
+.sprite.gaussCannon,
+.sprite_before.gaussCannon::before,
+.sprite_after.gaussCannon::after,
+.sprite.ionCannon,
+.sprite_before.ionCannon::before,
+.sprite_after.ionCannon::after,
+.sprite.plasmaCannon,
+.sprite_before.plasmaCannon::before,
+.sprite_after.plasmaCannon::after,
+.sprite.shieldDomeSmall,
+.sprite_before.shieldDomeSmall::before,
+.sprite_after.shieldDomeSmall::after,
+.sprite.shieldDomeLarge,
+.sprite_before.shieldDomeLarge::before,
+.sprite_after.shieldDomeLarge::after,
+.sprite.missileInterceptor,
+.sprite_before.missileInterceptor::before,
+.sprite_after.missileInterceptor::after,
+.sprite.missileInterplanetary,
+.sprite_before.missileInterplanetary::before,
+.sprite_after.missileInterplanetary::after,
+.sprite.metalStorage,
+.sprite_before.metalStorage::before,
+.sprite_after.metalStorage::after,
+.sprite.crystalStorage,
+.sprite_before.crystalStorage::before,
+.sprite_after.crystalStorage::after,
+.sprite.deuteriumStorage,
+.sprite_before.deuteriumStorage::before,
+.sprite_after.deuteriumStorage::after,
+.sprite.missileSilo,
+.sprite_before.missileSilo::before,
+.sprite_after.missileSilo::after,
+.sprite.terraformer,
+.sprite_before.terraformer::before,
+.sprite_after.terraformer::after,
+.sprite.repairDock,
+.sprite_before.repairDock::before,
+.sprite_after.repairDock::after,
+.sprite.moonbase,
+.sprite_before.moonbase::before,
+.sprite_after.moonbase::after,
+.sprite.sensorPhalanx,
+.sprite_before.sensorPhalanx::before,
+.sprite_after.sensorPhalanx::after,
+.sprite.jumpGate,
+.sprite_before.jumpGate::before,
+.sprite_after.jumpGate::after,
+.sprite.energyTechnology,
+.sprite_before.energyTechnology::before,
+.sprite_after.energyTechnology::after,
+.sprite.laserTechnology,
+.sprite_before.laserTechnology::before,
+.sprite_after.laserTechnology::after,
+.sprite.ionTechnology,
+.sprite_before.ionTechnology::before,
+.sprite_after.ionTechnology::after,
+.sprite.hyperspaceTechnology,
+.sprite_before.hyperspaceTechnology::before,
+.sprite_after.hyperspaceTechnology::after,
+.sprite.plasmaTechnology,
+.sprite_before.plasmaTechnology::before,
+.sprite_after.plasmaTechnology::after,
+.sprite.combustionDriveTechnology,
+.sprite_before.combustionDriveTechnology::before,
+.sprite_after.combustionDriveTechnology::after,
+.sprite.impulseDriveTechnology,
+.sprite_before.impulseDriveTechnology::before,
+.sprite_after.impulseDriveTechnology::after,
+.sprite.hyperspaceDriveTechnology,
+.sprite_before.hyperspaceDriveTechnology::before,
+.sprite_after.hyperspaceDriveTechnology::after,
+.sprite.espionageTechnology,
+.sprite_before.espionageTechnology::before,
+.sprite_after.espionageTechnology::after,
+.sprite.computerTechnology,
+.sprite_before.computerTechnology::before,
+.sprite_after.computerTechnology::after,
+.sprite.astrophysicsTechnology,
+.sprite_before.astrophysicsTechnology::before,
+.sprite_after.astrophysicsTechnology::after,
+.sprite.researchNetworkTechnology,
+.sprite_before.researchNetworkTechnology::before,
+.sprite_after.researchNetworkTechnology::after,
+.sprite.gravitonTechnology,
+.sprite_before.gravitonTechnology::before,
+.sprite_after.gravitonTechnology::after,
+.sprite.weaponsTechnology,
+.sprite_before.weaponsTechnology::before,
+.sprite_after.weaponsTechnology::after,
+.sprite.shieldingTechnology,
+.sprite_before.shieldingTechnology::before,
+.sprite_after.shieldingTechnology::after,
+.sprite.armorTechnology,
+.sprite_before.armorTechnology::before,
+.sprite_after.armorTechnology::after {
+    background-size: 100% 100% !important;
+    background-position: 0 0 !important;
+    background-repeat: no-repeat !important;
+    border-radius: 6px;
+}
+.sprite.metalMine, .sprite_before.metalMine::before, .sprite_after.metalMine::after { background-image: url("/img/iron-armada/obj/metalMine.webp") !important; }
+.sprite.crystalMine, .sprite_before.crystalMine::before, .sprite_after.crystalMine::after { background-image: url("/img/iron-armada/obj/crystalMine.webp") !important; }
+.sprite.deuteriumSynthesizer, .sprite_before.deuteriumSynthesizer::before, .sprite_after.deuteriumSynthesizer::after { background-image: url("/img/iron-armada/obj/deuteriumSynthesizer.webp") !important; }
+.sprite.solarPlant, .sprite_before.solarPlant::before, .sprite_after.solarPlant::after { background-image: url("/img/iron-armada/obj/solarPlant.webp") !important; }
+.sprite.fusionPlant, .sprite_before.fusionPlant::before, .sprite_after.fusionPlant::after { background-image: url("/img/iron-armada/obj/fusionPlant.webp") !important; }
+.sprite.roboticsFactory, .sprite_before.roboticsFactory::before, .sprite_after.roboticsFactory::after { background-image: url("/img/iron-armada/obj/roboticsFactory.webp") !important; }
+.sprite.shipyard, .sprite_before.shipyard::before, .sprite_after.shipyard::after { background-image: url("/img/iron-armada/obj/shipyard.webp") !important; }
+.sprite.researchLaboratory, .sprite_before.researchLaboratory::before, .sprite_after.researchLaboratory::after { background-image: url("/img/iron-armada/obj/researchLaboratory.webp") !important; }
+.sprite.allianceDepot, .sprite_before.allianceDepot::before, .sprite_after.allianceDepot::after { background-image: url("/img/iron-armada/obj/allianceDepot.webp") !important; }
+.sprite.naniteFactory, .sprite_before.naniteFactory::before, .sprite_after.naniteFactory::after { background-image: url("/img/iron-armada/obj/naniteFactory.webp") !important; }
+.sprite.solarSatellite, .sprite_before.solarSatellite::before, .sprite_after.solarSatellite::after { background-image: url("/img/iron-armada/obj/solarSatellite.webp") !important; }
+.sprite.resbuggy, .sprite_before.resbuggy::before, .sprite_after.resbuggy::after { background-image: url("/img/iron-armada/obj/resbuggy.webp") !important; }
+.sprite.transporterSmall, .sprite_before.transporterSmall::before, .sprite_after.transporterSmall::after { background-image: url("/img/iron-armada/obj/transporterSmall.webp") !important; }
+.sprite.transporterLarge, .sprite_before.transporterLarge::before, .sprite_after.transporterLarge::after { background-image: url("/img/iron-armada/obj/transporterLarge.webp") !important; }
+.sprite.fighterLight, .sprite_before.fighterLight::before, .sprite_after.fighterLight::after { background-image: url("/img/iron-armada/obj/fighterLight.webp") !important; }
+.sprite.fighterHeavy, .sprite_before.fighterHeavy::before, .sprite_after.fighterHeavy::after { background-image: url("/img/iron-armada/obj/fighterHeavy.webp") !important; }
+.sprite.cruiser, .sprite_before.cruiser::before, .sprite_after.cruiser::after { background-image: url("/img/iron-armada/obj/cruiser.webp") !important; }
+.sprite.battleship, .sprite_before.battleship::before, .sprite_after.battleship::after { background-image: url("/img/iron-armada/obj/battleship.webp") !important; }
+.sprite.interceptor, .sprite_before.interceptor::before, .sprite_after.interceptor::after { background-image: url("/img/iron-armada/obj/interceptor.webp") !important; }
+.sprite.bomber, .sprite_before.bomber::before, .sprite_after.bomber::after { background-image: url("/img/iron-armada/obj/bomber.webp") !important; }
+.sprite.destroyer, .sprite_before.destroyer::before, .sprite_after.destroyer::after { background-image: url("/img/iron-armada/obj/destroyer.webp") !important; }
+.sprite.deathstar, .sprite_before.deathstar::before, .sprite_after.deathstar::after { background-image: url("/img/iron-armada/obj/deathstar.webp") !important; }
+.sprite.reaper, .sprite_before.reaper::before, .sprite_after.reaper::after { background-image: url("/img/iron-armada/obj/reaper.webp") !important; }
+.sprite.explorer, .sprite_before.explorer::before, .sprite_after.explorer::after { background-image: url("/img/iron-armada/obj/explorer.webp") !important; }
+.sprite.recycler, .sprite_before.recycler::before, .sprite_after.recycler::after { background-image: url("/img/iron-armada/obj/recycler.webp") !important; }
+.sprite.colonyShip, .sprite_before.colonyShip::before, .sprite_after.colonyShip::after { background-image: url("/img/iron-armada/obj/colonyShip.webp") !important; }
+.sprite.espionageProbe, .sprite_before.espionageProbe::before, .sprite_after.espionageProbe::after { background-image: url("/img/iron-armada/obj/espionageProbe.webp") !important; }
+.sprite.rocketLauncher, .sprite_before.rocketLauncher::before, .sprite_after.rocketLauncher::after { background-image: url("/img/iron-armada/obj/rocketLauncher.webp") !important; }
+.sprite.laserCannonLight, .sprite_before.laserCannonLight::before, .sprite_after.laserCannonLight::after { background-image: url("/img/iron-armada/obj/laserCannonLight.webp") !important; }
+.sprite.laserCannonHeavy, .sprite_before.laserCannonHeavy::before, .sprite_after.laserCannonHeavy::after { background-image: url("/img/iron-armada/obj/laserCannonHeavy.webp") !important; }
+.sprite.gaussCannon, .sprite_before.gaussCannon::before, .sprite_after.gaussCannon::after { background-image: url("/img/iron-armada/obj/gaussCannon.webp") !important; }
+.sprite.ionCannon, .sprite_before.ionCannon::before, .sprite_after.ionCannon::after { background-image: url("/img/iron-armada/obj/ionCannon.webp") !important; }
+.sprite.plasmaCannon, .sprite_before.plasmaCannon::before, .sprite_after.plasmaCannon::after { background-image: url("/img/iron-armada/obj/plasmaCannon.webp") !important; }
+.sprite.shieldDomeSmall, .sprite_before.shieldDomeSmall::before, .sprite_after.shieldDomeSmall::after { background-image: url("/img/iron-armada/obj/shieldDomeSmall.webp") !important; }
+.sprite.shieldDomeLarge, .sprite_before.shieldDomeLarge::before, .sprite_after.shieldDomeLarge::after { background-image: url("/img/iron-armada/obj/shieldDomeLarge.webp") !important; }
+.sprite.missileInterceptor, .sprite_before.missileInterceptor::before, .sprite_after.missileInterceptor::after { background-image: url("/img/iron-armada/obj/missileInterceptor.webp") !important; }
+.sprite.missileInterplanetary, .sprite_before.missileInterplanetary::before, .sprite_after.missileInterplanetary::after { background-image: url("/img/iron-armada/obj/missileInterplanetary.webp") !important; }
+.sprite.metalStorage, .sprite_before.metalStorage::before, .sprite_after.metalStorage::after { background-image: url("/img/iron-armada/obj/metalStorage.webp") !important; }
+.sprite.crystalStorage, .sprite_before.crystalStorage::before, .sprite_after.crystalStorage::after { background-image: url("/img/iron-armada/obj/crystalStorage.webp") !important; }
+.sprite.deuteriumStorage, .sprite_before.deuteriumStorage::before, .sprite_after.deuteriumStorage::after { background-image: url("/img/iron-armada/obj/deuteriumStorage.webp") !important; }
+.sprite.missileSilo, .sprite_before.missileSilo::before, .sprite_after.missileSilo::after { background-image: url("/img/iron-armada/obj/missileSilo.webp") !important; }
+.sprite.terraformer, .sprite_before.terraformer::before, .sprite_after.terraformer::after { background-image: url("/img/iron-armada/obj/terraformer.webp") !important; }
+.sprite.repairDock, .sprite_before.repairDock::before, .sprite_after.repairDock::after { background-image: url("/img/iron-armada/obj/repairDock.webp") !important; }
+.sprite.moonbase, .sprite_before.moonbase::before, .sprite_after.moonbase::after { background-image: url("/img/iron-armada/obj/moonbase.webp") !important; }
+.sprite.sensorPhalanx, .sprite_before.sensorPhalanx::before, .sprite_after.sensorPhalanx::after { background-image: url("/img/iron-armada/obj/sensorPhalanx.webp") !important; }
+.sprite.jumpGate, .sprite_before.jumpGate::before, .sprite_after.jumpGate::after { background-image: url("/img/iron-armada/obj/jumpGate.webp") !important; }
+.sprite.energyTechnology, .sprite_before.energyTechnology::before, .sprite_after.energyTechnology::after { background-image: url("/img/iron-armada/obj/energyTechnology.webp") !important; }
+.sprite.laserTechnology, .sprite_before.laserTechnology::before, .sprite_after.laserTechnology::after { background-image: url("/img/iron-armada/obj/laserTechnology.webp") !important; }
+.sprite.ionTechnology, .sprite_before.ionTechnology::before, .sprite_after.ionTechnology::after { background-image: url("/img/iron-armada/obj/ionTechnology.webp") !important; }
+.sprite.hyperspaceTechnology, .sprite_before.hyperspaceTechnology::before, .sprite_after.hyperspaceTechnology::after { background-image: url("/img/iron-armada/obj/hyperspaceTechnology.webp") !important; }
+.sprite.plasmaTechnology, .sprite_before.plasmaTechnology::before, .sprite_after.plasmaTechnology::after { background-image: url("/img/iron-armada/obj/plasmaTechnology.webp") !important; }
+.sprite.combustionDriveTechnology, .sprite_before.combustionDriveTechnology::before, .sprite_after.combustionDriveTechnology::after { background-image: url("/img/iron-armada/obj/combustionDriveTechnology.webp") !important; }
+.sprite.impulseDriveTechnology, .sprite_before.impulseDriveTechnology::before, .sprite_after.impulseDriveTechnology::after { background-image: url("/img/iron-armada/obj/impulseDriveTechnology.webp") !important; }
+.sprite.hyperspaceDriveTechnology, .sprite_before.hyperspaceDriveTechnology::before, .sprite_after.hyperspaceDriveTechnology::after { background-image: url("/img/iron-armada/obj/hyperspaceDriveTechnology.webp") !important; }
+.sprite.espionageTechnology, .sprite_before.espionageTechnology::before, .sprite_after.espionageTechnology::after { background-image: url("/img/iron-armada/obj/espionageTechnology.webp") !important; }
+.sprite.computerTechnology, .sprite_before.computerTechnology::before, .sprite_after.computerTechnology::after { background-image: url("/img/iron-armada/obj/computerTechnology.webp") !important; }
+.sprite.astrophysicsTechnology, .sprite_before.astrophysicsTechnology::before, .sprite_after.astrophysicsTechnology::after { background-image: url("/img/iron-armada/obj/astrophysicsTechnology.webp") !important; }
+.sprite.researchNetworkTechnology, .sprite_before.researchNetworkTechnology::before, .sprite_after.researchNetworkTechnology::after { background-image: url("/img/iron-armada/obj/researchNetworkTechnology.webp") !important; }
+.sprite.gravitonTechnology, .sprite_before.gravitonTechnology::before, .sprite_after.gravitonTechnology::after { background-image: url("/img/iron-armada/obj/gravitonTechnology.webp") !important; }
+.sprite.weaponsTechnology, .sprite_before.weaponsTechnology::before, .sprite_after.weaponsTechnology::after { background-image: url("/img/iron-armada/obj/weaponsTechnology.webp") !important; }
+.sprite.shieldingTechnology, .sprite_before.shieldingTechnology::before, .sprite_after.shieldingTechnology::after { background-image: url("/img/iron-armada/obj/shieldingTechnology.webp") !important; }
+.sprite.armorTechnology, .sprite_before.armorTechnology::before, .sprite_after.armorTechnology::after { background-image: url("/img/iron-armada/obj/armorTechnology.webp") !important; }
+
+/* resource icons (bar, cost rows, tooltips) */
+.resourceIcon { background-size: contain !important; background-position: center !important; background-repeat: no-repeat !important; }
+.resourceIcon.metal { background-image: url("/img/iron-armada/ui/res_metal.webp") !important; }
+.resourceIcon.crystal { background-image: url("/img/iron-armada/ui/res_crystal.webp") !important; }
+.resourceIcon.deuterium { background-image: url("/img/iron-armada/ui/res_deuterium.webp") !important; }
+.resourceIcon.energy { background-image: url("/img/iron-armada/ui/res_energy.webp") !important; }
+.resourceIcon.darkmatter { background-image: url("/img/iron-armada/ui/res_darkmatter.webp") !important; }
+
+/* fleet mission buttons */
+#fleet2 #buttonz ul#missions li a,
+#fleet2 #buttonz ul#missions li.on a,
+#fleet2 #buttonz ul#missions li.off a,
+#fleet2 #buttonz ul#missions li.on a:hover,
+#fleet2 #buttonz ul#missions li.on a.active {
+    background-size: 54px 54px !important;
+    background-position: 0 0 !important;
+    background-repeat: no-repeat !important;
+    border-radius: 8px;
+}
+#fleet2 #buttonz ul#missions li.off a { opacity: .35; filter: grayscale(.8); }
+#fleet2 #buttonz ul#missions li.on a:hover, #fleet2 #buttonz ul#missions li.on a.active { filter: drop-shadow(0 0 6px var(--ia-amber)); }
+#fleet2 #buttonz ul#missions li#button1 a, #fleet2 #buttonz ul#missions li#button1.on a, #fleet2 #buttonz ul#missions li#button1.off a { background-image: url("/img/iron-armada/ui/mission_1.webp") !important; }
+#fleet2 #buttonz ul#missions li#button2 a, #fleet2 #buttonz ul#missions li#button2.on a, #fleet2 #buttonz ul#missions li#button2.off a { background-image: url("/img/iron-armada/ui/mission_2.webp") !important; }
+#fleet2 #buttonz ul#missions li#button3 a, #fleet2 #buttonz ul#missions li#button3.on a, #fleet2 #buttonz ul#missions li#button3.off a { background-image: url("/img/iron-armada/ui/mission_3.webp") !important; }
+#fleet2 #buttonz ul#missions li#button4 a, #fleet2 #buttonz ul#missions li#button4.on a, #fleet2 #buttonz ul#missions li#button4.off a { background-image: url("/img/iron-armada/ui/mission_4.webp") !important; }
+#fleet2 #buttonz ul#missions li#button5 a, #fleet2 #buttonz ul#missions li#button5.on a, #fleet2 #buttonz ul#missions li#button5.off a { background-image: url("/img/iron-armada/ui/mission_5.webp") !important; }
+#fleet2 #buttonz ul#missions li#button6 a, #fleet2 #buttonz ul#missions li#button6.on a, #fleet2 #buttonz ul#missions li#button6.off a { background-image: url("/img/iron-armada/ui/mission_6.webp") !important; }
+#fleet2 #buttonz ul#missions li#button7 a, #fleet2 #buttonz ul#missions li#button7.on a, #fleet2 #buttonz ul#missions li#button7.off a { background-image: url("/img/iron-armada/ui/mission_7.webp") !important; }
+#fleet2 #buttonz ul#missions li#button8 a, #fleet2 #buttonz ul#missions li#button8.on a, #fleet2 #buttonz ul#missions li#button8.off a { background-image: url("/img/iron-armada/ui/mission_8.webp") !important; }
+#fleet2 #buttonz ul#missions li#button9 a, #fleet2 #buttonz ul#missions li#button9.on a, #fleet2 #buttonz ul#missions li#button9.off a { background-image: url("/img/iron-armada/ui/mission_9.webp") !important; }
+#fleet2 #buttonz ul#missions li#button15 a, #fleet2 #buttonz ul#missions li#button15.on a, #fleet2 #buttonz ul#missions li#button15.off a { background-image: url("/img/iron-armada/ui/mission_15.webp") !important; }
+
+/* page headers: new art is 1308x600, fit it to the frame */
+#planet, #supplies > header, #technologydetails_wrapper header { background-size: cover !important; background-position: center !important; }
+

@@ -455,3 +455,6 @@ html:has(body.ia) {
         transform: none;
     }
 }
+
+/* logos are solid-background artwork: screen blend drops the dark backdrop onto the page */
+.ia-logo { mix-blend-mode: screen; }
