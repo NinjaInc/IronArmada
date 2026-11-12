@@ -768,3 +768,41 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     #productionboxBottom .content-box-s .content .construction th { font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .06em; color: var(--ia-amber-hi); }
     #productionboxBottom .content-box-s .content .construction .timer { font-weight: 700; color: var(--ia-ink); }
 }
+
+/* ===== Polish pass 4: tiles, planet list, buttons, atmosphere ===== */
+@media (min-width: 901px) {
+    /* object tiles: framed art with state rings and hover lift */
+    .technology .icon { outline: 1px solid rgba(143,179,209,.3); outline-offset: -1px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.5), inset 0 0 0 1px rgba(143,179,209,.28); transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; overflow: hidden; }
+    .technology:hover .icon { outline-color: var(--ia-steel-hi); transform: translateY(-2px) scale(1.04); box-shadow: 0 6px 16px rgba(0,0,0,.6), inset 0 0 0 1px var(--ia-steel-hi), 0 0 14px rgba(143,179,209,.25); }
+    .technology[data-status="on"] .icon { outline-color: rgba(95,195,208,.7); box-shadow: 0 2px 8px rgba(0,0,0,.5), inset 0 0 0 1px rgba(95,195,208,.55), 0 0 12px rgba(95,195,208,.18); }
+    .technology[data-status="on"]:hover .icon { outline-color: #5fc3d0; box-shadow: 0 6px 16px rgba(0,0,0,.6), inset 0 0 0 1px #5fc3d0, 0 0 18px rgba(95,195,208,.4); }
+    .technology[data-status="active"] .icon { outline: 2px solid var(--ia-amber); outline-offset: -2px; box-shadow: 0 2px 8px rgba(0,0,0,.5), inset 0 0 0 2px var(--ia-amber), 0 0 16px rgba(209,133,51,.45); animation: ia-pulse 2.4s ease-in-out infinite; }
+    .technology[data-status="off"] .icon { filter: grayscale(.85) brightness(.7); }
+    .technology[data-status="disabled"] .icon { filter: saturate(.6) brightness(.85); }
+    .technology .level, .technology .amount { background: rgba(7,10,14,.85) !important; border: 1px solid var(--ia-steel); border-radius: 9px; padding: 0 6px; font-family: "Barlow Condensed", sans-serif; font-weight: 700; color: var(--ia-amber-hi) !important; text-shadow: none; }
+}
+@keyframes ia-pulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.18); } }
+@media (prefers-reduced-motion: reduce) { .technology[data-status="active"] .icon { animation: none; } }
+
+/* planet list: amber rail on the current planet, hover slide */
+#planetList .smallplanet { transition: transform .15s, filter .15s; }
+#planetList .smallplanet:hover { transform: translateX(-3px); filter: brightness(1.18); }
+#planetList .smallplanet.hightlightPlanet, #planetList .smallplanet.active { box-shadow: 0 0 14px rgba(209,133,51,.25); }
+
+/* planet / page header art: fade into the panel and sharpen the title */
+#planet { box-shadow: inset 0 -40px 40px -20px rgba(7,10,14,.85), inset 0 0 0 1px rgba(143,179,209,.2); border-radius: 3px; }
+#planet h2, #planetNameHeader, #supplies > header h2 { text-shadow: 0 2px 6px rgba(0,0,0,.9), 0 0 18px rgba(0,0,0,.7); }
+
+/* primary buttons */
+button.upgrade, .build-it, a.build-it, button.build-it, .btn_blue, a.btn_blue {
+    background: linear-gradient(180deg, #e19a4a, #b86d20) !important; color: #1a1006 !important; border: 1px solid #f0b46a !important; border-radius: 3px !important;
+    font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; text-shadow: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.25); transition: filter .15s, transform .15s;
+}
+button.upgrade:hover, .build-it:hover, .btn_blue:hover { filter: brightness(1.12); transform: translateY(-1px); }
+button.upgrade.disabled, .build-it.disabled, button.upgrade:disabled { filter: grayscale(.9) brightness(.55); box-shadow: none; transform: none; }
+
+/* atmosphere: soft vignette and thin scrollbars */
+body#ingamepage::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse at 50% 30%, transparent 55%, rgba(0,0,0,.45) 100%); }
+* { scrollbar-width: thin; scrollbar-color: var(--ia-steel) var(--ia-hull0); }
+::selection { background: rgba(209,133,51,.45); color: #fff; }
