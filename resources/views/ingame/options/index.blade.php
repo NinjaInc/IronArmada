@@ -209,7 +209,7 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.disable_chat_bar') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="disable_chat_bar" {{ old('disable_chat_bar') }}>
+                                                    <input type="checkbox" name="disable_chat_bar" value="1" @checked(!empty($prefs['disable_chat_bar']))>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,7 +223,7 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.disable_outlaw_warning') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="disable_outlaw_warning" {{ old('disable_outlaw_warning') }}>
+                                                    <input type="checkbox" name="disable_outlaw_warning" value="1" @checked(!empty($prefs['disable_outlaw_warning']))>
                                                 </div>
                                             </div>
                                         </div>
@@ -237,37 +237,26 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.show_mobile_version') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="show_mobile_version" {{ old('show_mobile_version') }}>
+                                                    <input type="checkbox" name="show_mobile_version" value="1" @checked(!empty($prefs['show_mobile_version']))>
                                                 </div>
                                             </div>
 
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.show_alt_dropdowns') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="show_old_dropdowns" {{ old('show_old_dropdowns') }}>
+                                                    <input type="checkbox" name="show_old_dropdowns" value="1" @checked(!empty($prefs['show_old_dropdowns']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.activate_autofocus') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" checked="" name="activate_autofocus" {{ old('activate_autofocus') }}>
+                                                    <input type="checkbox" name="activate_autofocus" value="1" @checked(!empty($prefs['activate_autofocus']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.always_show_events') }}</label>
                                                 <div class="thefield">
-                                                    <select name="eventsShow" class="w200 dropdownInitialized" style="display: none;">
-                                                        <option value="1" selected="">
-                                                            {{ __('t_ingame.options.events_hide') }}
-                                                        </option>
-                                                        <option value="2">
-                                                            {{ __('t_ingame.options.events_above') }}
-                                                        </option>
-                                                        <option value="3">
-                                                            {{ __('t_ingame.options.events_below') }}
-                                                        </option></select><span class="dropdown currentlySelected w200" rel="dropdown57" style="width: 200px;"><a class="undefined" data-value="1" rel="dropdown57" href="javascript:void(0);">
-                                                {{ __('t_ingame.options.events_hide') }}
-                                            </a></span>
+                                                    @include('ingame.options.partials.dropdown', ['name' => 'eventsShow', 'id' => null, 'rel' => '57', 'value' => $prefs['eventsShow'], 'options' => [1 => __('t_ingame.options.events_hide'), 2 => __('t_ingame.options.events_above'), 3 => __('t_ingame.options.events_below')]])
                                                 </div>
                                             </div>
                                         </div>
@@ -279,41 +268,14 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.sort_planets_by') }}</label>
                                                 <div class="thefield">
-                                                    <select id="sortSetting" name="settings_sort" class="w200 dropdownInitialized" style="display: none;">
-                                                        <option value="0" selected="">
-                                                            {{ __('t_ingame.options.sort_emergence') }}
-                                                        </option>
-                                                        <option value="1">
-                                                            {{ __('t_ingame.options.sort_coordinates') }}
-                                                        </option>
-                                                        <option value="2">
-                                                            {{ __('t_ingame.options.sort_alphabet') }}
-                                                        </option>
-                                                        <option value="3">
-                                                            {{ __('t_ingame.options.sort_size') }}
-                                                        </option>
-                                                        <option value="4">
-                                                            {{ __('t_ingame.options.sort_used_fields') }}
-                                                        </option>
-                                                    </select><span class="dropdown currentlySelected w200" rel="dropdown382" style="width: 200px;"><a class="undefined" data-value="0" rel="dropdown382" href="javascript:void(0);">
-                                                {{ __('t_ingame.options.sort_emergence') }}
-                                            </a></span>
+                                                    @include('ingame.options.partials.dropdown', ['name' => 'settings_sort', 'id' => 'sortSetting', 'rel' => '382', 'value' => $prefs['settings_sort'], 'options' => [0 => __('t_ingame.options.sort_emergence'), 1 => __('t_ingame.options.sort_coordinates'), 2 => __('t_ingame.options.sort_alphabet'), 3 => __('t_ingame.options.sort_size'), 4 => __('t_ingame.options.sort_used_fields')]])
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.sort_sequence') }}</label>
                                                 <div class="thefield">
                                                     <input type="hidden" id="sortOrderHidden" name="" value="0">
-                                                    <select id="sortOrder" name="settings_order" class="w200 dropdownInitialized" style="display: none;">
-                                                        <option value="0" selected="">
-                                                            {{ __('t_ingame.options.sort_order_up') }}
-                                                        </option>
-                                                        <option value="1">
-                                                            {{ __('t_ingame.options.sort_order_down') }}
-                                                        </option>
-                                                    </select><span class="dropdown currentlySelected w200" rel="dropdown438" style="width: 200px;"><a class="undefined" data-value="0" rel="dropdown438" href="javascript:void(0);">
-                                                {{ __('t_ingame.options.sort_order_up') }}
-                                            </a></span>
+                                                    @include('ingame.options.partials.dropdown', ['name' => 'settings_order', 'id' => 'sortOrder', 'rel' => '438', 'value' => $prefs['settings_order'], 'options' => [0 => __('t_ingame.options.sort_order_up'), 1 => __('t_ingame.options.sort_order_down')]])
                                                 </div>
                                             </div>
                                         </div>
@@ -324,19 +286,19 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.highlight_planet_info') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" checked="" name="showDetailOverlay">
+                                                    <input type="checkbox" name="showDetailOverlay" value="1" @checked(!empty($prefs['showDetailOverlay']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.animated_detail_display') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" checked="" name="animatedSliders">
+                                                    <input type="checkbox" name="animatedSliders" value="1" @checked(!empty($prefs['animatedSliders']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.animated_overview') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" checked="" name="animatedOverview">
+                                                    <input type="checkbox" name="animatedOverview" value="1" @checked(!empty($prefs['animatedOverview']))>
                                                 </div>
                                             </div>
                                         </div>
@@ -350,13 +312,13 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.popup_notes') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="popups[notices]">
+                                                    <input type="checkbox" name="popups[notices]" value="1" @checked(!empty($prefs['popups_notices']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.popup_combat_reports') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="popups[combatreport]">
+                                                    <input type="checkbox" name="popups[combatreport]" value="1" @checked(!empty($prefs['popups_combatreport']))>
                                                 </div>
                                             </div>
                                         </div>
@@ -368,33 +330,25 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.hide_report_pictures') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="spioReportPictures">
+                                                    <input type="checkbox" name="spioReportPictures" value="1" @checked(!empty($prefs['spioReportPictures']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.msgs_per_page') }}</label>
                                                 <div class="thefield">
-                                                    <select name="msgResultsPerPage" class="w200 dropdownInitialized" style="display: none;">
-                                                        <option value="10" selected="">10
-                                                        </option>
-                                                        <option value="25">25
-                                                        </option>
-                                                        <option value="50">50
-                                                        </option>
-                                                    </select><span class="dropdown currentlySelected w200" rel="dropdown178" style="width: 200px;"><a class="undefined" data-value="10" rel="dropdown178" href="javascript:void(0);">10
-                                            </a></span>
+                                                    @include('ingame.options.partials.dropdown', ['name' => 'msgResultsPerPage', 'id' => null, 'rel' => '178', 'value' => $prefs['msgResultsPerPage'], 'options' => [10 => '10', 25 => '25', 50 => '50']])
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.auctioneer_notifications') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" checked="" name="auctioneerNotifications">
+                                                    <input type="checkbox" name="auctioneerNotifications" value="1" @checked(!empty($prefs['auctioneerNotifications']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.economy_notifications') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="economyNotifications">
+                                                    <input type="checkbox" name="economyNotifications" value="1" @checked(!empty($prefs['economyNotifications']))>
                                                 </div>
                                             </div>
                                         </div>
@@ -406,13 +360,13 @@
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.detailed_activity') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" checked="" name="showActivityMinutes" value="1">
+                                                    <input type="checkbox" name="showActivityMinutes" value="1" @checked(!empty($prefs['showActivityMinutes']))>
                                                 </div>
                                             </div>
                                             <div class="fieldwrapper">
                                                 <label class="styled textBeefy">{{ __('t_ingame.options.preserve_galaxy_system') }}</label>
                                                 <div class="thefield">
-                                                    <input type="checkbox" name="preserveSystemOnPlanetChange" value="1">
+                                                    <input type="checkbox" name="preserveSystemOnPlanetChange" value="1" @checked(!empty($prefs['preserveSystemOnPlanetChange']))>
                                                 </div>
                                             </div>
                                         </div>

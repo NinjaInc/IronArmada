@@ -45,6 +45,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $dark_matter
  * @property int $tactical_retreat_ratio
  * @property Carbon|null $dark_matter_last_regen
+ * @property array<string, int>|null $preferences
  * @property bool $vacation_mode
  * @property bool $is_bot
  * @property string|null $bot_personality
@@ -321,6 +322,7 @@ class User extends Authenticatable
             'vacation_mode_activated_at' => 'datetime',
             'vacation_mode_until' => 'datetime',
             'dark_matter_last_regen' => 'datetime',
+            'preferences' => 'array',
             'character_class_free_used' => 'boolean',
             'character_class_changed_at' => 'datetime',
             'alliance_left_at' => 'datetime',

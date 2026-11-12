@@ -1000,6 +1000,7 @@ return [
     // Options (user settings) module
     // -------------------------------------------------------------------
     'options' => [
+        'settings_saved' => 'Settings saved.',
         // Page title
         'page_title'                                => 'Options',
 

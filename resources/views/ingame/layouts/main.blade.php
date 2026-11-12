@@ -1806,6 +1806,9 @@ However, the Space Dock's engineers think that some of the remains can be salvag
 </div>
 
 <!-- Chat Bar -->
+@if (\OGame\Services\UserPreferencesService::get($currentPlayer->getUser(), 'disable_chat_bar'))
+    <style>#chatBar { display: none !important; }</style>
+@endif
 <div id="chatBar">
     <ul class="chat_bar_list">
         <li id="chatBarPlayerList" class="chat_bar_pl_list_item">

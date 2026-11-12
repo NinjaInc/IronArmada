@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use OGame\Services\PlayerService;
+use OGame\Services\UserPreferencesService;
 
 class OptionsController extends OGameController
 {
@@ -32,6 +33,7 @@ class OptionsController extends OGameController
             'canUpdateUsername' => $canUpdateUsername,
             'player' => $player,
             'espionage_probes_amount' => $player->getEspionageProbesAmount(),
+            'prefs' => UserPreferencesService::forUser($player->getUser()),
         ]);
     }
 
@@ -185,6 +187,11 @@ class OptionsController extends OGameController
      */
     public function save(Request $request, PlayerService $player): RedirectResponse
     {
+        // Interface preferences live in the same form and always save.
+        if ($request->has('selectedTab')) {
+            UserPreferencesService::saveFromRequest($player->getUser(), $request->all());
+        }
+
         // Define change handlers.
         $change_handlers = [
             'processChangeUsername',
@@ -212,7 +219,7 @@ class OptionsController extends OGameController
             }
         }
 
-        // No actual change has been detected, return to index page.
-        return redirect()->route('options.index');
+        // No account change detected: preferences were saved, go back to the page.
+        return redirect()->route('options.index')->with('success', __('t_ingame.options.settings_saved'));
     }
 }

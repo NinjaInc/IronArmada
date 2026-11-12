@@ -178,7 +178,7 @@ class PlanetListService
         $result = [];
 
         // First add all planets
-        foreach ($this->planets as $planet) {
+        foreach ($this->orderedPlanets() as $planet) {
             $result[] = $planet;
 
             // Check if this planet has a moon
@@ -197,7 +197,37 @@ class PlanetListService
      */
     public function allPlanets(): array
     {
-        return $this->planets;
+        return $this->orderedPlanets();
+    }
+
+    /**
+     * Planets in the order the player chose under Options > Planets.
+     * Only affects display order, first() keeps the original (homeworld) order.
+     *
+     * @return array<PlanetService>
+     */
+    private function orderedPlanets(): array
+    {
+        $prefs = UserPreferencesService::forUser($this->player->getUser());
+        $sort = $prefs['settings_sort'];
+        $planets = $this->planets;
+
+        if ($sort > 0) {
+            usort($planets, function (PlanetService $a, PlanetService $b) use ($sort): int {
+                $ca = $a->getPlanetCoordinates();
+                $cb = $b->getPlanetCoordinates();
+
+                return match ($sort) {
+                    1 => [$ca->galaxy, $ca->system, $ca->position] <=> [$cb->galaxy, $cb->system, $cb->position],
+                    2 => strcasecmp($a->getPlanetName(), $b->getPlanetName()),
+                    3 => $a->getPlanetDiameter() <=> $b->getPlanetDiameter(),
+                    4 => $a->getBuildingCount() <=> $b->getBuildingCount(),
+                    default => 0,
+                };
+            });
+        }
+
+        return $prefs['settings_order'] === 1 ? array_reverse($planets) : $planets;
     }
 
     /**

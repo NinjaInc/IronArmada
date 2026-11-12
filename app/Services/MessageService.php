@@ -197,7 +197,7 @@ class MessageService
         $paginator = Message::where('user_id', $this->player->getId())
             ->whereIn('key', $messageKeys)
             ->orderBy('created_at', 'desc')
-            ->paginate(10, ['*'], 'page', $page);
+            ->paginate(UserPreferencesService::get($this->player->getUser(), 'msgResultsPerPage'), ['*'], 'page', $page);
 
         // Convert messages to GameMessage objects.
         $gameMessages = [];
