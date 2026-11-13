@@ -848,3 +848,37 @@ body#ingamepage::after { content: ""; position: fixed; inset: 0; pointer-events:
     #productionboxBottom .content-box-s .header { clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 100%, 14px 100%); margin: 0 14px; border-bottom: 2px solid var(--ia-amber) !important; background: linear-gradient(180deg, rgba(143,179,209,.22), rgba(143,179,209,.04)) !important; box-shadow: 0 6px 12px -8px var(--ia-amber); }
     #productionboxBottom .content-box-s .header h3 { text-align: center; }
 }
+
+/* ===== New art pass: page banners, menu icons, class emblems ===== */
+#researchcomponent #planet, #shipyardcomponent #planet, #defensescomponent #planet,
+#facilitiescomponent header[data-anchor], #fleetdispatchcomponent #planet, #fleetdispatchcomponent #fleet2 #planet,
+#alliancecomponent #planet, #traderOverviewcomponent #planet, #directivescomponent #planet, #rewardscomponent #planet {
+    background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; }
+#facilitiescomponent header[data-anchor] { background-image: url(/img/iron-armada/banners/facilities.jpg) !important; }
+#researchcomponent #planet { background-image: url(/img/iron-armada/banners/research.jpg) !important; }
+#shipyardcomponent #planet { background-image: url(/img/iron-armada/banners/shipyard.jpg) !important; }
+#defensescomponent #planet { background-image: url(/img/iron-armada/banners/defence.jpg) !important; }
+#fleetdispatchcomponent #planet, #fleetdispatchcomponent #fleet2 #planet { background-image: url(/img/iron-armada/banners/fleet.jpg) !important; }
+#alliancecomponent #planet:not(.shortHeader) { background-image: url(/img/iron-armada/banners/alliance.jpg) !important; }
+#traderOverviewcomponent #planet { background-image: url(/img/iron-armada/banners/merchant.jpg) !important; }
+#directivescomponent #planet, #rewardscomponent #planet { background-image: url(/img/iron-armada/banners/directives.jpg) !important; }
+
+/* left menu icons: one art tile per entry, no sprite offsets */
+.menu_icon .menuImage { background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important; }
+.menu_icon .menuImage.overview, .menu_icon .menuImage.overview_claimable { background-image: url(/img/iron-armada/ui/menu_overview.webp) !important; }
+.menu_icon .menuImage.resources { background-image: url(/img/iron-armada/ui/menu_resources.webp) !important; }
+.menu_icon .menuImage.station { background-image: url(/img/iron-armada/ui/menu_facilities.webp) !important; }
+.menu_icon .menuImage.traderOverview { background-image: url(/img/iron-armada/ui/menu_merchant.webp) !important; }
+.menu_icon .menuImage.research { background-image: url(/img/iron-armada/ui/menu_research.webp) !important; }
+.menu_icon .menuImage.shipyard { background-image: url(/img/iron-armada/ui/menu_shipyard.webp) !important; }
+.menu_icon .menuImage.defense { background-image: url(/img/iron-armada/ui/menu_defence.webp) !important; }
+.menu_icon .menuImage.fleet1 { background-image: url(/img/iron-armada/ui/menu_fleet.webp) !important; }
+.menu_icon .menuImage.galaxy { background-image: url(/img/iron-armada/ui/menu_galaxy.webp) !important; }
+.menu_icon .menuImage.alliance { background-image: url(/img/iron-armada/ui/menu_alliance.webp) !important; }
+.menu_icon .menuImage.rewarding { background-image: url(/img/iron-armada/ui/menu_directives.webp) !important; }
+.menu_icon .menuImage.active, .menu_icon .menuImage.highlighted { background-position: center !important; }
+
+/* class emblems */
+.sprite.characterclass.miner, .sprite.characterclass.small.miner, .sprite.characterclass.medium.miner, .sprite.characterclass.large.miner { background-image: url(/img/iron-armada/ui/class_miner.webp) !important; background-size: contain !important; background-position: center !important; }
+.sprite.characterclass.warrior, .sprite.characterclass.small.warrior, .sprite.characterclass.medium.warrior, .sprite.characterclass.large.warrior { background-image: url(/img/iron-armada/ui/class_warrior.webp) !important; background-size: contain !important; background-position: center !important; }
+.sprite.characterclass.explorer, .sprite.characterclass.small.explorer, .sprite.characterclass.medium.explorer, .sprite.characterclass.large.explorer { background-image: url(/img/iron-armada/ui/class_explorer.webp) !important; background-size: contain !important; background-position: center !important; }
