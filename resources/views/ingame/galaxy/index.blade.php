@@ -11,6 +11,7 @@
     @if ($is_in_vacation_mode ?? false)
     <div id="galaxycomponent" class="maincontent">
         <div id="inhalt">
+            <div class="ia-banner ia-banner-galaxy" aria-hidden="true"></div>
             <div id="galaxyContent">
                 <div class="galaxyTable" style="background: #000; border: none !important;">
                     <div class="galaxyRow ctGalaxyFleetInfo" id="fleetstatusrow" style="text-align: center;">

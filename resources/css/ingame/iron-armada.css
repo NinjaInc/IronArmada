@@ -882,3 +882,9 @@ body#ingamepage::after { content: ""; position: fixed; inset: 0; pointer-events:
 .sprite.characterclass.miner, .sprite.characterclass.small.miner, .sprite.characterclass.medium.miner, .sprite.characterclass.large.miner { background-image: url(/img/iron-armada/ui/class_miner.webp) !important; background-size: contain !important; background-position: center !important; }
 .sprite.characterclass.warrior, .sprite.characterclass.small.warrior, .sprite.characterclass.medium.warrior, .sprite.characterclass.large.warrior { background-image: url(/img/iron-armada/ui/class_warrior.webp) !important; background-size: contain !important; background-position: center !important; }
 .sprite.characterclass.explorer, .sprite.characterclass.small.explorer, .sprite.characterclass.medium.explorer, .sprite.characterclass.large.explorer { background-image: url(/img/iron-armada/ui/class_explorer.webp) !important; background-size: contain !important; background-position: center !important; }
+
+/* ===== Follow-ups: ingame logo, galaxy banner, galaxy moon/debris icons, missile mission ===== */
+.ia-banner-galaxy { height: 150px; margin: 0 auto 3px; width: 654px; max-width: 100%; background: url(/img/iron-armada/banners/galaxy.jpg) center / cover no-repeat; border: 1px solid rgba(143,179,209,.35); }
+#galaxyContent .ctContentRow .cellMoon .moon_a, #galaxyContent .ctContentRow .cellMoon .moon_c { background: url(/img/iron-armada/ui/moon.webp) no-repeat center / 90% !important; }
+#galaxyContent .ctContentRow .cellDebris .debris_1 { background: url(/img/iron-armada/ui/debris.webp) no-repeat center / 90% !important; }
+#fleet2 #buttonz ul#missions li#button10 a, #fleet2 #buttonz ul#missions li#button10.on a, #fleet2 #buttonz ul#missions li#button10.off a { background-image: url("/img/iron-armada/ui/mission_10.webp") !important; background-size: contain !important; background-position: center !important; }
