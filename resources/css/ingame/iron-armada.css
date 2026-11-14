@@ -888,3 +888,6 @@ body#ingamepage::after { content: ""; position: fixed; inset: 0; pointer-events:
 #galaxyContent .ctContentRow .cellMoon .moon_a, #galaxyContent .ctContentRow .cellMoon .moon_c { background: url(/img/iron-armada/ui/moon.webp) no-repeat center / 90% !important; }
 #galaxyContent .ctContentRow .cellDebris .debris_1 { background: url(/img/iron-armada/ui/debris.webp) no-repeat center / 90% !important; }
 #fleet2 #buttonz ul#missions li#button10 a, #fleet2 #buttonz ul#missions li#button10.on a, #fleet2 #buttonz ul#missions li#button10.off a { background-image: url("/img/iron-armada/ui/mission_10.webp") !important; background-size: contain !important; background-position: center !important; }
+
+/* missile launch icon (galaxy action row) */
+.icon.icon_missile { background: url(/img/iron-armada/ui/missile_launch.webp) no-repeat center / contain !important; }
