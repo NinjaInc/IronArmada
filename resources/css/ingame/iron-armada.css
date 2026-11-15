@@ -891,3 +891,8 @@ body#ingamepage::after { content: ""; position: fixed; inset: 0; pointer-events:
 
 /* missile launch icon (galaxy action row) */
 .icon.icon_missile { background: url(/img/iron-armada/ui/missile_launch.webp) no-repeat center / contain !important; }
+
+/* alliance class icons */
+.alliance_class.small.trader:before { background: url(/img/iron-armada/ui/alliance_trader.webp) no-repeat center / contain !important; }
+.alliance_class.small.explorer:before { background: url(/img/iron-armada/ui/alliance_explorer.webp) no-repeat center / contain !important; }
+.alliance_class.small.warrior:before { background: url(/img/iron-armada/ui/alliance_warrior.webp) no-repeat center / contain !important; }
