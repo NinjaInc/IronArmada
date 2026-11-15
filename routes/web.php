@@ -30,6 +30,7 @@ use OGame\Http\Controllers\OverviewController;
 use OGame\Http\Controllers\PhalanxController;
 use OGame\Http\Controllers\PlanetAbandonController;
 use OGame\Http\Controllers\PlanetMoveController;
+use OGame\Http\Controllers\PublicHighscoreController;
 use OGame\Http\Controllers\ResearchController;
 use OGame\Http\Controllers\ResourcesController;
 use OGame\Http\Controllers\RewardsController;
@@ -61,6 +62,11 @@ Route::get('/ajax/main/legal', [RulesController::class, 'ajaxLegal'])->name('leg
 Route::get('/ajax/main/privacy-policy', [RulesController::class, 'ajaxPrivacyPolicy'])->name('privacypolicy.ajax');
 Route::get('/ajax/main/terms', [RulesController::class, 'ajaxTerms'])->name('terms.ajax');
 Route::get('/ajax/main/contact', [RulesController::class, 'ajaxContact'])->name('contact.ajax');
+
+// Public read-only top 10 feed for outside sites (the xLAx clan website).
+Route::get('/api/public/highscores', [PublicHighscoreController::class, 'top'])
+    ->middleware('throttle:60,1')
+    ->name('public.highscores');
 
 // Group: all logged in pages:
 Route::middleware(['auth', 'banned', 'globalgame', 'locale', 'firstlogin'])->group(function () {
