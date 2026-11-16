@@ -253,7 +253,7 @@ abstract class AbstractBuildingsController extends OGameController
         }
 
         // Explicitly verify CSRF token because this request supports both POST and GET.
-        if (!hash_equals($request->session()->token(), $request->input('_token'))) {
+        if (!hash_equals((string) $request->session()->token(), (string) $request->input('_token'))) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid token.',
@@ -296,7 +296,7 @@ abstract class AbstractBuildingsController extends OGameController
         }
 
         // Explicitly verify CSRF token because this request supports both POST and GET.
-        if (!hash_equals($request->session()->token(), $request->input('_token'))) {
+        if (!hash_equals((string) $request->session()->token(), (string) $request->input('_token'))) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid token.',
