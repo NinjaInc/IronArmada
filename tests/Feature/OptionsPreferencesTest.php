@@ -57,6 +57,17 @@ class OptionsPreferencesTest extends IsolatedAccountTestCase
         $this->assertSame(10, $prefs['msgResultsPerPage']);
     }
 
+    public function testEventsShowPreferenceReachesLayout(): void
+    {
+        $this->post('/options', ['selectedTab' => '1', 'eventsShow' => '3', '_token' => csrf_token()]);
+
+        $this->get('/overview')->assertSee('var eventsShowPref = 3;', false);
+
+        $this->post('/options', ['selectedTab' => '1', 'eventsShow' => '1', '_token' => csrf_token()]);
+
+        $this->get('/overview')->assertSee('var eventsShowPref = 1;', false);
+    }
+
     public function testChatBarHiddenWhenDisabled(): void
     {
         $this->post('/options', ['selectedTab' => '1', 'disable_chat_bar' => '1', '_token' => csrf_token()]);
