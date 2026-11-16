@@ -57,9 +57,7 @@
 
                             <form autocomplete="off" method="post" name="prefs" id="prefs" class="formValidation" action="{{ route('options.save') }}">
                                 {{ csrf_field() }}
-                                <!--<input type="hidden" name="mode" value="save">
-                            <input type="hidden" id="selectedTab" name="selectedTab" value="0">
-                            <input type="hidden" name="token" value="1deca78fc6abd579d0444cd354eb4d8b">-->
+                                <input type="hidden" id="selectedTab" name="selectedTab" value="0">
 
                                 <div class="content">
 

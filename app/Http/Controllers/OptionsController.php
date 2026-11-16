@@ -188,9 +188,7 @@ class OptionsController extends OGameController
     public function save(Request $request, PlayerService $player): RedirectResponse
     {
         // Interface preferences live in the same form and always save.
-        if ($request->has('selectedTab')) {
-            UserPreferencesService::saveFromRequest($player->getUser(), $request->all());
-        }
+        UserPreferencesService::saveFromRequest($player->getUser(), $request->all());
 
         // Define change handlers.
         $change_handlers = [
