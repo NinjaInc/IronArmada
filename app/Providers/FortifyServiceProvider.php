@@ -71,16 +71,10 @@ class FortifyServiceProvider extends ServiceProvider
             return $user;
         });
 
-        /*Fortify::registerView(function () {
-            return view('auth.register');
-        });
-
-        Fortify::requestPasswordResetLinkView(function () {
-            return view('auth.forgot-password');
-        });
-
-        Fortify::resetPasswordView(function () {
-            return view('auth.reset-password');
-        });*/
+        // Registration and password reset are handled from the login page (POST only).
+        // Fortify's GET view routes still exist, so bind them to a redirect instead of a 500.
+        Fortify::registerView(fn () => redirect()->route('login'));
+        Fortify::requestPasswordResetLinkView(fn () => redirect()->route('login'));
+        Fortify::resetPasswordView(fn () => redirect()->route('login'));
     }
 }
