@@ -38,6 +38,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/iron-armada/favicon-32.png"/>
     <link rel="icon" href="/favicon.ico" sizes="any"/>
     <link rel="apple-touch-icon" href="/img/iron-armada/icon-180.png"/>
+    @include('partials.pwa-head')
     @vite(['resources/css/outgame.css', 'resources/js/outgame.js'])
 
     <script type="text/javascript">

@@ -79,6 +79,7 @@ html:has(body.ia) {
     flex-direction: column;
     min-height: 100vh;
     min-height: 100svh;
+    overflow-x: clip;
 }
 .ia-page *,
 .ia-page *::before,
@@ -191,16 +192,17 @@ html:has(body.ia) {
 
 /* the armour plate (sign in / create account) */
 .ia-plate {
+    --ia-cut: 30px;
     align-self: center;
     padding: 1px;
     background: linear-gradient(160deg, #3d5a73, #1f2f3d 55%, #2c4357);
-    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px));
+    clip-path: polygon(0 0, calc(100% - var(--ia-cut)) 0, 100% var(--ia-cut), 100% 100%, var(--ia-cut) 100%, 0 calc(100% - var(--ia-cut)));
     filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.55));
 }
 .ia-plate-inner {
     position: relative;
     background: linear-gradient(180deg, rgba(20, 29, 37, 0.96), rgba(10, 16, 22, 0.97));
-    clip-path: polygon(0 0, calc(100% - 29px) 0, 100% 29px, 100% 100%, 29px 100%, 0 calc(100% - 29px));
+    clip-path: polygon(0 0, calc(100% - (var(--ia-cut) - 1px)) 0, 100% calc(var(--ia-cut) - 1px), 100% 100%, calc(var(--ia-cut) - 1px) 100%, 0 calc(100% - (var(--ia-cut) - 1px)));
 }
 .ia-plate-inner::before {
     content: "";
@@ -424,6 +426,9 @@ html:has(body.ia) {
         --art-y: 20vh;
         background-position: center top, 22% 22vh;
         background-size: 100% 100%, auto 62vh;
+        background-image: linear-gradient(180deg, #070a0e 0, #070a0e var(--art-y), rgba(7, 10, 14, 0) calc(var(--art-y) + 140px), rgba(7, 10, 14, 0) 68vh, #070a0e 84vh), -webkit-image-set(url("/img/iron-armada/login-background.jpg") 1x, url("/img/iron-armada/login-background@2x.jpg") 2x);
+        background-image: linear-gradient(180deg, #070a0e 0, #070a0e var(--art-y), rgba(7, 10, 14, 0) calc(var(--art-y) + 140px), rgba(7, 10, 14, 0) 68vh, #070a0e 84vh), image-set(url("/img/iron-armada/login-background.jpg") 1x, url("/img/iron-armada/login-background@2x.jpg") 2x);
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
     .ia-brand img {
         height: 52px;
@@ -444,6 +449,40 @@ html:has(body.ia) {
     }
     .ia-footer-langs {
         justify-content: flex-start;
+    }
+    .ia-footer-links a,
+    .ia-footer-langs a {
+        display: inline-block;
+        padding: 6px 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ia-header {
+        padding: 14px 14px 0;
+    }
+    .ia-hero {
+        padding: 14px 14px 36px;
+        gap: 18px;
+    }
+    .ia-hero-copy h1 {
+        font-size: clamp(38px, 10.5vw, 48px);
+        line-height: 0.98;
+    }
+    .ia-hero-copy p {
+        margin-top: 12px;
+        font-size: 16px;
+    }
+    .ia-panel {
+        padding: 20px 18px 24px;
+    }
+    .ia-plate {
+        --ia-cut: 18px;
+    }
+    .ia-tabs button {
+        font-size: clamp(18px, 5vw, 21px);
+        min-height: 48px;
+        padding: 14px 8px;
     }
 }
 

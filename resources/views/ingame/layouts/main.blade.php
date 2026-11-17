@@ -25,6 +25,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/img/iron-armada/favicon-32.png"/>
     <link rel="icon" href="/favicon.ico" sizes="any"/>
     <link rel="apple-touch-icon" href="/img/iron-armada/icon-180.png"/>
+    @include('partials.pwa-head')
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="Language" content="en"/>
     <meta name="ogame-session" content="3c442273a6de4c8f79549e78f4c3ca50e7ea7580"/>

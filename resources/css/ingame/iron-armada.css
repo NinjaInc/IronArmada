@@ -161,7 +161,7 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
    ========================================================================== */
 @media (max-width: 900px) {
     html, body#ingamepage { min-width: 0 !important; width: 100% !important; overflow-x: hidden; }
-    body#ingamepage { -webkit-text-size-adjust: 100%; }
+    body#ingamepage { -webkit-text-size-adjust: 100%; background-attachment: scroll !important; }
 
     #siteHeader { height: auto; min-height: 22px; }
     #pageContent { width: 100% !important; min-width: 0 !important; max-width: 100%; box-sizing: border-box; padding: 0 6px; }
@@ -169,26 +169,28 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     /* header block */
     #top { height: auto !important; min-height: 0; display: block; position: relative; padding: 8px 8px 10px; box-sizing: border-box; width: 100% !important; }
     #headerbarcomponent, #headerbarcomponent #bar { position: static !important; width: 100% !important; height: auto !important; margin: 0 !important; }
-    #headerbarcomponent #bar ul { display: flex; flex-wrap: wrap; gap: 2px 14px; justify-content: space-between; margin: 0; padding: 0; }
+    #headerbarcomponent #bar ul { display: flex; flex-wrap: wrap; gap: 4px 10px; justify-content: space-between; margin: 0; padding: 0; }
     #headerbarcomponent #bar li { float: none !important; position: static !important; width: auto !important; margin: 0 !important; }
-    #pageReloader { position: relative !important; top: auto !important; left: auto !important; display: block; width: 190px; height: 48px; margin: 6px 0 8px; }
+    #headerbarcomponent #bar li a { display: inline-block; padding: 6px 4px; font-size: 13px; }
+    #pageReloader { position: relative !important; top: auto !important; left: auto !important; display: block; width: 160px; height: 40px; margin: 4px 0 6px; }
 
     #resourcesbarcomponent { position: static !important; width: 100% !important; height: auto !important; float: none !important; left: auto; top: auto; }
     #resourcesbarcomponent #resources { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; width: 100% !important; height: auto !important; margin: 0; padding: 0; }
     #resourcesbarcomponent .resource_tile { position: relative; float: none !important; width: auto !important; height: auto !important; margin: 0 !important; padding: 0 !important; background: none !important; min-width: 0; }
     #resourcesbarcomponent .resource_tile .resource { position: static !important; float: none !important; width: 100% !important; height: auto !important; margin: 0 !important; padding: 4px 2px 5px !important; box-sizing: border-box; text-align: center; }
-    #resourcesbarcomponent .resourceIcon { position: static !important; display: block; margin: 0 auto 2px !important; transform: scale(.7); transform-origin: center; height: 34px !important; }
-    #resourcesbarcomponent .resource .value { position: static !important; display: block; width: 100% !important; margin: 0 !important; padding: 0 !important; font-size: 12px !important; line-height: 14px; text-align: center; overflow: hidden; text-overflow: ellipsis; }
-    #resourcesbarcomponent .resource_tile::after { left: 2px; right: 2px; }
+    #resourcesbarcomponent .resourceIcon { position: static !important; display: block; transform: none !important; width: 36px !important; height: 26px !important; margin: 0 auto 2px !important; }
+    #resourcesbarcomponent .resource .value { position: static !important; display: block; width: 100% !important; margin: 0 !important; padding: 0 !important; font-size: 12px !important; line-height: 14px; text-align: center; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    #resourcesbarcomponent .resource_tile::after { left: 2px; right: 2px; bottom: 0 !important; }
 
     #notificationbarcomponent { position: relative !important; overflow: hidden; width: auto !important; height: auto !important; min-height: 40px; margin: 8px 0 0 !important; left: auto; right: auto; top: auto; box-sizing: border-box; }
 
     /* menu becomes a wrapped strip of buttons */
     #left { float: none !important; position: static !important; top: auto !important; width: 100% !important; margin: 8px 0 0; }
     #links, #rechts { float: none !important; width: 100% !important; max-width: 100% !important; }
-    #links #menuTable { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+    #links #menuTable { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 0; padding: 0; list-style: none; }
     #links .leftmenu li { margin: 0 !important; float: none !important; width: auto !important; }
-    #links .leftmenu a.menubutton { display: flex !important; align-items: center; width: 100% !important; height: 40px !important; line-height: 1.1 !important; padding: 0 8px !important; }
+    #links .leftmenu a.menubutton { display: flex !important; align-items: center; width: 100% !important; min-height: 44px; height: auto !important; line-height: 1.15 !important; padding: 6px 10px !important; }
+    #links .leftmenu a.menubutton.selected { box-shadow: inset 0 0 12px rgba(231, 177, 90, 0.16); }
     #links .leftmenu a.menubutton .menu_icon { display: none !important; }
     #links .leftmenu a.menubutton .textlabel { display: block; width: 100%; font-size: 14px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #links .leftmenu .menu_icon { display: none !important; }
@@ -196,7 +198,7 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     /* content */
     #middle { float: none !important; width: 100% !important; margin: 8px 0 0 !important; }
     #contentWrapper, #box #inhalt, #middle #inhalt, #inhalt { width: 100% !important; max-width: 100%; box-sizing: border-box; }
-    #contentWrapper { padding-bottom: 16px !important; overflow-x: auto; }
+    #contentWrapper { padding-bottom: 16px !important; overflow-x: hidden; }
     #inhalt img, #inhalt video { max-width: 100%; height: auto; }
     #inhalt table { max-width: 100%; }
     #inhalt .content-box-s, #inhalt .contentz, #inhalt .content, #inhalt .header, #inhalt .footer { max-width: 100%; box-sizing: border-box; }
@@ -219,7 +221,7 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     /* wrappers that carried fixed widths */
     #toolbarcomponent, #planetbarcomponent { width: 100% !important; float: none !important; }
     #message-wrapper, #messages_collapsed, #eventboxLoading, #eventboxFilled, #eventboxBlank, #eventboxContent { position: relative !important; width: 100% !important; left: auto !important; top: auto !important; box-sizing: border-box; }
-    #attack_alert { display: none; }
+    #attack_alert { position: relative !important; right: auto !important; top: auto !important; margin: 4px auto 0 !important; display: inline-block; }
     #headerbarcomponent #bar, #headerbarcomponent #bar ul { height: auto !important; overflow: visible; }
     #headerbarcomponent #bar ul { margin-bottom: 8px !important; }
 
@@ -230,7 +232,8 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 
     /* planet overview panel: fixed 650px children -> fluid */
     #detailWrapper, #header_text, #planetdata, #planetdata .overlay, #planetDetails, #planetDetails table, #planetOptions, #buffBar { width: 100% !important; max-width: 100% !important; left: auto !important; box-sizing: border-box; }
-    #planetDetails table { position: static !important; }
+    #planetDetails table { position: static !important; display: table !important; width: 100% !important; }
+    #planetDetails td { padding: 5px 8px; font-size: 13px; line-height: 1.35; }
     #planetDetails td.data { width: auto !important; }
     #planetDetails td.desc { width: 40% !important; }
     #header_text h2 { width: auto !important; max-width: 100%; overflow-wrap: anywhere; font-size: 18px; }
@@ -243,13 +246,15 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     /* planets list */
     #right { float: none !important; width: 100% !important; margin-top: 8px; }
     #rechts { width: 100% !important; margin: 0 !important; }
-    #rechts #planetList { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
-    #rechts .smallplanet { float: none !important; flex: 0 0 150px; margin: 0 !important; }
+    #rechts #planetList { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 6px; padding: 2px 2px 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
+    #rechts .smallplanet { float: none !important; flex: 0 0 156px; margin: 0 !important; scroll-snap-align: start; }
+    #rechts .smallplanet a.planetlink { display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 6px 8px; box-sizing: border-box; }
 
     /* footer + chat */
     #siteFooter { height: auto; line-height: 1.5; padding: 6px 0; }
     #siteFooter .content { display: block; text-align: center; }
     #siteFooter .fleft, #siteFooter .fright { float: none !important; display: block; width: auto !important; }
+    #siteFooter a { display: inline-block; padding: 6px 8px; }
     #chatBar { max-width: 100%; }
 }
 
@@ -285,7 +290,10 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     #technologydetails_content .information, #technologydetails_content .build_duration { max-width: 100%; }
 
     /* bigger tap targets */
-    #inhalt a.build-it, #inhalt .build-it, #inhalt input.btn_blue, #inhalt button, #inhalt a.btn_blue, #inhalt input[type=submit] { min-height: 38px; }
+    #inhalt a.build-it, #inhalt .build-it, #inhalt input.btn_blue, #inhalt button, #inhalt a.btn_blue, #inhalt input[type=submit] { min-height: 44px; padding: 8px 14px; }
+    #inhalt a.build-it, #inhalt a.btn_blue { display: inline-flex; align-items: center; justify-content: center; }
+    #fleet2 #buttonz ul#missions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    #fleet2 #buttonz ul#missions li { float: none !important; margin: 0 !important; }
     .ui-dialog, .overlayDiv, #overlayDiv { max-width: 96vw !important; left: 2vw !important; width: 96vw !important; }
     .ui-dialog .ui-dialog-content { width: auto !important; max-width: 100%; overflow-x: auto; }
 }
@@ -294,11 +302,11 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 @media (max-width: 900px) {
     #galaxyHeader { height: auto !important; margin: 0 !important; padding: 6px !important; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; box-sizing: border-box; width: 100% !important; }
     #galaxyHeader form, #galaxyHeader > div { float: none !important; }
-    #galaxyHeader .btn_blue { float: none !important; height: auto !important; min-height: 32px; line-height: 32px !important; padding: 0 10px !important; display: inline-block; }
+    #galaxyHeader .btn_blue { float: none !important; height: auto !important; min-height: 42px; line-height: 1.2 !important; padding: 0 12px !important; display: inline-flex; align-items: center; justify-content: center; }
     #galaxyHeader .systembuttons { float: none !important; display: flex; flex-wrap: wrap; gap: 4px; width: 100%; }
     #galaxyHeader .btn_system_action { flex: 1 1 45%; min-width: 0; text-align: center; }
-    #galaxyHeader input#galaxy_input, #galaxyHeader input#system_input { width: 56px !important; height: 32px; font-size: 16px; text-align: center; }
-    #galaxyHeader .galaxy_icons { transform: scale(1.25); margin: 0 6px; }
+    #galaxyHeader input#galaxy_input, #galaxyHeader input#system_input { width: 56px !important; height: 36px; font-size: 16px; text-align: center; }
+    #galaxyHeader .galaxy_icons { transform: none; min-width: 36px; min-height: 36px; display: inline-flex; align-items: center; justify-content: center; margin: 0 2px; }
 
     #galaxyContent, #galaxyContent .galaxyTable { width: 100% !important; max-width: 100%; overflow-x: visible; box-sizing: border-box; }
     #galaxyContent .ctGalaxyHead, #galaxyContent .ctGalaxyFleetInfo, #galaxyContent .ctGalaxyFooter { height: auto !important; min-height: 24px !important; flex-wrap: wrap; padding: 3px 4px; }
@@ -307,16 +315,16 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
     #galaxyContent .filterCell { display: flex; gap: 4px; }
     #galaxyContent .filter { min-width: 28px; min-height: 28px; display: flex; align-items: center; justify-content: center; }
 
-    #galaxyContent .galaxyRow.ctContentRow { flex-wrap: wrap; min-height: 0; gap: 3px 4px; padding: 4px; background: rgba(7,10,14,.55); border: 1px solid var(--ia-seam-dim); border-radius: 2px; }
+    #galaxyContent .galaxyRow.ctContentRow { flex-wrap: wrap; min-height: 0; gap: 6px 4px; margin-bottom: 6px; padding: 8px 6px; background: rgba(7,10,14,.55); border: 1px solid var(--ia-seam-dim); border-radius: 2px; }
+    #galaxyContent .ctContentRow .galaxyCell { background: transparent; border: 0; }
     #galaxyContent .ctContentRow .cellPosition { flex: 0 0 24px; width: 24px; }
     #galaxyContent .ctContentRow .cellPlanet { flex: 0 0 44px; width: 44px; }
     #galaxyContent .ctContentRow .cellPlanetName { flex: 1 1 90px; min-width: 0; justify-content: flex-start; }
     #galaxyContent .ctContentRow .cellMoon, #galaxyContent .ctContentRow .cellDebris { flex: 0 0 34px; width: 34px; }
-    #galaxyContent .ctContentRow .cellPlayerName { flex: 1 1 40%; min-width: 0; justify-content: flex-start; padding: 0 6px; min-height: 30px; }
-    #galaxyContent .ctContentRow .cellAlliance { flex: 1 1 18%; width: auto; min-width: 48px; min-height: 30px; }
-    #galaxyContent .ctContentRow .cellAction { flex: 1 1 100%; width: 100%; justify-content: space-around; flex-wrap: wrap; gap: 6px; min-height: 34px; }
-    #galaxyContent .ctContentRow .cellAction .emptyAction, #galaxyContent .ctContentRow .cellAction > span { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
-    #galaxyContent .ctContentRow .cellAction a { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
+    #galaxyContent .ctContentRow .cellPlayerName { flex: 1 1 40%; min-width: 0; justify-content: flex-start; padding: 0 6px; min-height: 32px; background: rgba(22,34,46,.65); border: 1px solid rgba(59,99,133,.3); }
+    #galaxyContent .ctContentRow .cellAlliance { flex: 1 1 18%; width: auto; min-width: 48px; min-height: 32px; background: rgba(22,34,46,.65); border: 1px solid rgba(59,99,133,.3); }
+    #galaxyContent .ctContentRow .cellAction { flex: 1 1 100%; width: 100%; justify-content: space-around; flex-wrap: wrap; gap: 8px; min-height: 40px; padding-top: 4px; border-top: 1px solid var(--ia-seam-dim); }
+    #galaxyContent .ctContentRow .cellAction .emptyAction, #galaxyContent .ctContentRow .cellAction > span, #galaxyContent .ctContentRow .cellAction a { min-width: 40px; min-height: 40px; width: auto; height: auto; display: inline-flex; align-items: center; justify-content: center; background: rgba(16,26,36,.7); border: 1px solid rgba(59,99,133,.35); border-radius: 4px; }
     #galaxyContent .ctContentRow .cellAction img { width: 22px; height: 22px; }
     #galaxyContent .ctContentRow .galaxyCell:empty { display: none; }
     #galaxyContent .expeditionDebrisSlotBox { width: 100% !important; box-sizing: border-box; }
@@ -324,7 +332,9 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 
 @media (max-width: 480px) {
     #links #menuTable { grid-template-columns: repeat(2, 1fr); }
-    #resourcesbarcomponent #resources { grid-template-columns: repeat(3, 1fr); }
+    #resourcesbarcomponent #resources { grid-template-columns: repeat(6, 1fr); }
+    #resourcesbarcomponent .resource_tile:nth-child(-n+3) { grid-column: span 2; }
+    #resourcesbarcomponent .resource_tile:nth-child(n+4) { grid-column: span 3; }
 }
 
 /* ---- Directives page ---- */
@@ -346,7 +356,7 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 .ia-directive-dm small { font-size: 11px; color: var(--ia-ink3); }
 .ia-directive-state { font-size: 12px; color: var(--ia-ink3); }
 .ia-directive-reward .btn_blue { min-height: 30px; padding: 0 12px; cursor: pointer; }
-@media (max-width: 900px) { .ia-directives-balance { float: none; display: block; } .ia-directive { flex-wrap: wrap; } .ia-directive-reward { width: 100%; display: flex; align-items: center; justify-content: space-between; } }
+@media (max-width: 900px) { .ia-directives-balance { float: none; display: block; } .ia-directive { flex-wrap: wrap; } .ia-directive-reward { width: 100%; display: flex; align-items: center; justify-content: space-between; } .ia-directive-reward .btn_blue { min-height: 44px; padding: 0 16px; } }
 
 /* ---- Battle / espionage reports (message details) ---- */
 #messagedetails { font-family: "Barlow", sans-serif; color: var(--ia-ink2); }
@@ -786,7 +796,9 @@ body#ingamepage :focus-visible { outline: 2px solid var(--ia-amber-hi); outline-
 
 /* planet list: amber rail on the current planet, hover slide */
 #planetList .smallplanet { transition: transform .15s, filter .15s; }
-#planetList .smallplanet:hover { transform: translateX(-3px); filter: brightness(1.18); }
+@media (hover: hover) and (min-width: 901px) {
+    #planetList .smallplanet:hover { transform: translateX(-3px); filter: brightness(1.18); }
+}
 #planetList .smallplanet.hightlightPlanet, #planetList .smallplanet.active { box-shadow: 0 0 14px rgba(209,133,51,.25); }
 
 /* planet / page header art: fade into the panel and sharpen the title */
@@ -896,3 +908,266 @@ body#ingamepage::after { content: ""; position: fixed; inset: 0; pointer-events:
 .alliance_class.small.trader:before { background: url(/img/iron-armada/ui/alliance_trader.webp) no-repeat center / contain !important; }
 .alliance_class.small.explorer:before { background: url(/img/iron-armada/ui/alliance_explorer.webp) no-repeat center / contain !important; }
 .alliance_class.small.warrior:before { background: url(/img/iron-armada/ui/alliance_warrior.webp) no-repeat center / contain !important; }
+
+/* ===== Android PWA & Phone Rendering Polish ===== */
+body#ingamepage {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+@media (max-width: 900px) {
+    /* Fluid admin bar instead of fixed 990px */
+    #adminbar { height: auto !important; min-height: 32px; }
+    #adminbar #mmoContent { width: 100% !important; height: auto !important; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 4px 8px; box-sizing: border-box; }
+    #adminbar #adminLogo { float: none !important; height: auto !important; padding: 2px 6px 2px 0; }
+    #adminbar ul { float: none !important; margin: 4px 0 !important; display: flex; flex-wrap: wrap; gap: 6px 10px; }
+
+    /* Fluid fleet speed slider (overrides 600px inline style) */
+    #speedPercentage.percentageBar { float: none !important; width: 100% !important; max-width: 100%; margin-left: 0 !important; box-sizing: border-box; }
+    #percentStatus { float: none !important; margin-top: 4px; }
+
+    /* Fluid missile attack modal (overrides 420px inline styles) */
+    #rocketattack #target, #rocketattack #priority ul { width: 100% !important; max-width: 100%; justify-content: center; }
+
+    /* Fluid Select2 recipient inputs in messages */
+    .select2-container { max-width: 100% !important; }
+
+    /* Error decision modal buttons on narrow screens */
+    #errorBoxDecision a, #errorBoxDecision #errorBoxDecisionYes, #errorBoxDecision #errorBoxDecisionNo {
+        float: none !important;
+        width: 48% !important;
+        display: inline-block;
+        box-sizing: border-box;
+    }
+
+    /* Safe-area bottom padding in standalone PWA mode */
+    #siteFooter { padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
+}
+
+
+/* ===== Polish pass 5: desktop — legacy sprite cleanup & token completion ===== */
+
+/* ---- Tier 1a: Kill OGame legacy sprite GIFs (unconditional, any viewport) ---- */
+body#ingamepage #buttonz .header {
+    background-image: none !important;
+    background: linear-gradient(90deg, rgba(143,179,209,.14), transparent 80%) !important;
+    border-bottom: 1px solid var(--ia-seam);
+}
+body#ingamepage #buttonz .content { background: none !important; }
+body#ingamepage #buttonz .footer { display: none !important; }
+body#ingamepage #buttonz ul#building li a.detail_button:link,
+body#ingamepage #buttonz ul#building li a.detail_button:visited { background: none !important; }
+body#ingamepage #buttonz div.move-box { background-color: var(--ia-ink3) !important; }
+body#ingamepage #buttonz div.move-box:hover { background-color: var(--ia-amber-hi) !important; }
+
+@media (min-width: 901px) {
+
+    /* ---- Tier 1b: Messages panel — biggest OGame legacy surface on desktop ---- */
+    #messagecontainercomponent .content {
+        background: linear-gradient(180deg, rgba(26,40,54,.95), rgba(9,15,22,.97)) !important;
+        border: 1px solid var(--ia-seam) !important;
+        border-top: 2px solid var(--ia-steel) !important;
+        border-radius: 2px !important;
+    }
+    #messagecontainercomponent .content::before,
+    #messagecontainercomponent .content::after { display: none !important; }
+
+    #messagecontainercomponent .content h3 {
+        background: linear-gradient(90deg, rgba(58,127,180,.18), transparent 70%) !important;
+        font-family: "Barlow Condensed", sans-serif !important;
+        font-weight: 700 !important; font-size: 14px !important;
+        letter-spacing: .07em !important; text-transform: uppercase !important;
+        color: var(--ia-steel-hi) !important;
+        border-bottom: 1px solid var(--ia-seam-dim);
+    }
+    #messagecontainercomponent .content h3::before,
+    #messagecontainercomponent .content h3::after { display: none !important; }
+
+    #messagecontainercomponent .content .singleTab { border-radius: 2px; transition: background .12s; }
+    #messagecontainercomponent .content .singleTab:hover { background: rgba(143,179,209,.08); }
+    #messagecontainercomponent .content .singleTab.marker {
+        background: rgba(58,127,180,.18) !important;
+        border-bottom: 2px solid var(--ia-amber);
+    }
+    #messagecontainercomponent .content .tabLabel {
+        color: var(--ia-ink3) !important;
+        font-family: "Barlow", sans-serif !important; font-size: 10px !important;
+    }
+    #messagecontainercomponent .content .singleTab.marker .tabLabel { color: var(--ia-ink) !important; }
+    #messagecontainercomponent .content .singleTab .newMessagesCount {
+        background-color: var(--ia-hull1) !important;
+        border: 1px solid var(--ia-amber) !important;
+        color: var(--ia-amber-hi) !important;
+        font-family: "Barlow Condensed", sans-serif !important; font-weight: 700 !important;
+    }
+    #messagecontainercomponent .messageContent { background: var(--ia-hull1) !important; border-radius: 2px !important; }
+    #messagecontainercomponent .messagesHolder { background: var(--ia-hull0) !important; color: var(--ia-ink2) !important; }
+    #messagecontainercomponent .messagesHolder::before { display: none !important; }
+    #messagecontainercomponent .msg { background: rgba(16,26,36,.85) !important; border-left: 3px solid var(--ia-seam-dim); }
+    #messagecontainercomponent .msg_new { background: rgba(26,40,54,.92) !important; border-left-color: var(--ia-steel) !important; }
+    #messagecontainercomponent .msgStatus { background-color: var(--ia-hull2) !important; }
+    #messagecontainercomponent .msg_new .msgStatus { background-color: var(--ia-steel) !important; }
+    #messagecontainercomponent .msgStatus::before,
+    #messagecontainercomponent .msg_new .msgStatus::before { display: none !important; }
+    #messagecontainercomponent .msgHead .msgTitle {
+        color: var(--ia-ink) !important;
+        font-family: "Barlow Condensed", sans-serif !important;
+        font-weight: 600 !important; font-size: 13px !important;
+    }
+    #messagecontainercomponent .msgHead .msgDate { color: var(--ia-ink3) !important; }
+    #messagecontainercomponent .messagesFiltersWrapper {
+        background: var(--ia-hull1) !important;
+        border: 1px solid var(--ia-seam) !important;
+    }
+    #messagecontainercomponent #filteredHeadersRow {
+        background: rgba(7,10,14,.65); color: var(--ia-ink2) !important;
+        border-bottom: 1px solid var(--ia-seam-dim);
+    }
+    #messagecontainercomponent #filteredHeadersRow .filteredHeaderCell.sortBy {
+        background: linear-gradient(180deg, rgba(58,127,180,.35), rgba(58,127,180,.15)) !important;
+        color: var(--ia-ink) !important;
+    }
+    #allianceCommunicationWrapper { border-top: 1px solid var(--ia-seam-dim) !important; }
+
+    /* ---- Tier 1c: Barlow Condensed on page section headings ---- */
+    #buttonz h2, #movement h3 a, #movement h3, #statistics h3, #highscoreContent h2, #highscoreContent h3 {
+        font-family: "Barlow Condensed", sans-serif !important;
+        font-weight: 700 !important; font-size: 15px !important;
+        letter-spacing: .06em !important; text-transform: uppercase !important;
+        color: var(--ia-steel-hi) !important; line-height: 28px !important;
+    }
+
+    /* ---- Tier 2a: Fleet dispatch panel & ship selection ---- */
+    #eventContent {
+        background: rgba(7,10,14,.55);
+        border: 1px solid var(--ia-seam-dim);
+        border-radius: 2px;
+    }
+    #eventContent .reversal { color: var(--ia-amber-hi) !important; }
+    #eventContent .arrivalTime {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 700;
+        color: var(--ia-ink);
+        font-variant-numeric: tabular-nums;
+    }
+    #fleet1 .header h2, #fleet2 .header h2, #fleet3 .header h2, #sendfleet .header h2 {
+        font-family: "Barlow Condensed", sans-serif !important;
+        font-weight: 700 !important; font-size: 15px !important;
+        letter-spacing: .07em !important; text-transform: uppercase !important;
+        color: var(--ia-steel-hi) !important;
+    }
+    .ship_selection_table td {
+        background: rgba(10,16,23,.55);
+        border: 1px solid var(--ia-seam-dim);
+        color: var(--ia-ink2);
+    }
+    .ship_selection_table input[type=text] {
+        background: var(--ia-hull1);
+        border: 1px solid var(--ia-seam);
+        color: var(--ia-ink);
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    /* ---- Tier 2b: Galaxy header form strip — ZERO iron-armada styles existed ---- */
+    #galaxyHeader {
+        background: linear-gradient(180deg, var(--ia-hull2), var(--ia-hull1));
+        border: 1px solid var(--ia-seam);
+        border-top: 2px solid var(--ia-steel);
+        border-radius: 2px;
+        padding: 8px 12px;
+        display: flex; align-items: center; gap: 10px;
+    }
+    #galaxyHeader input#galaxy_input, #galaxyHeader input#system_input {
+        background: var(--ia-hull0);
+        border: 1px solid var(--ia-seam);
+        border-radius: 2px;
+        color: var(--ia-ink);
+        font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 15px;
+        text-align: center; width: 56px; padding: 3px 4px;
+    }
+    #galaxyHeader input:focus { border-color: var(--ia-amber); outline: none; box-shadow: 0 0 0 2px rgba(209,133,51,.25); }
+    #galaxyContent .ctGalaxyHead.headBold {
+        display: flex !important;
+        background: rgba(7,10,14,.75);
+        border-bottom: 1px solid var(--ia-seam);
+        font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .05em;
+        text-transform: uppercase; color: var(--ia-ink3) !important; font-size: 11px;
+    }
+    #galaxyContent .ctContentRow:hover .cellPlayerName,
+    #galaxyContent .ctContentRow:hover .cellAlliance,
+    #galaxyContent .ctContentRow:hover .cellPlanetName { color: var(--ia-ink) !important; }
+
+    /* ---- Tier 2c: Left menu — hover transitions + selected glow ---- */
+    #links .leftmenu a.menubutton {
+        transition: border-left-color .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+    #links .leftmenu a.menubutton.selected {
+        box-shadow: inset 3px 0 12px rgba(209,133,51,.12), 0 1px 4px rgba(0,0,0,.35);
+    }
+
+    /* ---- Tier 2d: Highscore panel — entire section unstyled ---- */
+    #highscoreContent { color: var(--ia-ink2) !important; font-family: "Barlow", sans-serif !important; font-size: 13px !important; }
+    #highscoreContent a:link, #highscoreContent a:visited { color: var(--ia-steel-hi) !important; }
+    #highscoreContent a:hover { color: var(--ia-amber-hi) !important; text-decoration: none; }
+    #highscoreContent #ranks .score { font-family: "Barlow Condensed", sans-serif !important; font-weight: 700 !important; color: var(--ia-ink) !important; }
+    #highscoreContent div.content { background: rgba(10,16,23,.72) !important; border: 1px solid var(--ia-seam); border-radius: 2px; background-image: none !important; }
+    #highscoreContent div.header { background: linear-gradient(180deg, var(--ia-hull2), var(--ia-hull1)) !important; background-image: none !important; border-bottom: 1px solid var(--ia-seam); }
+    #highscoreContent div.footer { background: var(--ia-hull0) !important; background-image: none !important; border-top: 1px solid var(--ia-seam-dim); }
+
+    /* ---- Tier 3a: Planet overview glassmorphism ---- */
+    #planetdata {
+        background: rgba(10,16,23,.72) !important;
+        backdrop-filter: blur(6px) saturate(1.4);
+        -webkit-backdrop-filter: blur(6px) saturate(1.4);
+        border: 1px solid rgba(143,179,209,.28) !important;
+        border-top: 2px solid var(--ia-seam) !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    #planetdata td, #planetdata .desc { color: var(--ia-ink2); font-size: 12px; line-height: 1.6; }
+    #buffBar { border-top: 1px solid var(--ia-seam-dim); background: rgba(7,10,14,.55); }
+    #planetOptions {
+        border-top: 1px solid var(--ia-seam-dim);
+        background: linear-gradient(90deg, rgba(58,127,180,.08), transparent 60%);
+        padding: 4px 8px;
+    }
+    #planetOptions a { color: var(--ia-steel-hi); font-size: 12px; }
+    #planetOptions a:hover { color: var(--ia-amber-hi); text-shadow: 0 0 8px rgba(231,177,90,.4); }
+
+    /* ---- Tier 3b: Build queue row body text token coverage ---- */
+    #productionboxBottom .content-box-s .content,
+    #productionboxBottom .content-box-s .content td,
+    #productionboxBottom .content-box-s .content span { color: var(--ia-ink2) !important; font-family: "Barlow", sans-serif; font-size: 12px; }
+    #productionboxBottom .content-box-s .content .name { color: var(--ia-ink) !important; }
+    #productionboxBottom .content-box-s .content .construction .timer { color: var(--ia-ink) !important; font-weight: 700; font-variant-numeric: tabular-nums; }
+    #productionboxBottom .content-box-s .content .construction tr:hover td { background: rgba(143,179,209,.07); }
+
+    /* ---- Tier 3c: Notification bar depth shadow ---- */
+    #notificationbarcomponent {
+        box-shadow:
+            inset 0 0 24px rgba(58,127,180,.09),
+            inset 0 1px 0 rgba(255,255,255,.04),
+            0 4px 14px rgba(0,0,0,.35) !important;
+    }
+
+    /* ---- Tier 3d: Resource tile dividers at higher contrast ---- */
+    #resourcesbarcomponent .resource_tile { border-left-color: rgba(143,179,209,.22); }
+    #resourcesbarcomponent .resource_tile:last-child { border-right: 1px solid rgba(143,179,209,.22); }
+
+    /* ---- Tier 3e: Page-specific content wrapper opacity on tile-heavy pages ---- */
+    #researchcomponent #contentWrapper,
+    #shipyardcomponent #contentWrapper,
+    #defensescomponent #contentWrapper,
+    #facilitiescomponent #contentWrapper { background: rgba(10,18,28,.72) !important; }
+
+    /* ---- Tier 3f: Build timer (span.time) token coverage ---- */
+    span.time {
+        background: rgba(7,10,14,.85) !important;
+        color: var(--ia-ink2) !important;
+        font-family: "Barlow Condensed", sans-serif !important;
+        font-weight: 700 !important;
+        border: 1px solid var(--ia-seam-dim);
+        border-radius: 2px;
+        padding: 2px 5px !important;
+    }
+}
