@@ -1,6 +1,6 @@
 # AGENTS.md
 
-OGameX is an open-source PHP/Laravel recreation of OGame, a browser-based space strategy MMO. It runs in Docker with MariaDB.
+Iron Armada is a private, browser-based space strategy MMO in the style of OGame. It is a fork of [OGameX](https://github.com/lanedirt/OGameX), the open-source PHP/Laravel recreation of OGame, re-skinned and extended into its own game by Archon Tech. The strategy engine comes from OGameX; the visual identity, computer-controlled empires, pirate raids, daily directives, Discord integration, mobile layout and public highscore feed are Iron Armada's own. It runs in Docker with MariaDB.
 
 ## Agent rules
 
@@ -116,6 +116,17 @@ resources/views/
 
 - The database is exposed on port 3306 by default. If that port is already taken on your machine, set `DB_EXTERNAL_PORT` in `.env` to another port (e.g. 3308).
 - Use `--no-deps` when running single-service commands to avoid restarting the database container unnecessarily.
+
+## Deployment
+
+- Production runs in Docker and is published through a Cloudflare Tunnel. TLS is terminated at the tunnel.
+- Host ports are set in `docker-compose.override.yml`: the game is on host port 8280 and the websocket (Reverb) is on 8290. The tunnel targets these ports. Pass both compose files, or rely on `COMPOSE_FILE` in `.env`. `docker-compose.prod.yml` is intentionally left untouched.
+- `public/build` is tracked in git. After changing CSS or JS, run `npm run build` and commit the regenerated output together with the source change.
+- The Iron Armada theme lives in `resources/css/ingame/iron-armada.css` and `resources/css/outgame/iron-armada.css`.
+
+## Public API
+
+- The public highscore feed (`GET /api/public/highscores`) is consumed by external sites. Its request and response contract must not change: do not rename or remove fields, change types or units, or alter the URL or pagination without coordinating with the consumers first.
 
 ## Composer scripts reference
 
