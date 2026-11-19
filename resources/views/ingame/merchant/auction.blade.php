@@ -386,7 +386,7 @@
                 if (auctionActive) {
                     var left = remainingSeconds();
                     $countdown.text(fill(str('ends-in'), 'time', formatRemaining(left)));
-                    $countdown.toggleClass('ia-auction-countdown-urgent', left < FAST_WINDOW);
+                    $countdown.toggleClass('ia-auction-countdown-urgent is-final', left < FAST_WINDOW);
                     if (left <= 0 && !closeKicked && !stopped) {
                         // Hammer time: ask the server straight away instead of waiting for the next poll.
                         closeKicked = true;
