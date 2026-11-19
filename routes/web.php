@@ -9,6 +9,7 @@ use OGame\Http\Controllers\Admin\ServerAdministrationController;
 use OGame\Http\Controllers\Admin\ServerSettingsController as AdminServerSettingsController;
 use OGame\Http\Controllers\AllianceController;
 use OGame\Http\Controllers\AllianceDepotController;
+use OGame\Http\Controllers\AuctionController;
 use OGame\Http\Controllers\BuddiesController;
 use OGame\Http\Controllers\ChangeNickController;
 use OGame\Http\Controllers\CharacterClassController;
@@ -184,6 +185,11 @@ Route::middleware(['auth', 'banned', 'globalgame', 'locale', 'firstlogin'])->gro
     Route::get('/merchant/scrap', [MerchantController::class, 'scrap'])->name('merchant.scrap');
     Route::post('/merchant/scrap/bargain', [MerchantController::class, 'scrapBargain'])->name('merchant.scrap.bargain');
     Route::post('/merchant/scrap/execute', [MerchantController::class, 'scrapExecute'])->name('merchant.scrap.execute');
+    // Armada Salvage Auction
+    Route::get('/merchant/auction', [AuctionController::class, 'index'])->name('merchant.auction.index');
+    Route::get('/ajax/merchant/auction/state', [AuctionController::class, 'state'])->name('merchant.auction.state');
+    Route::post('/ajax/merchant/auction/bid', [AuctionController::class, 'bid'])->middleware('throttle:20,1')->name('merchant.auction.bid');
+    Route::post('/merchant/auction/claim', [AuctionController::class, 'claim'])->name('merchant.auction.claim');
 
     Route::get('/alliance', [AllianceController::class, 'index'])->name('alliance.index');
     Route::get('/alliance/apply/{alliance_id}', [AllianceController::class, 'showApplicationForm'])->name('alliance.application.form');
