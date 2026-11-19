@@ -224,6 +224,7 @@ class BotService
         // Pirates do not build an economy, they only raid (with strict protection rules for players).
         if ($personality === 'pirate') {
             app(PirateService::class)->takeTurn($bot, $player);
+            $this->considerAuction($bot);
             return;
         }
 
@@ -250,6 +251,23 @@ class BotService
 
         // Fleet actions (colonising, raiding) once the economy has been looked after.
         app(BotFleetService::class)->takeTurn($bot, $player, $personality);
+
+        $this->considerAuction($bot);
+    }
+
+    /**
+     * Let the bot bid in the daily salvage auction. Off unless the server setting "auction_bots_enabled" is on.
+     *
+     * Runs last in the turn and outside any transaction: AuctionService::placeBid() opens its own transaction
+     * (auctions -> users lock order, docs/AUCTION-SPEC.md 4.2). AuctionBotStrategy::consider() never throws.
+     */
+    private function considerAuction(User $bot): void
+    {
+        if ((int)$this->settings->get('auction_bots_enabled', 0) <= 0) {
+            return;
+        }
+
+        app(AuctionBotStrategy::class)->consider($bot);
     }
 
     /**
