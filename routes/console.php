@@ -1,5 +1,6 @@
 <?php
 
+use OGame\Console\Commands\Scheduler\AuctionTick;
 use OGame\Console\Commands\Scheduler\CleanupDestroyedPlanets;
 use OGame\Console\Commands\Scheduler\CleanupWreckFields;
 use OGame\Console\Commands\Scheduler\DarkMatterRegenerateCommand;
@@ -44,3 +45,6 @@ Schedule::command(DarkMatterRegenerateCommand::class)->everyFiveMinutes()->witho
 
 // Computer controlled empires take their turn (each bot is only due every few minutes)
 Schedule::command(RunBots::class)->everyMinute()->withoutOverlapping();
+
+// Armada Salvage Auction: settle due auctions, final call, open the daily auction
+Schedule::command(AuctionTick::class)->everyMinute()->withoutOverlapping();
