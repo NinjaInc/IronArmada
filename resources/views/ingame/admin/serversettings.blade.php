@@ -197,6 +197,71 @@
                             </div>
                         </div>
 
+                        <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.admin.section_auction') }}</p>
+
+                        <div class="group bborder" style="display: block;">
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_enabled') }}</label>
+                                <div class="thefield">
+                                    <square-checkbox class="square-checkbox">
+                                        <input type="checkbox" id="square-checkAuctionEnabled" name="auction_enabled" value="1" {{ $auction_enabled ? 'checked' : '' }}>
+                                        <label for="square-checkAuctionEnabled"></label>
+                                    </square-checkbox>
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_open_hour_utc') }}</label>
+                                <div class="thefield">
+                                    <input type="text" pattern="[0-9]*" class="textInput w50 textCenter textBeefy" value="{{ $auction_open_hour_utc }}" size="2" maxlength="2" name="auction_open_hour_utc">
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_duration_minutes') }}</label>
+                                <div class="thefield">
+                                    <input type="text" pattern="[0-9]*" class="textInput w100 textCenter textBeefy" value="{{ $auction_duration_minutes }}" size="10" name="auction_duration_minutes">
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_snipe_window_seconds') }}</label>
+                                <div class="thefield">
+                                    <input type="text" pattern="[0-9]*" class="textInput w100 textCenter textBeefy" value="{{ $auction_snipe_window_seconds }}" size="10" name="auction_snipe_window_seconds">
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_snipe_extension_seconds') }}</label>
+                                <div class="thefield">
+                                    <input type="text" pattern="[0-9]*" class="textInput w100 textCenter textBeefy" value="{{ $auction_snipe_extension_seconds }}" size="10" name="auction_snipe_extension_seconds">
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_max_extension_seconds') }}</label>
+                                <div class="thefield">
+                                    <input type="text" pattern="[0-9]*" class="textInput w100 textCenter textBeefy" value="{{ $auction_max_extension_seconds }}" size="10" name="auction_max_extension_seconds">
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_min_increment_abs') }}</label>
+                                <div class="thefield">
+                                    <input type="text" pattern="[0-9]*" class="textInput w100 textCenter textBeefy" value="{{ $auction_min_increment_abs }}" size="10" name="auction_min_increment_abs">
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_min_increment_pct') }}</label>
+                                <div class="thefield">
+                                    <input type="text" pattern="[0-9]*" class="textInput w50 textCenter textBeefy" value="{{ $auction_min_increment_pct }}" size="3" maxlength="3" name="auction_min_increment_pct">
+                                </div>
+                            </div>
+                            <div class="fieldwrapper">
+                                <label class="styled textBeefy">{{ __('t_ingame.admin.auction_bots_enabled') }}</label>
+                                <div class="thefield">
+                                    <square-checkbox class="square-checkbox">
+                                        <input type="checkbox" id="square-checkAuctionBotsEnabled" name="auction_bots_enabled" value="1" {{ $auction_bots_enabled ? 'checked' : '' }}>
+                                        <label for="square-checkAuctionBotsEnabled"></label>
+                                    </square-checkbox>
+                                </div>
+                            </div>
+                        </div>
+
                         <p class="box_highlight textCenter no_buddies">{{ __('t_ingame.admin.section_alliance') }}</p>
 
                         <div class="group bborder" style="display: block;">

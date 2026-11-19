@@ -4,6 +4,7 @@ namespace OGame\Http\Controllers\Admin;
 
 use Cache;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use OGame\Enums\HighscoreTypeEnum;
 use OGame\Http\Controllers\OGameController;
@@ -75,6 +76,15 @@ class ServerSettingsController extends OGameController
             'hamill_probability' => $settingsService->hamillManoeuvreChance(),
             'highscore_admin_visible' => $settingsService->highscoreAdminVisible(),
             'discord_webhook_set' => trim($settingsService->get(DiscordNotifier::SETTING_KEY, '')) !== '',
+            'auction_enabled' => (bool)$settingsService->get('auction_enabled', 0),
+            'auction_open_hour_utc' => (int)$settingsService->get('auction_open_hour_utc', 18),
+            'auction_duration_minutes' => (int)$settingsService->get('auction_duration_minutes', 1320),
+            'auction_snipe_window_seconds' => (int)$settingsService->get('auction_snipe_window_seconds', 300),
+            'auction_snipe_extension_seconds' => (int)$settingsService->get('auction_snipe_extension_seconds', 300),
+            'auction_max_extension_seconds' => (int)$settingsService->get('auction_max_extension_seconds', 3600),
+            'auction_min_increment_abs' => (int)$settingsService->get('auction_min_increment_abs', 50),
+            'auction_min_increment_pct' => (int)$settingsService->get('auction_min_increment_pct', 5),
+            'auction_bots_enabled' => (bool)$settingsService->get('auction_bots_enabled', 0),
         ]);
     }
 
@@ -155,6 +165,37 @@ class ServerSettingsController extends OGameController
                 return redirect()->route('admin.serversettings.index')->with('error', __('t_ingame.admin.discord_webhook_invalid'));
             }
             $settingsService->set(DiscordNotifier::SETTING_KEY, $webhook);
+        }
+
+        // Salvage auction: all nine values are validated together. If any is out of range, none of them are saved.
+        $auction = Validator::make([
+            'auction_enabled' => request('auction_enabled', 0),
+            'auction_open_hour_utc' => request('auction_open_hour_utc', 18),
+            'auction_duration_minutes' => request('auction_duration_minutes', 1320),
+            'auction_snipe_window_seconds' => request('auction_snipe_window_seconds', 300),
+            'auction_snipe_extension_seconds' => request('auction_snipe_extension_seconds', 300),
+            'auction_max_extension_seconds' => request('auction_max_extension_seconds', 3600),
+            'auction_min_increment_abs' => request('auction_min_increment_abs', 50),
+            'auction_min_increment_pct' => request('auction_min_increment_pct', 5),
+            'auction_bots_enabled' => request('auction_bots_enabled', 0),
+        ], [
+            'auction_enabled' => ['required', 'boolean'],
+            'auction_open_hour_utc' => ['required', 'integer', 'between:0,23'],
+            'auction_duration_minutes' => ['required', 'integer', 'between:1,10080'],
+            'auction_snipe_window_seconds' => ['required', 'integer', 'between:0,86400'],
+            'auction_snipe_extension_seconds' => ['required', 'integer', 'between:0,86400'],
+            'auction_max_extension_seconds' => ['required', 'integer', 'between:0,604800'],
+            'auction_min_increment_abs' => ['required', 'integer', 'between:1,4294967295'],
+            'auction_min_increment_pct' => ['required', 'integer', 'between:1,100'],
+            'auction_bots_enabled' => ['required', 'boolean'],
+        ]);
+
+        if ($auction->fails()) {
+            return redirect()->route('admin.serversettings.index')->with('error', __('t_ingame.admin.auction_invalid'));
+        }
+
+        foreach ($auction->validated() as $key => $value) {
+            $settingsService->set($key, (int)$value);
         }
 
         // Clear highscore cache when admin visibility setting changes
