@@ -29,8 +29,26 @@
                     <a href="{{ route('merchant.resource-market') }}" id="js_traderResources" class="js_trader trader_link tooltipLeft js_hideTipOnMobile ipiHintable" data-ipi-hint="ipiTraderResources" data-tooltip-title="{{ __('t_merchant.exchange_resources_desc') }}">
                         <h2>{{ __('t_merchant.resource_market') }}</h2>
                     </a>
-                    <a href="#" id="js_traderAuctioneer" class="js_trader trader_link tooltipRight js_hideTipOnMobile ipiHintable" data-ipi-hint="ipiTraderAuctioneer" data-tooltip-title="{{ __('t_merchant.auctioneer_desc') }}">
+                    <a href="{{ route('merchant.auction.index') }}" id="js_traderAuctioneer" class="js_trader trader_link tooltipRight js_hideTipOnMobile ipiHintable" data-ipi-hint="ipiTraderAuctioneer" data-tooltip-title="{{ __('t_merchant.auctioneer_desc') }}">
                         <h2>{{ __('t_merchant.auctioneer') }}</h2>
+                        @php
+                            // Server-rendered badge (spec 5.1): current bid, "Active" with no bids yet, or "Closed".
+                            // Hidden entirely while auction_enabled is 0.
+                            $tileAuctions = resolve(\OGame\Services\AuctionService::class);
+                            $tileEnabled = $tileAuctions->isEnabled();
+                            $tileAuction = $tileEnabled ? $tileAuctions->current() : null;
+                        @endphp
+                        @if ($tileEnabled)
+                            <span class="ia-auction-badge" id="ia-auction-badge">
+                                @if ($tileAuction === null)
+                                    {{ __('t_merchant.auction.badge_closed') }}
+                                @elseif ((int)$tileAuction->current_bid > 0)
+                                    {{ number_format((int)$tileAuction->current_bid, 0, '.', ',') }}
+                                @else
+                                    {{ __('t_merchant.auction.badge_current') }}
+                                @endif
+                            </span>
+                        @endif
                     </a>
                     <br>
                     <a href="{{ route('merchant.scrap') }}" id="js_traderScrap" class="js_trader trader_link tooltipLeft js_hideTipOnMobile ipiHintable" data-ipi-hint="ipiTraderScrap" data-tooltip-title="{{ __('t_merchant.scrap_merchant_desc') }}">
