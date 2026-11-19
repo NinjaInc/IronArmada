@@ -458,14 +458,21 @@ For any auction `A`, let **held(A)** be the bid rows with `refunded_at IS NULL`.
 
 ### 4.2 Lock order (deadlock avoidance)
 
-Every auction write follows one global order:
+Auction code takes locks in this order (it is **not** a global order for the codebase):
 
 1. the `auctions` row (`lockForUpdate`);
-2. `users` rows involved, in **ascending id** (`lockForUpdate`);
-3. the `planets` row (claim only).
+2. `users` rows involved, in **ascending id** (`lockForUpdate`), for `placeBid` and `cancel`. `settleIfDue` takes an
+   implicit FK shared lock on the winner's `users` row instead;
+3. alternatively, for `claim`, the `planets` row. No auction transaction holds a `users` row and a `planets` row together.
 
-Nothing else in the codebase locks an auction row. Existing DM code (`DarkMatterService::debit/credit`,
-`processRegeneration`) locks only a single user row, so no lock cycle is possible. `DarkMatterService::debit/credit`
+Existing game code locks **planets -> users** (`PlayerService::updateFleetMissions()` locks all planets of a user, then
+`ExpeditionMission` calls `DarkMatterService::credit()`, which locks the users row), and `PlayerService::delete()` goes
+users -> auctions through the FK actions. So the auction order is only safe while (a) only auction code locks `auctions`
+first and (b) no auction transaction holds both a users and a planets row. Never extend an auction transaction to lock
+both, and never call `placeBid`, `claim` or `cancel` from inside a transaction that already holds a users or planets
+lock: call them outside any transaction. The only real cycle is account deletion vs `placeBid`/`settleIfDue`/`cancel`;
+InnoDB breaks it with error 1213, which is why those transactions use `DB::transaction(..., 3)` (attempts). Do not assert
+`DB::transactionLevel() === 0`: tests run inside `DatabaseTransactions`. `DarkMatterService::debit/credit`
 re-lock the user row inside a nested transaction (a savepoint). Re-locking a row this transaction already holds is a
 no-op in InnoDB, so we call them as they are and do not duplicate their balance logic.
 
@@ -555,9 +562,11 @@ DB::transaction(function () use ($winner, $auctionId, $planetId): string {
 
 Lot resources deliberately **bypass storage capacity**. A salvage crate is a prize, like expedition loot. The UI says so.
 
-The claim uses atomic `col = col + n` updates rather than `PlanetService::addResources()` + `save()`. That way a concurrent
-request holding a stale in-memory planet cannot overwrite the delivery with an older value (see the "state cached in
-service singletons" warning in `AGENTS.md`). The implementer must confirm that the planet column names for units equal
+The claim uses atomic `col = col + n` updates rather than `PlanetService::addResources()` + `save()`. That way the claim
+itself never overwrites a concurrent change with a stale in-memory planet value (see the "state cached in service
+singletons" warning in `AGENTS.md`). It does not stop a later stale absolute `save()` from overwriting the delivery; in
+this codebase absolute writes happen in `PlanetService::update()` after `reloadPlanet()` under the planet lock, and
+deductions use `deductResourcesAtomic`, so delivery is as safe as transport or expedition arrivals. The implementer must confirm that the planet column names for units equal
 their `machine_name`, as `PlanetService::addUnit` implies, and that the destroyed-planet flag column is named as above.
 
 ### 4.6 `cancel`
@@ -791,12 +800,12 @@ review comments. "Model" is the cheapest model that can do the task well.
 | T7 | Race command + `TestCommand::runParallelPostRequests` + README entry | `app/Console/Commands/Test/TestRaceConditionAuctionBid.php`, `TestCommand.php`, `Test/README.md` | sonnet | T4 |
 | T8 | `AuctionTick` scheduler command + schedule entry + `AuctionCancel` admin command | `app/Console/Commands/Scheduler/AuctionTick.php`, `app/Console/Commands/Admin/AuctionCancel.php`, `routes/console.php` | sonnet | T4 |
 | T9 | `AuctionNotifier`, `NotifyAuctionEvent` job, `AuctionOutbid`/`AuctionWon` game messages + notify test | `app/Services/AuctionNotifier.php`, `app/Jobs/NotifyAuctionEvent.php`, `app/GameMessages/Auction{Outbid,Won}.php`, `tests/Feature/AuctionNotifyTest.php` | sonnet | T2, T4 |
-| T10 | `AuctionController` + routes + HTTP test | `app/Http/Controllers/AuctionController.php`, `routes/web.php`, `tests/Feature/AuctionHttpTest.php` | sonnet | T4, T9 |
+| T10 | `AuctionController` + routes + HTTP test. Note: reject any bid whose `auction_id` is not `current()->id` before calling the service (a bid on a non-existent id takes a PK gap lock that blocks `openIfDue()`); map any remaining `Throwable` to a generic try-again error, not a 500 | `app/Http/Controllers/AuctionController.php`, `routes/web.php`, `tests/Feature/AuctionHttpTest.php` | sonnet | T4, T9 |
 | T11 | Auction page markup (static structure, server-rendered first paint) + merchant tile link and badge | `resources/views/ingame/merchant/auction.blade.php`, `merchant/index.blade.php` | haiku | T2, T10 |
 | T12 | Polling JS (inline in the blade): countdown, bid POST, quick buttons, outbid flash | `auction.blade.php` script block | sonnet | T11 |
 | T13 | CSS block + mobile rules + `npm run build`, commit `public/build` | `resources/css/ingame/iron-armada.css`, `public/build/*` | haiku | T11, A1 to A3 |
 | T14 | Admin server-settings "Auction" fieldset | `Admin/ServerSettingsController.php`, server settings blade | haiku (view) + sonnet (validation) | T1, T2 |
-| T15 | Bot strategy + `BotService::takeTurn` hook + bot test | `app/Services/AuctionBotStrategy.php`, `BotService.php`, `tests/Feature/AuctionBotTest.php` | sonnet | T4 |
+| T15 | Bot strategy + `BotService::takeTurn` hook + bot test. Note: bot bids must call `placeBid` outside any transaction (see 4.2); never wrap `AuctionBotStrategy::consider()` in a transaction that holds a users or planets lock | `app/Services/AuctionBotStrategy.php`, `BotService.php`, `tests/Feature/AuctionBotTest.php` | sonnet | T4 |
 | T16 | (v2, optional) Reverb `AuctionUpdated` event + channel + JS subscribe | `app/Events/AuctionUpdated.php`, `routes/channels.php`, `auction.blade.php` | sonnet | T12 |
 | T17 | Final concurrency sign-off: run the race command, re-check invariants, approve enabling `auction_enabled` in prod | review only | **opus** | T7, T8, T10 |
 

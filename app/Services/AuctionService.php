@@ -13,6 +13,7 @@ use OGame\Models\Auction\BidResult;
 use OGame\Models\AuctionBid;
 use OGame\Models\DarkMatterTransaction;
 use OGame\Models\Planet;
+use OGame\Models\Setting;
 use OGame\Models\User;
 use Throwable;
 
@@ -20,13 +21,18 @@ use Throwable;
  * Armada Salvage Auction core (docs/AUCTION-SPEC.md sections 3.2 and 4).
  *
  * All dark matter movement for auctions lives here and goes through DarkMatterService::debit()/credit(),
- * so every movement has a dark_matter_transactions row. Every write path takes locks in one global order:
- * the auctions row, then users rows in ascending id, then the planets row.
+ * so every movement has a dark_matter_transactions row.
+ *
+ * Lock order (auction code only): auctions row -> users rows ascending (placeBid, cancel; settle takes an implicit
+ * FK S-lock on the winner) | auctions row -> planets row (claim). No auction transaction holds users AND planets.
+ * Existing game code locks planets -> users (updateFleetMissions -> expedition DM credit), so never extend an
+ * auction transaction to lock both, and never call placeBid/claim/cancel from inside a transaction that already
+ * holds a users or planets lock (call them outside any transaction, for example after BotService::takeTurn's own work).
  */
 class AuctionService
 {
-    /** Largest value an unsigned 32 bit column (auctions.current_bid, auction_bids.amount) can hold. */
-    private const int MAX_BID = 4294967295;
+    /** users.dark_matter, dark_matter_transactions.amount/balance_after are signed INT. */
+    private const int MAX_BID = 2147483647;
 
     public function __construct(
         private DarkMatterService $darkMatter,
@@ -66,7 +72,8 @@ class AuctionService
     {
         $current = $auction->current_bid;
         $percentStep = intdiv($current * $auction->min_increment_pct + 99, 100);
-        $minimum = max($current + max($auction->min_increment_abs, $percentStep), $auction->starting_bid);
+        // The step is at least 1, so the minimum is always strictly above the current bid.
+        $minimum = max($current + max($auction->min_increment_abs, $percentStep, 1), $auction->starting_bid);
 
         return intdiv($minimum + 9, 10) * 10;
     }
@@ -106,8 +113,8 @@ class AuctionService
                 'lot_key' => $lot->key,
                 'lot_payload' => $lot->toPayload(),
                 'starting_bid' => $this->catalog->startingBid($lot->key),
-                'min_increment_abs' => $this->intSetting('auction_min_increment_abs', 50),
-                'min_increment_pct' => $this->intSetting('auction_min_increment_pct', 5),
+                'min_increment_abs' => max(1, min(self::MAX_BID, $this->intSetting('auction_min_increment_abs', 50))),
+                'min_increment_pct' => max(0, min(255, $this->intSetting('auction_min_increment_pct', 5))),
                 'current_bid' => 0,
                 'leader_user_id' => null,
                 'bid_count' => 0,
@@ -133,6 +140,7 @@ class AuctionService
             return $this->reject('disabled', null);
         }
 
+        // Attempts = 3: every decision inside is a locking read, so a deadlock retry is safe (account deletion race).
         return DB::transaction(function () use ($bidder, $auctionId, $amount): BidResult {
             // Lock 1: the auction row serialises every bid, settle, claim and cancel on this auction.
             $auction = Auction::whereKey($auctionId)->lockForUpdate()->first();
@@ -170,11 +178,21 @@ class AuctionService
             }
 
             $previousLeader = null;
+            $heldBid = null;
             if ($previousLeaderId !== null) {
                 $previousLeader = $locked->get($previousLeaderId);
                 if ($previousLeader === null) {
                     // The FK nulls leader_user_id on account deletion, so this means corrupt state: abort everything.
                     throw new LogicException("Auction #{$auction->id}: leader {$previousLeaderId} is missing.");
+                }
+                // I1: exactly one held bid, and it must match leader and current_bid. Abort rather than commit a broken escrow.
+                $held = AuctionBid::where('auction_id', $auction->id)->whereNull('refunded_at')->lockForUpdate()->get();
+                $heldBid = $held->first();
+                if ($held->count() !== 1
+                    || $heldBid === null
+                    || (int)$heldBid->user_id !== $previousLeaderId
+                    || (int)$heldBid->amount !== $previousAmount) {
+                    throw new LogicException("Auction #{$auction->id}: held bid does not match leader/current_bid (I1).");
                 }
             }
 
@@ -185,20 +203,14 @@ class AuctionService
                 "Auction #{$auction->id} bid"
             );
 
-            if ($previousLeader !== null) {
+            if ($previousLeader !== null && $heldBid !== null) {
                 $this->darkMatter->credit(
                     $previousLeader,
-                    $previousAmount,
+                    (int)$heldBid->amount,
                     DarkMatterTransactionType::AUCTION_REFUND->value,
                     "Auction #{$auction->id} refund (outbid)"
                 );
-                $refundedRows = AuctionBid::where('auction_id', $auction->id)
-                    ->whereNull('refunded_at')
-                    ->update(['refunded_at' => $now]);
-                if ($refundedRows !== 1) {
-                    // I1: exactly one bid may be held. Abort rather than commit a broken escrow.
-                    throw new LogicException("Auction #{$auction->id}: expected 1 held bid, found {$refundedRows}.");
-                }
+                AuctionBid::whereKey($heldBid->id)->whereNull('refunded_at')->update(['refunded_at' => $now]);
             }
 
             $extended = false;
@@ -238,7 +250,7 @@ class AuctionService
                 $previousLeaderId,
                 $previousLeaderId !== null ? $previousAmount : 0,
             );
-        });
+        }, 3);
     }
 
     /**
@@ -269,7 +281,7 @@ class AuctionService
             $auction->save();
 
             return true;
-        });
+        }, 3);
 
         if ($settled && $winnerUserId !== null) {
             $this->autoClaimForBot($auctionId, $winnerUserId);
@@ -318,7 +330,7 @@ class AuctionService
             }
 
             $now = (int)Date::now()->timestamp;
-            $held = AuctionBid::where('auction_id', $auction->id)->whereNull('refunded_at')->get();
+            $held = AuctionBid::where('auction_id', $auction->id)->whereNull('refunded_at')->lockForUpdate()->get();
 
             if ($held->count() > 1) {
                 throw new LogicException("Auction #{$auction->id}: more than one held bid.");
@@ -336,8 +348,10 @@ class AuctionService
                     DarkMatterTransactionType::AUCTION_REFUND->value,
                     "Auction #{$auction->id} refund (cancelled)"
                 );
-                $heldBid->refunded_at = $now;
-                $heldBid->save();
+                $updated = AuctionBid::whereKey($heldBid->id)->whereNull('refunded_at')->update(['refunded_at' => $now]);
+                if ($updated !== 1) {
+                    throw new LogicException("Auction #{$auction->id}: held bid {$heldBid->id} already refunded.");
+                }
             }
 
             $auction->status = Auction::STATUS_CANCELLED;
@@ -346,7 +360,7 @@ class AuctionService
             $auction->save();
 
             return true;
-        });
+        }, 3);
 
         if ($cancelled) {
             logger()->info("Auction #{$auctionId} cancelled: {$reason}");
@@ -377,13 +391,22 @@ class AuctionService
      */
     public function checkInvariants(int $auctionId): array
     {
-        $auction = Auction::find($auctionId);
+        // Shared lock: freezes writers so the auction row, bids and ledger are read as one consistent view.
+        return DB::transaction(fn (): array => $this->evaluateInvariants($auctionId));
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function evaluateInvariants(int $auctionId): array
+    {
+        $auction = Auction::whereKey($auctionId)->sharedLock()->first();
         if ($auction === null) {
             return ["Auction #{$auctionId} does not exist."];
         }
 
         $violations = [];
-        $held = AuctionBid::where('auction_id', $auctionId)->whereNull('refunded_at')->get();
+        $held = AuctionBid::where('auction_id', $auctionId)->whereNull('refunded_at')->sharedLock()->get();
         $heldSum = (int)$held->sum('amount');
         $isActive = $auction->status === Auction::STATUS_ACTIVE;
 
@@ -392,7 +415,8 @@ class AuctionService
             if ((int)$auction->active_slot !== 1) {
                 $violations[] = 'I6: active auction without active_slot = 1.';
             }
-            if ((int)$auction->bid_count === 0) {
+            if ((int)$auction->bid_count === 0 || $auction->leader_user_id === null) {
+                // Also covers a leader whose account was deleted (FK nulls the leader, bid rows cascade away).
                 if ($held->count() !== 0 || $auction->leader_user_id !== null) {
                     $violations[] = 'I1: no bids but a held bid or leader exists.';
                 }
@@ -416,7 +440,12 @@ class AuctionService
                 // I2
                 /** @var AuctionBid|null $bid */
                 $bid = $held->first();
-                if ($held->count() !== 1 || $bid === null) {
+                if ($auction->winner_user_id === null) {
+                    // Winner account deleted: bid rows cascaded away, nothing may be held.
+                    if ($held->count() !== 0) {
+                        $violations[] = "I2: winner deleted but {$held->count()} held bid(s) remain.";
+                    }
+                } elseif ($held->count() !== 1 || $bid === null) {
                     $violations[] = "I2: expected exactly 1 held bid, found {$held->count()}.";
                 } else {
                     if ((int)$bid->user_id !== (int)$auction->winner_user_id) {
@@ -561,6 +590,14 @@ class AuctionService
 
     private function intSetting(string $key, int $default): int
     {
-        return (int)$this->settings->get($key, $default);
+        $raw = $this->settings->get($key, '');
+        if ($raw === '') {
+            // SettingsService::get() uses empty(), so a stored "0" reads as unset: look it up so 0 stays 0.
+            $stored = Setting::where('key', $key)->value('value');
+
+            return $stored !== null && trim((string)$stored) === '0' ? 0 : $default;
+        }
+
+        return (int)$raw;
     }
 }
