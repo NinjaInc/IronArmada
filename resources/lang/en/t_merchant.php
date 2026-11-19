@@ -215,6 +215,7 @@ return [
             'already_claimed' => 'This lot has already been claimed.',
             'bad_planet' => 'Select a planet you own.',
             'disabled' => 'The Salvage Auction is offline.',
+            'try_again' => 'Something went wrong. Please try again.',
         ],
     ],
 ];
