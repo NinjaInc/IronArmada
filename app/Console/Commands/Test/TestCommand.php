@@ -206,7 +206,19 @@ abstract class TestCommand extends Command
      */
     protected function getCsrfToken(): string
     {
-        $response = $this->httpClient->request('GET', '/');
+        return $this->fetchCsrfToken($this->httpClient);
+    }
+
+    /**
+     * Get an up-to-date CSRF token using the given (session carrying) HTTP client.
+     *
+     * @param Client $client
+     * @return string
+     * @throws GuzzleException
+     */
+    protected function fetchCsrfToken(Client $client): string
+    {
+        $response = $client->request('GET', '/');
         $csrfToken = null;
 
         if ($response->getStatusCode() === 200) {
@@ -222,6 +234,113 @@ abstract class TestCommand extends Command
         }
 
         return $csrfToken;
+    }
+
+    /**
+     * Create a separate HTTP client (own cookie jar) that is logged in as the given user. Does not touch
+     * $this->httpClient, so tests can drive several users at once.
+     *
+     * @param string $email Email of an existing user whose password is $this->password.
+     * @return Client
+     * @throws GuzzleException
+     */
+    protected function createLoggedInClient(string $email): Client
+    {
+        $baseUrl = App::environment('production')
+            ? $this->baseUrlProduction
+            : $this->baseUrlDevelopment;
+
+        $client = new Client([
+            'base_uri' => $baseUrl,
+            'cookies' => new CookieJar(),
+            'verify' => false,
+        ]);
+
+        $csrfToken = $this->fetchCsrfToken($client);
+        $client->request('POST', '/login', [
+            'timeout' => 30,
+            'form_params' => [
+                '_token' => $csrfToken,
+                'email' => $email,
+                'password' => $this->password,
+            ],
+        ]);
+
+        $response = $client->request('GET', '/overview');
+        if ($response->getStatusCode() !== 200 || !str_contains($response->getBody()->getContents(), 'ogame-player-id')) {
+            throw new RuntimeException("Login failed for {$email}.");
+        }
+
+        return $client;
+    }
+
+    /**
+     * Issue POST requests in parallel and return the outcome of each one. Counterpart of runParallelRequests()
+     * (which only sends GETs and is left unchanged).
+     *
+     * Each payload is sent as one form POST with a valid CSRF token (header and _token field) and
+     * "Accept: application/json". Redirects are not followed and HTTP error statuses do not throw, so the caller
+     * sees the raw status of every request.
+     *
+     * @param string $endpoint Path relative to the base URL, for example "ajax/merchant/auction/bid".
+     * @param array<int, array<string, mixed>> $payloads One entry per request: the form fields to send.
+     * @param array<int, Client> $clients Optional logged-in clients. Request $i uses $clients[$i % count($clients)],
+     *                                    so a list of clients spreads the requests over several users. Defaults to
+     *                                    the test user's $this->httpClient.
+     * @return array<int, array{status: int, json: array<string, mixed>|null, body: string}> Results in payload order.
+     *         A request that failed without any response has status 0.
+     * @throws GuzzleException
+     */
+    protected function runParallelPostRequests(string $endpoint, array $payloads, array $clients = []): array
+    {
+        $this->info('Running parallel POST requests to ' . $endpoint . '...');
+
+        if ($clients === []) {
+            $clients = [$this->httpClient];
+        }
+        $clients = array_values($clients);
+
+        // One CSRF token per client (each client has its own session).
+        $tokens = [];
+        foreach ($clients as $index => $client) {
+            $tokens[$index] = $this->fetchCsrfToken($client);
+        }
+
+        $promises = [];
+        foreach (array_values($payloads) as $i => $payload) {
+            $clientIndex = $i % count($clients);
+            $promises[$i] = $clients[$clientIndex]->postAsync($endpoint, [
+                'timeout' => 30,
+                'http_errors' => false,
+                'allow_redirects' => false,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'X-CSRF-TOKEN' => $tokens[$clientIndex],
+                    'X-Requested-With' => 'XMLHttpRequest',
+                ],
+                'form_params' => ['_token' => $tokens[$clientIndex]] + $payload,
+            ]);
+        }
+
+        $settled = Utils::settle($promises)->wait();
+
+        $results = [];
+        foreach ($settled as $i => $result) {
+            $response = $result['value'] ?? null;
+            if ($response === null) {
+                $results[$i] = ['status' => 0, 'json' => null, 'body' => ''];
+                continue;
+            }
+            $body = (string)$response->getBody();
+            $json = json_decode($body, true);
+            $results[$i] = [
+                'status' => $response->getStatusCode(),
+                'json' => is_array($json) ? $json : null,
+                'body' => $body,
+            ];
+        }
+
+        return $results;
     }
 
     protected function runParallelRequests(string $endpoint): void
