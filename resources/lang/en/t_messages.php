@@ -467,4 +467,17 @@ NOTE: The total strength of all participants compared to the total strength of d
         'body' => 'Your repair request on planet :planet has been completed.
 :ship_count ships have been put back into service.',
     ],
+
+    // ------------------------
+    // Auction (Iron Armada feature)
+    'auction_outbid' => [
+        'from' => 'Salvage Corps',
+        'subject' => 'Outbid on :lot',
+        'body' => 'Another commander has bid :amount dark matter on :lot. Your bid has been refunded. Bid again: :link',
+    ],
+    'auction_won' => [
+        'from' => 'Salvage Corps',
+        'subject' => 'Lot won: :lot',
+        'body' => 'The hammer fell. :lot is yours for :amount dark matter. Claim it on the auction page: :link',
+    ],
 ];
