@@ -220,6 +220,7 @@ return [
             'bad_planet' => 'Select a planet you own.',
             'disabled' => 'The Salvage Auction is offline.',
             'try_again' => 'Something went wrong. Please try again.',
+            'invalid_token' => 'Invalid token.',
         ],
     ],
 ];

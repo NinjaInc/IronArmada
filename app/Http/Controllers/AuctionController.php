@@ -59,7 +59,7 @@ class AuctionController extends OGameController
         if (!hash_equals((string)$request->session()->token(), (string)$request->input('_token'))) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid token.',
+                'message' => __('t_merchant.auction.error.invalid_token'),
             ]);
         }
 
@@ -325,14 +325,8 @@ class AuctionController extends OGameController
         return Lang::has($key) ? __($key, $replace) : $this->tryAgainMessage();
     }
 
-    /**
-     * No dedicated string exists yet (t_merchant.auction.error.try_again is missing): the key is used as soon as
-     * it is added, with a plain English fallback until then.
-     */
     private function tryAgainMessage(): string
     {
-        return Lang::has('t_merchant.auction.error.try_again')
-            ? __('t_merchant.auction.error.try_again')
-            : 'Something went wrong. Please try again.';
+        return __('t_merchant.auction.error.try_again');
     }
 }
