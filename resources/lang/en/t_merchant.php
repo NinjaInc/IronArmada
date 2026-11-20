@@ -160,7 +160,11 @@ return [
         'intro' => 'One prize is auctioned every day. Bid dark matter. The highest bid when the hammer falls takes the lot.',
         'closed' => 'Auction closed.',
         'disabled' => 'The Salvage Auction is offline.',
-        // :time is a countdown string such as "3h 12m", formatted by the view.
+        // Countdown units. The letter after each placeholder is the unit: "3h 12m", "4m 09s", "7s".
+        'time_hm' => ':hoursh :minsm',
+        'time_ms' => ':minsm :secss',
+        'time_s' => ':secss',
+        // :time is a countdown string built from the time_* templates above, formatted by the view.
         'opens_in' => 'Opens in :time',
         'ends_in' => 'Hammer falls in :time',
         'extended' => 'Extended',
