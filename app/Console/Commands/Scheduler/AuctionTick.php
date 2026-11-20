@@ -29,26 +29,33 @@ class AuctionTick extends Command
      */
     public function handle(): int
     {
-        if (!$this->auctions->isEnabled()) {
-            $this->info('Auctions are disabled, nothing to do.');
-            return Command::SUCCESS;
-        }
-
-        // 1. Settle every due auction. settleAllDue() only returns a count, so remember which ids were due
-        // beforehand and read back how each of them ended up.
+        // 1. Settle every due auction, also while the feature is switched off, so held bids are never stuck
+        // (final review F4). settleIfDue() returns true only for the caller that actually transitioned the row
+        // (a page poll may have settled it first), so only that caller notifies: no lost and no double post (F1).
         $now = (int)Date::now()->timestamp;
         $dueIds = Auction::where('status', Auction::STATUS_ACTIVE)->where('ends_at', '<=', $now)->pluck('id');
-        $settledCount = $this->auctions->settleAllDue();
+        $settledCount = 0;
+        foreach ($dueIds as $dueId) {
+            if (!$this->auctions->settleIfDue((int)$dueId)) {
+                continue;
+            }
+            $settledCount++;
+            $auction = Auction::find($dueId);
+            if ($auction === null) {
+                continue;
+            }
+            if ($auction->status === Auction::STATUS_SETTLED) {
+                $this->notify('won', $auction);
+            } elseif ($auction->status === Auction::STATUS_UNSOLD) {
+                $this->notify('unsold', $auction);
+            }
+        }
         $this->info("Auctions settled: {$settledCount}");
 
-        if ($settledCount > 0) {
-            foreach (Auction::whereIn('id', $dueIds)->get() as $auction) {
-                if ($auction->status === Auction::STATUS_SETTLED) {
-                    $this->notify('won', $auction);
-                } elseif ($auction->status === Auction::STATUS_UNSOLD) {
-                    $this->notify('unsold', $auction);
-                }
-            }
+        // Final call and opening stay gated.
+        if (!$this->auctions->isEnabled()) {
+            $this->info('Auctions are disabled: settlement done, no final call or opening.');
+            return Command::SUCCESS;
         }
 
         // 2. Final call. The conditional UPDATE makes sure only one run announces it.

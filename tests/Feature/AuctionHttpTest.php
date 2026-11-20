@@ -187,6 +187,7 @@ class AuctionHttpTest extends IsolatedAccountTestCase
         $response->assertJson(['success' => true, 'message' => 'Bid placed: 1,000 DM']);
         $response->assertJsonPath('state.auction.current_bid', 1000);
         $response->assertJsonPath('state.auction.you_lead', true);
+        // Post-bid balance (final review F2): the controller reloads the user after placeBid.
         $response->assertJsonPath('state.dark_matter', 4000);
         $this->assertSame(4000, $this->darkMatter($this->currentUserId));
         $this->assertSame($this->currentUserId, (int)$auction->fresh()->leader_user_id);
@@ -360,10 +361,130 @@ class AuctionHttpTest extends IsolatedAccountTestCase
         $this->post('/merchant/auction/claim', ['auction_id' => 'x'])
             ->assertRedirect(route('merchant.auction.index'))
             ->assertSessionHas('auction_error');
+    }
 
+    public function testClaimStillWorksWhileFeatureIsDisabled(): void
+    {
         $this->enableAuction(false);
-        $this->post('/merchant/auction/claim', ['auction_id' => 1, 'planet_id' => $this->currentPlanetId])
-            ->assertSessionHas('auction_error', 'The Salvage Auction is offline.');
+        $auction = $this->makeAuction([
+            'status' => Auction::STATUS_SETTLED,
+            'active_slot' => null,
+            'winner_user_id' => $this->currentUserId,
+            'final_price' => 600,
+            'settled_at' => (int)now()->timestamp,
+        ]);
+        $before = (int)Planet::whereKey($this->currentPlanetId)->value('metal');
+
+        // The state endpoint still lists the paid win while disabled.
+        $this->getJson('/ajax/merchant/auction/state')
+            ->assertJson(['enabled' => false, 'auction' => null])
+            ->assertJsonPath('unclaimed.0.auction_id', $auction->id);
+
+        $this->post('/merchant/auction/claim', ['auction_id' => $auction->id, 'planet_id' => $this->currentPlanetId])
+            ->assertSessionHas('auction_success');
+        $this->assertSame($before + 1000, (int)Planet::whereKey($this->currentPlanetId)->value('metal'));
+        $this->assertNotNull($auction->fresh()->claimed_at);
+    }
+
+    public function testDueAuctionIsSettledByPollWhileFeatureIsDisabled(): void
+    {
+        Bus::fake();
+        $this->enableAuction(false);
+        $now = (int)now()->timestamp;
+        $auction = $this->makeAuction(['ends_at' => $now - 10, 'original_ends_at' => $now - 10]);
+
+        $this->getJson('/ajax/merchant/auction/state')->assertOk();
+
+        $this->assertSame(Auction::STATUS_UNSOLD, $auction->fresh()->status);
+    }
+
+    /**
+     * Gives the auction a leader (a rival) and makes it due, so settlement produces a winner.
+     */
+    private function makeDueAuctionWithLeader(): Auction
+    {
+        $auction = $this->makeAuction();
+        $rival = $this->createUser();
+        $this->giveDarkMatter($rival->id, 5000);
+        $this->assertTrue(resolve(\OGame\Services\AuctionService::class)->placeBid($rival, $auction->id, 600)->accepted);
+        $now = (int)now()->timestamp;
+        Auction::whereKey($auction->id)->update(['ends_at' => $now - 10, 'original_ends_at' => $now - 10]);
+
+        return $auction->fresh();
+    }
+
+    private function wonJobCount(int $auctionId): int
+    {
+        return Bus::dispatched(NotifyAuctionEvent::class, fn (NotifyAuctionEvent $job) => $job->event === 'won' && $job->auctionId === $auctionId)->count();
+    }
+
+    public function testPollSettleDispatchesWonNotificationOnce(): void
+    {
+        $this->enableAuction();
+        $auction = $this->makeDueAuctionWithLeader();
+        Bus::fake();
+
+        $this->getJson('/ajax/merchant/auction/state')->assertOk();
+        $this->assertSame(Auction::STATUS_SETTLED, $auction->fresh()->status);
+        $this->assertSame(1, $this->wonJobCount($auction->id));
+
+        // A second poll finds nothing to settle: no second notification.
+        $this->getJson('/ajax/merchant/auction/state')->assertOk();
+        $this->assertSame(1, $this->wonJobCount($auction->id));
+    }
+
+    public function testTickNotifiesOnceWhenThePollDidNotSettleFirst(): void
+    {
+        $this->enableAuction();
+        $auction = $this->makeDueAuctionWithLeader();
+        Bus::fake();
+
+        $this->artisan('ogamex:scheduler:auction-tick')->assertSuccessful();
+        $this->assertSame(Auction::STATUS_SETTLED, $auction->fresh()->status);
+        $this->assertSame(1, $this->wonJobCount($auction->id));
+
+        // A second tick run and a later poll must not notify again.
+        $this->artisan('ogamex:scheduler:auction-tick')->assertSuccessful();
+        $this->getJson('/ajax/merchant/auction/state')->assertOk();
+        $this->assertSame(1, $this->wonJobCount($auction->id));
+    }
+
+    public function testTickStaysSilentWhenThePollSettledFirst(): void
+    {
+        $this->enableAuction();
+        $auction = $this->makeDueAuctionWithLeader();
+        Bus::fake();
+
+        // Poll settles first (and notifies once); the tick then finds nothing due and stays silent.
+        $this->getJson('/ajax/merchant/auction/state')->assertOk();
+        $this->artisan('ogamex:scheduler:auction-tick')->assertSuccessful();
+
+        $this->assertSame(1, $this->wonJobCount($auction->id));
+    }
+
+    public function testTickStillSettlesWhileFeatureIsDisabled(): void
+    {
+        $this->enableAuction(false);
+        $auction = $this->makeDueAuctionWithLeader();
+        Bus::fake();
+
+        $this->artisan('ogamex:scheduler:auction-tick')->assertSuccessful();
+
+        $this->assertSame(Auction::STATUS_SETTLED, $auction->fresh()->status);
+        $this->assertSame(1, $this->wonJobCount($auction->id));
+        Bus::assertNotDispatched(NotifyAuctionEvent::class, fn (NotifyAuctionEvent $job) => $job->event === 'opened');
+    }
+
+    public function testNotifyJobPostsWonOnlyOnce(): void
+    {
+        $auction = $this->makeDueAuctionWithLeader();
+        resolve(\OGame\Services\AuctionService::class)->settleIfDue($auction->id);
+
+        $notifier = $this->createMock(\OGame\Services\AuctionNotifier::class);
+        $notifier->expects($this->once())->method('handle');
+
+        (new NotifyAuctionEvent('won', $auction->id))->handle($notifier);
+        (new NotifyAuctionEvent('won', $auction->id))->handle($notifier);
     }
 
     public function testStateListsUnclaimedWinnings(): void

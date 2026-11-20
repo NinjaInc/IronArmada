@@ -118,6 +118,10 @@ class AuctionController extends OGameController
 
         $this->dispatchNotifications($auctionId, $result);
 
+        // placeBid debited a freshly locked User instance; reload the request-scoped one so the state below
+        // reports the post-bid balance (final review F2).
+        $user->refresh();
+
         return response()->json([
             'success' => true,
             'message' => __('t_merchant.auction.bid_placed', ['amount' => number_format($amount, 0, '.', ',')]),
@@ -132,10 +136,8 @@ class AuctionController extends OGameController
     {
         $back = redirect()->route('merchant.auction.index');
 
-        if (!$auctions->isEnabled()) {
-            return $back->with('auction_error', $this->errorMessage('disabled'));
-        }
-
+        // Deliberately not gated by isEnabled(): a winner who already paid must always be able to claim, even
+        // while the feature is switched off (final review F4).
         $validator = Validator::make($request->all(), [
             'auction_id' => ['required', 'integer', 'min:1'],
             'planet_id' => ['required', 'integer', 'min:1'],
@@ -177,18 +179,25 @@ class AuctionController extends OGameController
             'dark_matter' => (int)$user->dark_matter,
             'unclaimed' => [],
         ];
-        if (!$state['enabled']) {
-            return $state;
-        }
 
+        // Settlement and the unclaimed list keep working while the feature is switched off, so held bids are not
+        // stuck and paid winners can still claim (final review F4). Only bidding and opening are gated.
         $auction = $auctions->current();
         if ($auction !== null && $auction->ends_at <= $now) {
             try {
-                $auctions->settleIfDue($auction->id);
+                // Only the caller that actually transitioned the row notifies (final review F1).
+                if ($auctions->settleIfDue($auction->id)) {
+                    $this->dispatchSettled($auction->id);
+                }
             } catch (Throwable $e) {
                 logger()->warning("Auction #{$auction->id} settle on read failed: {$e->getMessage()}");
             }
             $auction = $auctions->current();
+        }
+
+        if (!$state['enabled']) {
+            // Disabled: an auction that is not yet due stays out of the bidding UI.
+            $auction = null;
         }
 
         if ($auction !== null) {
@@ -222,7 +231,7 @@ class AuctionController extends OGameController
                     'placed_at' => $bid->placed_at,
                 ])
                 ->all();
-        } else {
+        } elseif ($state['enabled']) {
             $state['next_opens_at'] = $this->nextOpensAt($now);
         }
 
@@ -261,6 +270,22 @@ class AuctionController extends OGameController
         }
 
         return $options;
+    }
+
+    /**
+     * Dispatches the won/unsold notification for an auction this request just settled.
+     */
+    private function dispatchSettled(int $auctionId): void
+    {
+        try {
+            $closed = Auction::find($auctionId);
+            if ($closed === null) {
+                return;
+            }
+            NotifyAuctionEvent::dispatch($closed->status === Auction::STATUS_SETTLED ? 'won' : 'unsold', $closed->id);
+        } catch (Throwable $e) {
+            logger()->warning("Auction #{$auctionId}: settle notification dispatch failed: {$e->getMessage()}");
+        }
     }
 
     private function dispatchNotifications(int $auctionId, BidResult $result): void

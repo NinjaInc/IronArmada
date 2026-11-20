@@ -537,7 +537,7 @@ class AuctionService
             $auction->save();
 
             return '';
-        });
+        }, 3);
     }
 
     /**

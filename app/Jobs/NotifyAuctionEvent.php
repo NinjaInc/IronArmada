@@ -6,9 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use OGame\Models\Auction;
 use OGame\Services\AuctionNotifier;
+use Throwable;
 
 /**
  * Sends one Armada Salvage Auction notification (Discord and/or in-game message) off the request/tick path.
@@ -50,6 +52,23 @@ class NotifyAuctionEvent implements ShouldQueue
             return;
         }
 
-        $notifier->handle($this->event, $auction, $this->context);
+        // won/unsold are one-shot announcements (Discord SOLD post, winner message): a retry or a second dispatch
+        // must not post twice. Cache::add is atomic; the key is released again if sending throws so a retry works.
+        $guard = null;
+        if (in_array($this->event, ['won', 'unsold'], true)) {
+            $guard = "auction-notified:{$this->event}:{$this->auctionId}";
+            if (!Cache::add($guard, true, 86400)) {
+                return;
+            }
+        }
+
+        try {
+            $notifier->handle($this->event, $auction, $this->context);
+        } catch (Throwable $e) {
+            if ($guard !== null) {
+                Cache::forget($guard);
+            }
+            throw $e;
+        }
     }
 }
