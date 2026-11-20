@@ -17,13 +17,13 @@
             $minutes = intdiv($seconds % 3600, 60);
             $secs = $seconds % 60;
             if ($hours > 0) {
-                return $hours . 'h ' . $minutes . 'm';
+                return __('t_merchant.auction.time_hm', ['hours' => $hours, 'mins' => $minutes]);
             }
             if ($minutes > 0) {
-                return $minutes . 'm ' . $secs . 's';
+                return __('t_merchant.auction.time_ms', ['mins' => $minutes, 'secs' => $secs]);
             }
 
-            return $secs . 's';
+            return __('t_merchant.auction.time_s', ['secs' => $secs]);
         };
 
         // Rounds up to the next 10 DM, the same granularity the service uses for minimum bids.
@@ -265,6 +265,9 @@
          data-state-url="{{ route('merchant.auction.state') }}"
          data-ends-in="{{ __('t_merchant.auction.ends_in') }}"
          data-opens-in="{{ __('t_merchant.auction.opens_in') }}"
+         data-time-hm="{{ __('t_merchant.auction.time_hm') }}"
+         data-time-ms="{{ __('t_merchant.auction.time_ms') }}"
+         data-time-s="{{ __('t_merchant.auction.time_s') }}"
          data-bid-count="{{ __('t_merchant.auction.bid_count') }}"
          data-your-balance="{{ __('t_merchant.auction.your_balance') }}"
          data-minimum-bid="{{ __('t_merchant.auction.minimum_bid') }}"
@@ -307,12 +310,12 @@
                 var minutes = Math.floor((seconds % 3600) / 60);
                 var secs = seconds % 60;
                 if (hours > 0) {
-                    return hours + 'h ' + minutes + 'm';
+                    return fill(fill(str('time-hm'), 'hours', hours), 'mins', minutes);
                 }
                 if (minutes > 0) {
-                    return minutes + 'm ' + secs + 's';
+                    return fill(fill(str('time-ms'), 'mins', minutes), 'secs', secs);
                 }
-                return secs + 's';
+                return fill(str('time-s'), 'secs', secs);
             }
 
             function roundUp10(value) {
@@ -330,6 +333,8 @@
 
             var POLL_SLOW = 10000;
             var POLL_FAST = 3000;
+            var POLL_CLOSED = 20000; // while no auction is open: slow, but never stops
+            var OPEN_WINDOW = 90;    // seconds either side of next_opens_at that get the fast rate
             var FAST_WINDOW = 300; // seconds before ends_at
             var FLASH_MS = 15000;
 
@@ -351,7 +356,7 @@
             var clockOffsetMs = 0;      // server clock minus client clock, refreshed on every response
             var lastServerNow = 0;
             var auctionActive = renderedAuctionId > 0 && !$live.prop('hidden');
-            var stopped = false;        // polling stopped (closed or disabled)
+            var stopped = false;        // polling stopped (disabled only; closed keeps polling)
             var wasLeading = $('#ia-auction-chip-leading').prop('hidden') === false;
             var amountDirty = false;
             var inFlight = false;       // bid POST in flight
@@ -362,6 +367,7 @@
             var epoch = 0;              // bumped by bid responses so older poll responses are dropped
             var failures = 0;
             var closeKicked = false;
+            var lastOpenKick = 0;       // ms timestamp of the last poll forced by next_opens_at passing
 
             function setClock(serverNow) {
                 serverNow = parseInt(serverNow, 10);
@@ -395,10 +401,9 @@
                 } else if (opensAt > 0 && $next.length) {
                     var untilOpen = opensAt - serverNowSec();
                     $next.text(fill(str('opens-in'), 'time', formatRemaining(untilOpen)));
-                    if (stopped && untilOpen <= 0) {
-                        // The next auction should be open about now: resume polling to pick it up.
-                        opensAt = 0;
-                        stopped = false;
+                    if (!stopped && untilOpen <= 0 && new Date().getTime() - lastOpenKick > 5000) {
+                        // The next auction should be open about now: ask at once, then every 5 s until it shows.
+                        lastOpenKick = new Date().getTime();
                         pollNow();
                     }
                 }
@@ -481,8 +486,7 @@
                 $next.attr('data-opens-at', opensAt);
                 hideFlash();
                 $submit.prop('disabled', true);
-                stopped = true;
-                clearPoll();
+                // No stop here: the poll keeps running so the page flips to live when the next lot opens.
                 renderCountdown();
             }
 
@@ -585,7 +589,17 @@
             }
 
             function nextDelay() {
-                var base = (auctionActive && remainingSeconds() < FAST_WINDOW) ? POLL_FAST : POLL_SLOW;
+                var base = POLL_SLOW;
+                if (auctionActive) {
+                    if (remainingSeconds() < FAST_WINDOW) {
+                        base = POLL_FAST;
+                    }
+                } else {
+                    base = POLL_CLOSED;
+                    if (opensAt > 0 && Math.abs(opensAt - serverNowSec()) <= OPEN_WINDOW) {
+                        base = POLL_FAST;
+                    }
+                }
                 return Math.min(30000, base * (1 + failures));
             }
 
