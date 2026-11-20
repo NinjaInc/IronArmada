@@ -1318,3 +1318,63 @@ body#ingamepage #buttonz div.move-box:hover { background-color: var(--ia-amber-h
     .ia-auction-countdown.is-final, .ia-auction-flash { animation: none; }
     .ia-auction-quick-btn { transition: none; }
 }
+
+/* ===== Overview: planet data moves out of the artwork into a readout strip below it ===== */
+/* The art keeps its full 300px; the strip sits underneath instead of covering the planet and ships. */
+@media (min-width: 901px) {
+    #overview #planet {
+        height: 424px;
+        background-size: 100% 300px !important;
+        background-position: center top !important;
+        background-repeat: no-repeat !important;
+        background-color: var(--ia-hull0);
+        box-shadow: inset 0 0 0 1px rgba(143,179,209,.2);
+    }
+    #overview #planetdata {
+        float: none;
+        width: 100%;
+        height: 118px;
+        margin: 300px 0 0 0;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(180deg, rgba(10,16,23,.96), rgba(7,10,14,.98)) !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: 0 !important;
+        border-top: 2px solid var(--ia-amber) !important;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    #overview #planetdata .overlay { display: none; }
+    #overview #planetDetails { height: auto; flex: 1 1 auto; }
+    #overview #planetDetails table,
+    #overview #planetDetails tbody { display: block; position: static; width: 100%; }
+    #overview #planetDetails tbody { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    #overview #planetDetails tr {
+        display: flex;
+        flex-direction: column;
+        padding: 5px 12px 4px;
+        border-left: 1px solid var(--ia-seam-dim);
+        min-width: 0;
+    }
+    #overview #planetDetails tr:nth-child(1),
+    #overview #planetDetails tr:nth-child(4) { border-left: 0; }
+    #overview #planetDetails tr:nth-child(4) { grid-column: span 2; border-left: 0; }
+    #overview #planetDetails tr:nth-child(5) { border-left: 1px solid var(--ia-seam-dim); }
+    #overview #planetDetails td { display: block; padding: 0; text-align: left; font-size: 12px; line-height: 1.35; }
+    #overview #planetDetails td.desc { font: 700 10px/1.3 "Barlow Condensed", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--ia-steel-hi); }
+    #overview #planetDetails td.data { color: var(--ia-ink); overflow-wrap: anywhere; }
+    #overview #planetOptions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 32px;
+        margin: 0;
+        padding: 0 12px;
+        border-top: 1px solid var(--ia-seam-dim);
+        background: linear-gradient(90deg, rgba(58,127,180,.1), transparent 60%);
+    }
+    #overview #planetOptions .planetMoveStart { float: none; display: flex !important; align-items: center; }
+    #overview #planetOptions .float_right { float: none; }
+}
