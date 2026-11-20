@@ -21,6 +21,14 @@ class AuctionNotifyTest extends IsolatedAccountTestCase
 {
     private const WEBHOOK = 'https://discord.com/api/webhooks/123456789012345678/abc_DEF-123';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Other tests or a dev database may hold an active auction (unique active_slot): start clean.
+        // Rolled back with the test transaction.
+        Auction::query()->delete();
+    }
+
     private function makeAuction(array $overrides = []): Auction
     {
         $now = (int)now()->timestamp;

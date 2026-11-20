@@ -17,6 +17,14 @@ use Tests\IsolatedAccountTestCase;
  */
 class AuctionHttpTest extends IsolatedAccountTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Other tests or a dev database may hold an active auction (unique active_slot): start clean.
+        // Rolled back with the test transaction.
+        Auction::query()->delete();
+    }
+
     private function enableAuction(bool $enabled = true): void
     {
         resolve(SettingsService::class)->set('auction_enabled', $enabled ? 1 : 0);

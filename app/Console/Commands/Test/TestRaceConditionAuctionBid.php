@@ -23,6 +23,7 @@ use OGame\Models\User;
 use OGame\Services\AuctionService;
 use OGame\Services\SettingsService;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 /**
  * Class TestRaceConditionAuctionBid.
@@ -36,12 +37,15 @@ use Symfony\Component\Process\Process;
  *  B. bid vs settle: parallel bids from several users while a second PHP process runs settleIfDue in a loop.
  *  C. double claim: 20 parallel claim POSTs for one settled auction.
  *
- * The command refuses to run (exit code 1, nothing touched) if the auction routes are not registered or a real
- * auction is currently active. It temporarily switches the auction settings it needs and restores them afterwards.
- * Not for production use.
+ * The command refuses to run (exit code 1, nothing touched) if the auction routes are not registered, a real
+ * auction is currently active, the scheduler or a queue worker looks to be running, or a Discord webhook is set in
+ * the environment. It temporarily switches `auction_enabled` on and clears the Discord webhook setting, and restores
+ * both (and every other setting it touched) in a finally block. Because `auction_enabled` is a real shared setting,
+ * a running scheduler would open real auctions and post test auctions to Discord, so the operator must stop the
+ * scheduler and queue worker first and confirm with --scheduler-stopped. Not for production use.
  */
 #[Description('Issue parallel requests to test race conditions for auction bids, settlement and claims.')]
-#[Signature('ogamex:test:race-condition-auction-bid {--bidders=4 : Number of test bidders for scenario B (including the main test user)} {--settle-worker= : Internal: auction id for the settle loop worker process} {--settle-seconds=8 : Internal: runtime of the settle loop worker}')]
+#[Signature('ogamex:test:race-condition-auction-bid {--bidders=4 : Number of test users for scenario B (the main test user is excluded from B, see scenarioBidVersusSettle)} {--scheduler-stopped : Required. Confirms the scheduler (schedule:work / cron) and queue workers are stopped} {--settle-worker= : Internal: auction id for the settle loop worker process} {--settle-seconds=8 : Internal: runtime of the settle loop worker}')]
 class TestRaceConditionAuctionBid extends TestCommand
 {
     /**
@@ -57,8 +61,13 @@ class TestRaceConditionAuctionBid extends TestCommand
     /** @var array<int, string> Emails of the extra users created by this run. */
     private array $extraEmails = [];
 
-    /** @var array<string, string> Auction setting key => original value, restored on exit. */
-    private array $originalSettings = [];
+    /** Setting key holding the Discord webhook (cleared during the run so nothing is ever posted). */
+    private const string WEBHOOK_SETTING = 'discord_webhook_url';
+
+    /** @var array<string, string|null> Setting key => original raw value (null: row did not exist), restored on exit. */
+    private array $originalRaw = [];
+
+    private Process|null $settleWorker = null;
 
     /** @var int Counter used to give every test auction its own unique auction_date. */
     private int $dateCounter = 0;
@@ -93,11 +102,32 @@ class TestRaceConditionAuctionBid extends TestCommand
             return 1;
         }
 
+        // The command flips the real `auction_enabled` setting. A running scheduler would then open a real daily
+        // auction (which makes createAuction() hit the active_slot unique index) and its notification jobs would post
+        // the race_test auctions to Discord. Refuse unless the operator confirms the scheduler and workers are down.
+        if (!$this->option('scheduler-stopped')) {
+            $this->error('Refusing to run: this command temporarily enables auction_enabled in the real settings. Stop the scheduler (schedule:work / cron) and all queue workers, then re-run with --scheduler-stopped. Nothing was changed. Exiting...');
+            return 1;
+        }
+        $running = $this->detectRunningScheduler();
+        if ($running !== null) {
+            $this->error("Refusing to run: a scheduler or queue worker process appears to be running here ({$running}). Stop it first. Nothing was changed. Exiting...");
+            return 1;
+        }
+        // A webhook from the environment cannot be cleared from inside this process (other processes read their own
+        // env), so it has to be unset by the operator.
+        if ((string)config('app.discord_alert_webhook', '') !== '') {
+            $this->error('Refusing to run: DISCORD_ALERT_WEBHOOK is set in the environment, so test auctions could be posted to Discord. Unset it for this run. Nothing was changed. Exiting...');
+            return 1;
+        }
+
         $bidders = max(1, (int)$this->option('bidders'));
         $failed = false;
 
         try {
             $this->removeStaleTestData();
+            // Clear the stored Discord webhook for the whole run (restored in finally) so no job can post.
+            $this->overrideSetting(self::WEBHOOK_SETTING, '');
             $this->overrideSetting('auction_enabled', '1');
 
             for ($i = 0; $i < $this->numberOfIterations && !$failed; $i++) {
@@ -124,7 +154,13 @@ class TestRaceConditionAuctionBid extends TestCommand
             $this->error('Test aborted with an unexpected error: ' . $e->getMessage());
             $failed = true;
         } finally {
-            $this->cleanup();
+            $this->stopSettleWorker();
+            try {
+                $this->cleanup();
+            } catch (Throwable $e) {
+                $this->error('Cleanup failed: ' . $e->getMessage());
+            }
+            // Always restore the real settings, even if cleanup or the run blew up.
             $this->restoreSettings();
         }
 
@@ -196,30 +232,67 @@ class TestRaceConditionAuctionBid extends TestCommand
         // Anti-snipe extension would push ends_at away from every bid, so no bid could ever race the settlement.
         $this->overrideSetting('auction_snipe_window_seconds', '0');
 
-        // The leader bids through the service so the escrow state is consistent from the start.
-        $auction = $this->createAuction(Date::now()->timestamp + 4);
+        // The leader bids through the service so the escrow state is consistent from the start. ends_at starts far
+        // away and is pulled in right before the bid burst, so it is relative to when the burst begins.
+        $auction = $this->createAuction(Date::now()->timestamp + 3600);
         $leaderBid = resolve(AuctionService::class)->placeBid($leader, $auction->id, 500);
         if (!$leaderBid->accepted) {
             return $this->fail("Setup: leader bid of 500 was rejected ({$leaderBid->errorKey}).");
         }
 
+        // Scenario A already used the main user's 20 requests of throttle:20,1 (per user per minute), so the main
+        // user is left out here: its bids would all be 429. Use only the other bidders, each at most 20 requests.
+        $bidClients = array_slice($clients, 1);
+        if ($bidClients === []) {
+            $this->warn('Only one bidder configured: scenario B reuses the main user and will be partly throttled. Use --bidders=2 or more.');
+            $bidClients = $clients;
+        }
+        $payloadCount = min(20, 20 * count($bidClients));
+
         // Start the settle loop in its own process first so it is already polling when the bids land.
-        $worker = new Process([
+        $this->settleWorker = new Process([
             PHP_BINARY,
             base_path('artisan'),
             'ogamex:test:race-condition-auction-bid',
             '--settle-worker=' . $auction->id,
-            '--settle-seconds=10',
+            '--settle-seconds=15',
         ]);
-        $worker->start();
+        $this->settleWorker->start();
+        usleep(500000);
 
-        // 20 bids with distinct, increasing amounts, spread over the bidders (each user stays below throttle:20,1).
-        $payloads = [];
-        for ($i = 0; $i < 20; $i++) {
-            $payloads[] = ['auction_id' => $auction->id, 'amount' => 700 + $i * 60];
+        // Two waves of bids with distinct, increasing amounts. The auction ends 2 s after the burst starts: wave 1
+        // goes out immediately, wave 2 is fired just before ends_at so its requests overlap the settlement.
+        $burstStart = (int)Date::now()->timestamp;
+        $endsAt = $burstStart + 2;
+        Auction::whereKey($auction->id)->update(['ends_at' => $endsAt, 'original_ends_at' => $endsAt]);
+
+        $firstWave = [];
+        $secondWave = [];
+        for ($i = 0; $i < $payloadCount; $i++) {
+            $payload = ['auction_id' => $auction->id, 'amount' => 700 + $i * 60];
+            if ($i < intdiv($payloadCount, 2)) {
+                $firstWave[] = $payload;
+            } else {
+                $secondWave[] = $payload;
+            }
         }
-        $results = $this->runParallelPostRequests('ajax/merchant/auction/bid', $payloads, $clients);
-        $this->info('Bids accepted: ' . $this->countAccepted($results) . ' of ' . count($results));
+        $results = $this->runParallelPostRequests('ajax/merchant/auction/bid', $firstWave, $bidClients);
+        $wait = $endsAt - microtime(true) - 0.15;
+        if ($wait > 0) {
+            usleep((int)($wait * 1000000));
+        }
+        $results = array_merge($results, $this->runParallelPostRequests('ajax/merchant/auction/bid', $secondWave, $bidClients));
+
+        $closed = 0;
+        foreach ($results as $result) {
+            if (($result['json']['success'] ?? null) === false && ($result['json']['message'] ?? '') === __('t_merchant.auction.error.closed')) {
+                $closed++;
+            }
+        }
+        $this->info('Bids accepted: ' . $this->countAccepted($results) . ' of ' . count($results) . ", rejected as closed: {$closed}");
+        if ($closed === 0) {
+            $this->warn('No bid was rejected as closed: the burst finished before the auction ended, so this iteration did not overlap settlement. Treat as inconclusive and re-run.');
+        }
         $ok = $this->checkRequestStatuses($results);
 
         // Make sure the auction ends and is settled even if the worker was late (idempotent).
@@ -233,7 +306,8 @@ class TestRaceConditionAuctionBid extends TestCommand
             $service->settleIfDue($auction->id);
             usleep(200000);
         }
-        $worker->wait();
+        $this->settleWorker->wait();
+        $this->settleWorker = null;
 
         $final = Auction::find($auction->id);
         $ok = $this->expect($final !== null && $final->status !== Auction::STATUS_ACTIVE, 'auction left the active state') && $ok;
@@ -473,29 +547,74 @@ class TestRaceConditionAuctionBid extends TestCommand
 
     private function overrideSetting(string $key, string $value): void
     {
-        $settings = resolve(SettingsService::class);
-        if (!array_key_exists($key, $this->originalSettings)) {
-            $this->originalSettings[$key] = $settings->get($key, '0');
+        if (!array_key_exists($key, $this->originalRaw)) {
+            $raw = DB::table('settings')->where('key', $key)->value('value');
+            $this->originalRaw[$key] = $raw === null ? null : (string)$raw;
         }
-        $settings->set($key, $value);
-        // Write through the query builder too: SettingsService::get() treats a stored "0" as unset and set()
-        // skips writes it considers unchanged, so the database row is the source of truth for other processes.
-        DB::table('settings')->where('key', $key)->update(['value' => $value]);
+        // The database row is the source of truth for other processes (SettingsService::get() treats a stored "0"
+        // or "" as unset and set() skips writes it considers unchanged), so write through the query builder too.
+        resolve(SettingsService::class)->set($key, $value);
+        if (DB::table('settings')->where('key', $key)->exists()) {
+            DB::table('settings')->where('key', $key)->update(['value' => $value]);
+        } else {
+            DB::table('settings')->insert(['key' => $key, 'value' => $value]);
+        }
     }
 
     private function restoreSetting(string $key): void
     {
-        if (array_key_exists($key, $this->originalSettings)) {
-            DB::table('settings')->where('key', $key)->update(['value' => $this->originalSettings[$key]]);
-            unset($this->originalSettings[$key]);
+        if (!array_key_exists($key, $this->originalRaw)) {
+            return;
+        }
+        $original = $this->originalRaw[$key];
+        unset($this->originalRaw[$key]);
+        if ($original === null) {
+            DB::table('settings')->where('key', $key)->delete();
+        } else {
+            DB::table('settings')->where('key', $key)->update(['value' => $original]);
         }
     }
 
     private function restoreSettings(): void
     {
-        foreach (array_keys($this->originalSettings) as $key) {
-            $this->restoreSetting($key);
+        foreach (array_keys($this->originalRaw) as $key) {
+            try {
+                $this->restoreSetting($key);
+            } catch (Throwable $e) {
+                $this->error("FAILED to restore setting '{$key}': " . $e->getMessage() . ' Restore it manually.');
+            }
         }
+    }
+
+    private function stopSettleWorker(): void
+    {
+        if ($this->settleWorker !== null && $this->settleWorker->isRunning()) {
+            $this->settleWorker->stop(2);
+        }
+        $this->settleWorker = null;
+    }
+
+    /**
+     * Best effort: names a scheduler or queue worker process visible from this container, or null.
+     */
+    private function detectRunningScheduler(): string|null
+    {
+        try {
+            $process = new Process(['pgrep', '-af', 'schedule:work|schedule:run|queue:work|queue:listen|horizon']);
+            $process->run();
+            if ($process->getExitCode() === 0) {
+                foreach (explode("\n", trim($process->getOutput())) as $line) {
+                    // Ignore pgrep itself and this command.
+                    if ($line !== '' && !str_contains($line, 'pgrep') && !str_contains($line, 'race-condition-auction-bid')) {
+                        return $line;
+                    }
+                }
+            }
+        } catch (Throwable) {
+            // pgrep unavailable: rely on the --scheduler-stopped confirmation.
+        }
+
+        return null;
     }
 
     /**
