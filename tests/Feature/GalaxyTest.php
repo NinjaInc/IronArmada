@@ -15,6 +15,27 @@ use Tests\IsolatedAccountTestCase;
 class GalaxyTest extends IsolatedAccountTestCase
 {
     /**
+     * Verify the expedition fleet template selector is not locked behind an officer.
+     */
+    public function testExpeditionFleetTemplateSelectorIsEnabled(): void
+    {
+        $response = $this->get('/galaxy');
+
+        $response->assertOk();
+        $html = $response->getContent();
+
+        $this->assertIsString($html);
+        $this->assertMatchesRegularExpression(
+            '/<div id="galaxyExpeditionFleetTemplateContainer"\s+class="tooltip hideTooltipOnMouseenter"\s*>/',
+            $html
+        );
+        $this->assertMatchesRegularExpression(
+            '/<select class="expeditionFleetTemplateSelect"[^>]*id="expeditionFleetTemplateSelect">/',
+            $html
+        );
+    }
+
+    /**
      * Verify that debris fields are shown on the galaxy page.
      */
     public function testGalaxyDebrisFieldShown(): void
