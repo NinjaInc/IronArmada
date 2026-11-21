@@ -41087,6 +41087,14 @@ function loadStandardFleetDropdown() {
 
       // Reinitialize the dropdown
       $select.ogameDropDown();
+
+      // Galaxy expedition shortcut: ?template=ID pre-selects that standard fleet
+      var preselectId = parseInt(new URLSearchParams(window.location.search).get('template'), 10);
+      if (preselectId > 0 && typeof fleetDispatcher !== 'undefined' && fleetDispatcher) {
+        fleetDispatcher.selectStandardFleet(preselectId);
+        fleetDispatcher.refresh();
+        $select.val(String(preselectId)).ogameDropDown('select', String(preselectId));
+      }
     }
   });
 }

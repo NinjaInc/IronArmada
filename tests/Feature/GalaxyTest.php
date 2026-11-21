@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Support\Facades\Date;
 use OGame\Models\Enums\PlanetType;
 use OGame\Models\FleetMission;
+use OGame\Models\FleetTemplate;
 use OGame\Models\Resources;
 use OGame\Services\DebrisFieldService;
 use Tests\IsolatedAccountTestCase;
@@ -33,6 +34,34 @@ class GalaxyTest extends IsolatedAccountTestCase
             '/<select class="expeditionFleetTemplateSelect"[^>]*id="expeditionFleetTemplateSelect">/',
             $html
         );
+    }
+
+    /**
+     * Verify the player's standard fleets are listed in the expedition template selector.
+     */
+    public function testExpeditionFleetTemplateSelectorListsStandardFleets(): void
+    {
+        $template = FleetTemplate::factory()->create([
+            'user_id' => $this->currentUserId,
+            'name' => 'Expedition Alpha',
+            'ships' => ['210' => 5, '202' => 3],
+        ]);
+
+        $response = $this->get('/galaxy');
+
+        $response->assertOk();
+        $response->assertSee('<option value="' . $template->id . '">Expedition Alpha</option>', false);
+    }
+
+    /**
+     * Verify the expedition button on the galaxy page passes the chosen template to the fleet page.
+     */
+    public function testExpeditionButtonPassesTemplateToFleetPage(): void
+    {
+        $response = $this->get('/galaxy');
+
+        $response->assertOk();
+        $response->assertSee('&template=', false);
     }
 
     /**

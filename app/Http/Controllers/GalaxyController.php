@@ -12,6 +12,7 @@ use OGame\Factories\PlanetServiceFactory;
 use OGame\Models\Alliance;
 use OGame\Models\Enums\PlanetType;
 use OGame\Models\FleetMission;
+use OGame\Models\FleetTemplate;
 use OGame\Models\Highscore;
 use OGame\Models\Planet;
 use OGame\Models\Planet\Coordinate;
@@ -69,7 +70,19 @@ class GalaxyController extends OGameController
             $system = (int)$system_qs;
         }
 
+        // The player's standard fleets double as expedition fleet templates.
+        $expeditionFleetTemplates = FleetTemplate::where('user_id', $player->getId())
+            ->orderBy('id')
+            ->get(['id', 'name', 'ships'])
+            ->map(fn (FleetTemplate $template) => [
+                'id' => $template->id,
+                'name' => $template->name,
+                'ships' => $template->ships,
+            ])
+            ->all();
+
         return view('ingame.galaxy.index')->with([
+            'expedition_fleet_templates' => $expeditionFleetTemplates,
             'current_galaxy' => $galaxy,
             'current_system' => $system,
             'espionage_probe_count' => $planet->getObjectAmount('espionage_probe'),

@@ -147,7 +147,7 @@
             var toGalaxyLink = "#?page=ingame&component=galaxy&galaxy=2&system=3";
             var mobile = false;
             var inProgress = false;
-            var expeditionFleetTemplates = [];
+            var expeditionFleetTemplates = @json($expedition_fleet_templates);
 
             function initGalaxy()
             {
@@ -238,8 +238,10 @@
             function doExpedition()
             {
                 let expeditionLink = "{{ route('fleet.index') }}";
+                let templateId = parseInt($('#expeditionFleetTemplateSelect').val(), 10) || 0;
+                let templateParam = templateId > 0 ? "&template=" + templateId : "";
 
-                location.href = expeditionLink + "?mission=15&galaxy=" + galaxy + "&system=" + system + "&position=16&type=1";
+                location.href = expeditionLink + "?mission=15&galaxy=" + galaxy + "&system=" + system + "&position=16&type=1" + templateParam;
             }
 
         </script>
@@ -482,6 +484,8 @@
                                 >
                                     <a id="expeditionFleetTemplateBtn"
                                        class="dark_highlight_tablet"
+                                       href="{{ route('fleet.index') }}"
+                                       title="{{ __('t_ingame.fleet.edit_standard_fleets') }}"
                                     >
                                         <span class="icon icon_combatunits"></span>
                                         <span class="expedtionFleetTemplateBtnTitle">{{ __('t_ingame.galaxy.expedition_fleet') }}</span>
@@ -489,6 +493,9 @@
                                     <select class="expeditionFleetTemplateSelect" size="1" title="test"
                                             id="expeditionFleetTemplateSelect">
                                         <option value="0">-</option>
+                                        @foreach ($expedition_fleet_templates as $expedition_fleet_template)
+                                            <option value="{{ $expedition_fleet_template['id'] }}">{{ $expedition_fleet_template['name'] }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
