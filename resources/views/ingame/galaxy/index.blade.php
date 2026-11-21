@@ -478,8 +478,7 @@
                             </div>
                             <div id="expeditionDebrisSlotActions">
                                 <div id="galaxyExpeditionFleetTemplateContainer"
-                                     class="tooltip hideTooltipOnMouseenter disabled"
-                                     title="{{ __('t_ingame.galaxy.admiral_needed') }}"
+                                     class="tooltip hideTooltipOnMouseenter"
                                 >
                                     <a id="expeditionFleetTemplateBtn"
                                        class="dark_highlight_tablet"
@@ -488,7 +487,7 @@
                                         <span class="expedtionFleetTemplateBtnTitle">{{ __('t_ingame.galaxy.expedition_fleet') }}</span>
                                     </a>
                                     <select class="expeditionFleetTemplateSelect" size="1" title="test"
-                                            id="expeditionFleetTemplateSelect" disabled>
+                                            id="expeditionFleetTemplateSelect">
                                         <option value="0">-</option>
                                     </select>
                                 </div>
