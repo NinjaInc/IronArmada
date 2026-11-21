@@ -1655,6 +1655,27 @@ However, the Space Dock's engineers think that some of the remains can be salvag
 
 
             @yield('content')
+            <div id="eventlistBelowAnchor"></div>
+            @php
+                $eventsShowPref = \OGame\Services\UserPreferencesService::get($currentPlayer->getUser(), 'eventsShow');
+            @endphp
+            <script type="text/javascript">
+                // Options > "Events display": 1 = hidden (collapsed), 2 = expanded above the content, 3 = expanded below the content.
+                (function ($) {
+                    var eventsShowPref = {{ (int)$eventsShowPref }};
+                    $(function () {
+                        if (eventsShowPref === 1) {
+                            return;
+                        }
+                        if (eventsShowPref === 3) {
+                            $('#eventlistBelowAnchor').append($('#eventboxContent').first());
+                        }
+                        if (typeof toggleEvents === 'function') {
+                            toggleEvents(true);
+                        }
+                    });
+                })(jQuery);
+            </script>
         </div>
     </div>
     <div id="right">
