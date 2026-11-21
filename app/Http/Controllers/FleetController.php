@@ -699,6 +699,9 @@ class FleetController extends OGameController
                     $units->addUnit(ObjectService::getUnitObjectByMachineName('recycler'), $shipCount);
                 }
                 break;
+            case 15: // Expedition
+                $responseMessage = __('t_ingame.fleet.fleet_dispatch');
+                break;
             default:
                 return response()->json([
                     'response' => [
