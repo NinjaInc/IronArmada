@@ -144,6 +144,39 @@ class FleetDispatchExpeditionTest extends FleetDispatchTestCase
     }
 
     /**
+     * Assert that a galaxy standard fleet can be dispatched as an expedition.
+     */
+    public function testMiniFleetDispatchFromGalaxyTemplate(): void
+    {
+        $this->basicSetup();
+
+        $coordinates = $this->planetService->getPlanetCoordinates();
+        $post = $this->post('/ajax/fleet/dispatch/send-mini-fleet', [
+            'galaxy' => $coordinates->galaxy,
+            'system' => $coordinates->system,
+            'position' => 16,
+            'type' => PlanetType::Planet->value,
+            'shipCount' => 0,
+            'mission' => $this->missionType,
+            'speed' => 'NaN',
+            'am203' => 2,
+            'am210' => 1,
+            '_token' => csrf_token(),
+        ]);
+
+        $post->assertOk();
+        $post->assertJsonPath('response.success', true);
+
+        $fleetMissionService = resolve(FleetMissionService::class, ['player' => $this->planetService->getPlayer()]);
+        $fleetMission = $fleetMissionService->getActiveFleetMissionsForCurrentPlayer()->first();
+
+        $this->assertNotNull($fleetMission);
+        $this->assertSame($this->missionType, $fleetMission->mission_type);
+        $this->assertSame(2, $fleetMission->large_cargo);
+        $this->assertSame(1, $fleetMission->espionage_probe);
+    }
+
+    /**
      * Assert that expedition cannot target debris fields.
      */
     public function testFleetCheckToPosition16DebrisFieldFails(): void
