@@ -51,6 +51,8 @@ class GalaxyTest extends IsolatedAccountTestCase
 
         $response->assertOk();
         $response->assertSee('<option value="' . $template->id . '">Expedition Alpha</option>', false);
+        $response->assertSee('"fleetSpeed":100', false);
+        $response->assertSee('"expeditionTime":1', false);
     }
 
     /**
