@@ -187,7 +187,7 @@ class TestRaceConditionAuctionBid extends TestCommand
         $auction = $this->createAuction(Date::now()->timestamp + 3600);
         $leaderBid = resolve(AuctionService::class)->placeBid($leader, $auction->id, 500);
         if (!$leaderBid->accepted) {
-            return $this->fail("Setup: leader bid of 500 was rejected ({$leaderBid->errorKey}).");
+            return $this->failCase("Setup: leader bid of 500 was rejected ({$leaderBid->errorKey}).");
         }
 
         $payloads = array_fill(0, 20, ['auction_id' => $auction->id, 'amount' => 600]);
@@ -237,7 +237,7 @@ class TestRaceConditionAuctionBid extends TestCommand
         $auction = $this->createAuction(Date::now()->timestamp + 3600);
         $leaderBid = resolve(AuctionService::class)->placeBid($leader, $auction->id, 500);
         if (!$leaderBid->accepted) {
-            return $this->fail("Setup: leader bid of 500 was rejected ({$leaderBid->errorKey}).");
+            return $this->failCase("Setup: leader bid of 500 was rejected ({$leaderBid->errorKey}).");
         }
 
         // Scenario A already used the main user's 20 requests of throttle:20,1 (per user per minute), so the main
@@ -340,7 +340,7 @@ class TestRaceConditionAuctionBid extends TestCommand
         $service = resolve(AuctionService::class);
         $bid = $service->placeBid($main, $auction->id, 800);
         if (!$bid->accepted) {
-            return $this->fail("Setup: winner bid of 800 was rejected ({$bid->errorKey}).");
+            return $this->failCase("Setup: winner bid of 800 was rejected ({$bid->errorKey}).");
         }
 
         // End the auction now and settle it.
@@ -348,7 +348,7 @@ class TestRaceConditionAuctionBid extends TestCommand
         $service->settleIfDue($auction->id);
         $settled = Auction::find($auction->id);
         if ($settled === null || $settled->status !== Auction::STATUS_SETTLED || (int)$settled->winner_user_id !== $main->id) {
-            return $this->fail('Setup: auction did not settle for the test user.');
+            return $this->failCase('Setup: auction did not settle for the test user.');
         }
 
         $planetId = $this->currentPlanetService->getPlanetId();
@@ -463,7 +463,7 @@ class TestRaceConditionAuctionBid extends TestCommand
         return $condition;
     }
 
-    private function fail(string $message): bool
+    private function failCase(string $message): bool
     {
         $this->error("[ERROR] {$message}");
         return false;
