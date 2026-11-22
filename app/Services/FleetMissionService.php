@@ -61,6 +61,10 @@ class FleetMissionService
         }
 
         $slowest_speed = $units->getSlowestUnitSpeed($player);
+        if ($slowest_speed <= 0) {
+            throw new Exception('A fleet must contain at least one ship with a valid speed.');
+        }
+
         $distance = $this->calculateFleetMissionDistance($fromPlanet, $to);
 
         // Determine which fleet speed to use based on mission type.
