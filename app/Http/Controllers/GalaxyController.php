@@ -78,6 +78,8 @@ class GalaxyController extends OGameController
                 'id' => $template->id,
                 'name' => $template->name,
                 'ships' => $template->ships,
+                'fleetSpeed' => 100,
+                'expeditionTime' => 1,
             ])
             ->all();
 
