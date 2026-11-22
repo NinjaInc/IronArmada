@@ -1275,9 +1275,14 @@ class FleetController extends OGameController
         foreach (request()->all() as $key => $value) {
             if (str_starts_with($key, 'am')) {
                 $unit_id = (int)str_replace('am', '', $key);
+                $amount = (int)$value;
+                if ($amount <= 0) {
+                    continue;
+                }
+
                 // Create GameObject
                 $unitObject = ObjectService::getUnitObjectById($unit_id);
-                $units->addUnit($unitObject, (int)$value);
+                $units->addUnit($unitObject, $amount);
             }
         }
 
