@@ -52,6 +52,20 @@ class UnitCollectionTest extends UnitTestCase
     }
 
     /**
+     * Test that zero-amount units do not affect the fleet speed.
+     *
+     * @throws Exception
+     */
+    public function testSlowestFleetSpeedIgnoresZeroAmountUnits(): void
+    {
+        $unitCollection = new UnitCollection();
+        $unitCollection->addUnit(ObjectService::getShipObjectByMachineName('small_cargo'), 1);
+        $unitCollection->addUnit(ObjectService::getShipObjectByMachineName('solar_satellite'), 0);
+
+        $this->assertGreaterThan(0, $unitCollection->getSlowestUnitSpeed($this->playerService));
+    }
+
+    /**
      * Property test: Total cargo capacity equals sum of individual ship capacities.
      */
     public function testPropertyCargoCapacityFromAllShips(): void
