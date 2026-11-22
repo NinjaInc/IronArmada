@@ -661,6 +661,25 @@ class FleetController extends OGameController
         $targetType = (int)request()->input('type');
         $shipCount = (int)request()->input('shipCount');
         $mission_type = (int)request()->input('mission');
+        $speedInput = request()->input('speed', 10);
+        // Older galaxy template requests exposed an undefined speed as the literal "NaN".
+        $speedPercent = strtolower((string)$speedInput) === 'nan' ? 10.0 : (float)$speedInput;
+        $holdingHours = (int)request()->input('holdingtime', $mission_type === 15 ? 1 : 0);
+        if (!is_finite($speedPercent) || $speedPercent < 1 || $speedPercent > 10 || fmod($speedPercent, 0.5) !== 0.0) {
+            return response()->json([
+                'response' => [
+                    'message' => __('Fleet speed must be between 10% and 100% in 5% increments.'),
+                    'coordinates' => [
+                        'galaxy' => $galaxy,
+                        'system' => $system,
+                        'position' => $position,
+                    ],
+                    'success' => false,
+                ],
+                'newAjaxToken' => csrf_token(),
+                'components' => [],
+            ]);
+        }
         if ($settingsService->missionBlockedByAttackBlock($mission_type)) {
             return response()->json([
                 'response' => [
@@ -697,6 +716,30 @@ class FleetController extends OGameController
                 } else {
                     $responseMessage = __('t_ingame.fleet.fleet_dispatch');
                     $units->addUnit(ObjectService::getUnitObjectByMachineName('recycler'), $shipCount);
+                }
+                break;
+            case 15: // Expedition
+                $responseMessage = __('t_ingame.fleet.fleet_dispatch');
+                $units = $this->getUnitsFromRequest($player->planets->current());
+
+                $astrophysicsLevel = $player->getResearchLevel(machine_name: 'astrophysics');
+                if ($holdingHours < 1 || $holdingHours > $astrophysicsLevel) {
+                    return response()->json([
+                        'response' => [
+                            'message' => __('Expedition duration must be between :min_hours and :max_hours hours.', [
+                                'min_hours' => 1,
+                                'max_hours' => $astrophysicsLevel,
+                            ]),
+                            'coordinates' => [
+                                'galaxy' => $galaxy,
+                                'system' => $system,
+                                'position' => $position,
+                            ],
+                            'success' => false,
+                        ],
+                        'newAjaxToken' => csrf_token(),
+                        'components' => [],
+                    ]);
                 }
                 break;
             default:
@@ -753,7 +796,16 @@ class FleetController extends OGameController
         $planetType = PlanetType::from($targetType);
 
         try {
-            $fleetMission = $fleetMissionService->createNewFromPlanet($planet, $targetCoordinate, $planetType, $mission_type, $units, $resources, 10);
+            $fleetMission = $fleetMissionService->createNewFromPlanet(
+                $planet,
+                $targetCoordinate,
+                $planetType,
+                $mission_type,
+                $units,
+                $resources,
+                $speedPercent,
+                $holdingHours
+            );
 
             // Calculate the actual amount of units sent.
             $fleetUnitCount = $fleetMissionService->getFleetUnitCount($fleetMission);
