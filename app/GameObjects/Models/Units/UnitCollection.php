@@ -120,6 +120,10 @@ class UnitCollection
     {
         $slowest = 0;
         foreach ($this->units as $entry) {
+            if ($entry->amount <= 0) {
+                continue;
+            }
+
             $speed = $entry->unitObject->properties->speed->calculate($player)->totalValue;
             if ($slowest === 0 || $speed < $slowest) {
                 $slowest = $speed;
@@ -170,7 +174,7 @@ class UnitCollection
     public function hasNonEspionageUnit(): bool
     {
         foreach ($this->units as $entry) {
-            if ($entry->unitObject->machine_name !== 'espionage_probe') {
+            if ($entry->amount > 0 && $entry->unitObject->machine_name !== 'espionage_probe') {
                 return true;
             }
         }
