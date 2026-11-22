@@ -159,8 +159,10 @@ class FleetDispatchExpeditionTest extends FleetDispatchTestCase
             'shipCount' => 0,
             'mission' => $this->missionType,
             'speed' => 'NaN',
+            'am202' => 0,
             'am203' => 2,
             'am210' => 1,
+            'am212' => 0,
             '_token' => csrf_token(),
         ]);
 
