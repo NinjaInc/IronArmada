@@ -35,6 +35,9 @@ return [
             'key' => env('REVERB_APP_KEY'),
             'secret' => env('REVERB_APP_SECRET'),
             'app_id' => env('REVERB_APP_ID'),
+            // Host the BROWSER connects to. Set to "auto" to use whichever domain the player loaded the site from
+            // (needed when the site is served on more than one domain). Server-side publishing keeps using options.host.
+            'client_host' => env('REVERB_CLIENT_HOST'),
             'options' => [
                 'host' => env('REVERB_HOST'),
                 'port' => env('REVERB_PORT', 443),

@@ -830,7 +830,7 @@
                 var startpageUrl = "{{ str_replace('/', '\/', URL::to('/')) }}";
                 // Laravel Reverb / Echo configuration for real-time chat
                 var reverbAppKey = "{{ config('broadcasting.connections.reverb.key', '') }}";
-                var reverbHost = "{{ config('broadcasting.connections.reverb.options.host', 'localhost') }}";
+                var reverbHost = "{{ config('broadcasting.connections.reverb.client_host') ?: config('broadcasting.connections.reverb.options.host', 'localhost') }}";
                 var reverbPort = "{{ config('broadcasting.connections.reverb.options.port', '8080') }}";
                 var reverbScheme = "{{ config('broadcasting.connections.reverb.options.scheme', 'http') }}";
                 var chatUrl = "{{ route('chat.send') }}";

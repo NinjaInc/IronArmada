@@ -16,7 +16,7 @@
     window.Echo = new Echo({
         broadcaster: 'reverb',
         key: reverbAppKey,
-        wsHost: reverbHost,
+        wsHost: reverbHost === 'auto' ? window.location.hostname : reverbHost,
         wsPort: reverbPort,
         wssPort: reverbPort,
         forceTLS: reverbScheme === 'https',

@@ -73942,7 +73942,7 @@ var Echo=(function(e){Object.defineProperties(e,{__esModule:{value:!0},[Symbol.t
     window.Echo = new Echo({
         broadcaster: 'reverb',
         key: reverbAppKey,
-        wsHost: reverbHost,
+        wsHost: reverbHost === 'auto' ? window.location.hostname : reverbHost,
         wsPort: reverbPort,
         wssPort: reverbPort,
         forceTLS: reverbScheme === 'https',
