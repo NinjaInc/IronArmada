@@ -6,7 +6,7 @@
 @php /** @var array<OGame\GameMissions\BattleEngine\Models\BattleResultRound> $rounds */ @endphp
 
 <div id="messagedetails">
-<div class="detail_msg_head">
+<div class="detail_msg_head ia-battle-head">
     <span class="msg_title new blue_txt"><span class="middlemark">{{ __('t_ingame.messages.battle_report') }} {{ $defender_planet_name }} <figure
                     class="planetIcon planet tooltip js_hideTipOnMobile" data-tooltip-title="{{ __('t_ingame.messages.battle_planet') }}"></figure> <a
                     href="{{ $defender_planet_link }}"

@@ -9,6 +9,7 @@
     @endif
 
     <div id="content">
+        <div class="ia-banner ia-banner-battle" aria-hidden="true"></div>
         <div id="buttonz">
             <div class="header">
                 <h2>{{ __('t_ingame.messages.news_feed') }}</h2>

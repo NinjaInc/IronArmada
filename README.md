@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/images/hero.jpg" alt="Iron Armada" width="880" /></p>
+
 <p align="center"><img src="public/img/iron-armada/logo-iron-armada.png" alt="Iron Armada" width="420" /></p>
 
 <p align="center"><strong>A self-hosted, browser-based space strategy MMO.</strong><br/>Build an economy, research technology, command fleets and fight for the top of the highscore.</p>

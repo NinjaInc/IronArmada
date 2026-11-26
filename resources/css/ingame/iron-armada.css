@@ -1378,3 +1378,7 @@ body#ingamepage #buttonz div.move-box:hover { background-color: var(--ia-amber-h
     #overview #planetOptions .planetMoveStart { float: none; display: flex !important; align-items: center; }
     #overview #planetOptions .float_right { float: none; }
 }
+
+/* ===== Battle art: messages banner and battle report header ===== */
+.ia-banner-battle { height: 150px; margin: 0 auto 3px; width: 654px; max-width: 100%; background: url(/img/iron-armada/banners/battle.jpg) center / cover no-repeat; border: 1px solid rgba(143,179,209,.35); }
+.detail_msg_head.ia-battle-head { background: linear-gradient(180deg, rgba(7,10,14,.55), rgba(7,10,14,.85)), url(/img/iron-armada/banners/battle.jpg) center / cover no-repeat !important; border: 1px solid rgba(143,179,209,.35); padding: 8px 10px; }

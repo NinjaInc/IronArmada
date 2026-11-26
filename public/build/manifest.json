@@ -1,6 +1,6 @@
 {
   "resources/css/ingame.css": {
-    "file": "assets/ingame-C7iCWCsX.css",
+    "file": "assets/ingame-B7GdtZjr.css",
     "name": "ingame",
     "names": [
       "ingame.css"
@@ -18,12 +18,12 @@
     "isEntry": true
   },
   "resources/js/ingame.js": {
-    "file": "assets/ingame-5a073f01.js",
+    "file": "assets/ingame-d4ebb2de.js",
     "src": "resources/js/ingame.js",
     "isEntry": true
   },
   "resources/js/outgame.js": {
-    "file": "assets/outgame-1a0852d6.js",
+    "file": "assets/outgame-10de045b.js",
     "src": "resources/js/outgame.js",
     "isEntry": true
   }
