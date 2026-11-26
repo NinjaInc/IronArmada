@@ -8,7 +8,7 @@ Author: Josh Neufield (Archon Tech)
 |---|---|---|
 | `logo-iron-armada.png` | 930x232, transparent | Login/register page. Replaces `.logo_ogame` (was a 173x57 JPG) |
 | `logo-archon-tech.png` | 945x232, transparent | Same page. Replaces `.logo_gf` (the GameForge logo, 274x58) |
-| `login-background.jpg` / `login-background@2x.jpg` | 1404x844 / 2808x1688 | `#start` background on the login page (was `img/outgame/1867da5b5f8769b547bb91d88bb4f8.jpg`) |
+| `login-background.jpg` / `login-background@2x.jpg` | 1920x1080 (both; source art is 1080p, no true 2x) | `#start` background on the login page (was `img/outgame/1867da5b5f8769b547bb91d88bb4f8.jpg`) |
 | `ingame-background.jpg` | 3440x1440 | In-game backdrop (was `img/bg/background-large.jpg`, used by `resources/css/ingame/02base.css`) |
 | `favicon.ico` | 16/32/48 | `public/favicon.ico` |
 | `favicon-32.png` | 32x32 | `<link rel="icon">` |
