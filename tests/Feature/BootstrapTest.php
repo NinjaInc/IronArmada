@@ -61,6 +61,7 @@ class BootstrapTest extends TestCase
 
         // Check that overview page is correctly rendered without errors.
         $response->assertStatus(200);
+        $response->assertDontSee('id="buffBar"', false);
     }
 
     /**

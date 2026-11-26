@@ -19152,6 +19152,11 @@ function initItemActivation(currItemUuid) {
 
 function initBuffBar() {
   let slider = $('.sliderWrapper .active_items');
+
+  if ($('#buffBar').length === 0 || slider.length === 0) {
+    return;
+  }
+
   slider.anythingSlider({
     buildNavigation: false,
 

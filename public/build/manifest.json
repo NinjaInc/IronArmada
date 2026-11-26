@@ -18,12 +18,12 @@
     "isEntry": true
   },
   "resources/js/ingame.js": {
-    "file": "assets/ingame-d2d4462d.js",
+    "file": "assets/ingame-5a073f01.js",
     "src": "resources/js/ingame.js",
     "isEntry": true
   },
   "resources/js/outgame.js": {
-    "file": "assets/outgame-10de045b.js",
+    "file": "assets/outgame-1a0852d6.js",
     "src": "resources/js/outgame.js",
     "isEntry": true
   }

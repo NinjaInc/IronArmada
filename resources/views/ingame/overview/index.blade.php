@@ -255,18 +255,6 @@
                 </div>
             </div>
 
-            <div id="buffBar" class="sliderWrapper">
-                <div data-uuid="" data-id="" class="add_item">
-                    <a class="activate_item border3px" href="javascript:void(0);" ref="1"></a>
-                </div>
-
-                <ul class="active_items hidden">
-                    <li>
-                    </li>
-                </ul>
-            </div>
-
-
         </div>
         <div class="c-left"></div>
         <div class="c-right"></div>
